@@ -235,11 +235,14 @@ class RiskEngine:
             reasons.append(
                 f"Daily PnL {existing_daily_pnl:.2f} breaches max daily loss threshold."
             )
-        if daily_trade_count >= self.config.max_daily_trades:
+        if self.config.max_daily_trades > 0 and daily_trade_count >= self.config.max_daily_trades:
             reasons.append(
                 f"Daily trade count {daily_trade_count} reached max of {self.config.max_daily_trades}."
             )
-        if symbol_daily_trade_count >= self.config.max_daily_trades_per_symbol:
+        if (
+            self.config.max_daily_trades_per_symbol > 0
+            and symbol_daily_trade_count >= self.config.max_daily_trades_per_symbol
+        ):
             reasons.append(
                 f"Daily trade count for {intent.symbol} reached max of {self.config.max_daily_trades_per_symbol}."
             )

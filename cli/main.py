@@ -1480,7 +1480,10 @@ def _render_daemon_status(status) -> None:
         "Trades/Symbol Today",
         ", ".join(f"{symbol}:{count}" for symbol, count in status.trades_per_symbol_today.items()) or "-",
     )
-    table.add_row("Daily Cap Reached", "Yes" if status.daily_trade_cap_reached else "No")
+    table.add_row(
+        "Daily Trade Cap",
+        "Disabled" if not status.daily_trade_cap_enabled else "Reached" if status.daily_trade_cap_reached else "Active",
+    )
     if status.account:
         table.add_row("Cash", f"${status.account.cash:,.2f}")
         table.add_row("Equity", f"${status.account.equity:,.2f}")

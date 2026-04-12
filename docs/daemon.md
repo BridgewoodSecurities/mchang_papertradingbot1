@@ -70,8 +70,8 @@ REQUIRE_MULTIPLE_SIGNALS=true
 MIN_SIGNALS_REQUIRED=2
 MAX_POSITION_NOTIONAL_PCT=0.20
 MAX_TOTAL_EXPOSURE_PCT=0.50
-MAX_DAILY_TRADES=2
-MAX_DAILY_TRADES_PER_SYMBOL=1
+MAX_DAILY_TRADES=0
+MAX_DAILY_TRADES_PER_SYMBOL=0
 MAX_OPEN_POSITIONS=5
 SYMBOL_COOLDOWN_MINUTES=60
 TRADE_FREQUENCY_PENALTY_ENABLED=true
@@ -164,19 +164,20 @@ If the signal count is below `MIN_SIGNALS_REQUIRED`, the system defaults to `HOL
 
 ## Trade Frequency Limits
 
-The daemon now enforces stricter anti-overtrading controls:
+The daemon now emphasizes prudence and trade quality over arbitrary quotas:
 
-- `MAX_DAILY_TRADES=2`
-- `MAX_DAILY_TRADES_PER_SYMBOL=1`
+- `MAX_DAILY_TRADES=0` disables the global hard daily trade cap
+- `MAX_DAILY_TRADES_PER_SYMBOL=0` disables the per-symbol hard daily trade cap
 - a recent-trade penalty that raises the effective confidence threshold after recent activity
+- multi-signal confirmation, confidence thresholds, edge-quality checks, cooldowns, open-position protection, and anti-flip-flop logic still remain in force
 
 `tradingagents daemon status` shows:
 
 - trades today
 - trades per symbol today
-- whether the daily cap has been reached
+- whether a hard daily trade cap is active or disabled
 
-The arena prompt also sees recent trade counts so it can bias toward patience before the risk engine has to reject.
+The arena prompt also sees recent trade counts so it can bias toward patience, prudence, and higher-confidence decisions even without a hard trade quota.
 
 ## Existing Position And Anti-Churn Logic
 

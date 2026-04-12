@@ -526,7 +526,11 @@ class TradingCycleRunner:
             "trades_today": trades_today,
             "recent_trade_count": recent_trade_count,
             "recent_symbol_trade_count": recent_symbol_trade_count,
-            "approaching_daily_trade_cap": trades_today >= max(0, self.risk_config.max_daily_trades - 1),
+            "daily_trade_cap_enabled": self.risk_config.max_daily_trades > 0,
+            "approaching_daily_trade_cap": (
+                self.risk_config.max_daily_trades > 0
+                and trades_today >= max(0, self.risk_config.max_daily_trades - 1)
+            ),
             "portfolio": {
                 "cash": account.cash,
                 "equity": account.equity,

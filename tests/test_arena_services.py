@@ -188,6 +188,8 @@ class ArenaServiceTests(unittest.TestCase):
         )
         self.assertIn("HOLD is preferred when uncertain", prompt)
         self.assertIn("Do not trade just because a cycle occurred", prompt)
+        self.assertIn("There is no arbitrary trade quota to fill", prompt)
+        self.assertIn("Favor patience, capital preservation, and disciplined sizing", prompt)
         self.assertIn("Trades today", prompt)
         self.assertIn("Open position context", prompt)
 

@@ -216,8 +216,10 @@ class DaemonService:
         trade_date = get_market_date(datetime.now(timezone.utc), self.session)
         trades_today = self.store.count_trades_for_date(trade_date=trade_date)
         trades_per_symbol_today = self.store.get_trades_per_symbol_for_date(trade_date=trade_date)
+        daily_trade_cap_enabled = self.runner.risk_config.max_daily_trades > 0
         daily_trade_cap_reached = (
-            trades_today >= self.runner.risk_config.max_daily_trades
+            daily_trade_cap_enabled
+            and trades_today >= self.runner.risk_config.max_daily_trades
         )
         if state:
             pid = state.get("pid")
@@ -255,6 +257,7 @@ class DaemonService:
             trades_today=trades_today,
             trades_per_symbol_today=trades_per_symbol_today,
             daily_trade_cap_reached=daily_trade_cap_reached,
+            daily_trade_cap_enabled=daily_trade_cap_enabled,
         )
 
     def _record_post_cycle_state(self, *, run_id: str) -> None:

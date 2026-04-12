@@ -193,8 +193,8 @@ class RiskConfig(BaseModel):
     market_hours_only: bool = True
     cooldown_minutes_per_symbol: int = Field(default=60, ge=0)
     max_order_notional_usd: float = Field(default=1000.0, gt=0.0)
-    max_daily_trades: int = Field(default=2, ge=0)
-    max_daily_trades_per_symbol: int = Field(default=1, ge=0)
+    max_daily_trades: int = Field(default=0, ge=0)
+    max_daily_trades_per_symbol: int = Field(default=0, ge=0)
     allow_position_scaling: bool = False
     max_trades_per_cycle: int = Field(default=2, ge=1)
     default_to_hold: bool = True
@@ -288,6 +288,7 @@ class DaemonStatus(BaseModel):
     trades_today: int = 0
     trades_per_symbol_today: dict[str, int] = Field(default_factory=dict)
     daily_trade_cap_reached: bool = False
+    daily_trade_cap_enabled: bool = False
 
 
 class ClosedTrade(BaseModel):

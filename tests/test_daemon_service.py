@@ -301,7 +301,8 @@ class DaemonServiceTests(unittest.TestCase):
             )
             status = service.get_status()
             self.assertEqual(status.trades_today, 2)
-            self.assertTrue(status.daily_trade_cap_reached)
+            self.assertFalse(status.daily_trade_cap_enabled)
+            self.assertFalse(status.daily_trade_cap_reached)
             self.assertEqual(status.trades_per_symbol_today["NVDA"], 1)
 
 

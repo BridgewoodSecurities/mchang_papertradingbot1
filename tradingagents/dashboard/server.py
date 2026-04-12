@@ -88,6 +88,7 @@ def build_unavailable_snapshot(
                 "trades_today": 0,
                 "trades_per_symbol_today": {},
                 "daily_trade_cap_reached": False,
+                "daily_trade_cap_enabled": False,
             },
             "heartbeat": None,
             "artifacts": {

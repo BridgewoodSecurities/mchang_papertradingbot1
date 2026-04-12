@@ -43,8 +43,8 @@ class ExecutionConfigTests(unittest.TestCase):
         self.assertEqual(config.allowed_symbols, ["AAPL", "NVDA"])
         self.assertEqual(config.max_order_notional_usd, 500.0)
         self.assertEqual(config.min_confidence_threshold, 0.65)
-        self.assertEqual(config.max_daily_trades, 2)
-        self.assertEqual(config.max_daily_trades_per_symbol, 1)
+        self.assertEqual(config.max_daily_trades, 0)
+        self.assertEqual(config.max_daily_trades_per_symbol, 0)
         self.assertTrue(config.require_multiple_signals)
 
     def test_build_analysis_config_preserves_default_shape(self):

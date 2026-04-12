@@ -198,10 +198,10 @@ def load_risk_config(env: dict[str, str] | None = None) -> RiskConfig:
         max_order_notional_usd=_parse_float(
             env.get("MAX_ORDER_NOTIONAL_USD"), 1000.0
         ),
-        max_daily_trades=_parse_int(env.get("MAX_DAILY_TRADES"), 2),
+        max_daily_trades=_parse_int(env.get("MAX_DAILY_TRADES"), 0),
         max_daily_trades_per_symbol=_parse_int(
             env.get("MAX_DAILY_TRADES_PER_SYMBOL"),
-            1,
+            0,
         ),
         allow_position_scaling=_parse_bool(
             env.get("ALLOW_POSITION_SCALING")

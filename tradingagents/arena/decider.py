@@ -138,9 +138,12 @@ Hard rules:
 - Default to HOLD unless the signal is strong.
 - HOLD is preferred when uncertain, and no trade is better than a weak trade.
 - Do not trade just because a cycle occurred.
+- There is no arbitrary trade quota to fill; trade only when prudence, fresh evidence, and confidence justify action.
+- Recent activity should make you more selective, not more active.
 - Never trade without a clear expected edge and an explanation of why the market is wrong.
 - Every BUY or SELL must cite multiple supporting signals.
 - Confidence must reflect uncertainty honestly and should stay low when evidence is mixed.
+- Favor patience, capital preservation, and disciplined sizing over action for its own sake.
 - Reject stale reasoning: say whether the information is new or already priced in.
 - Reject trades that do not fit past successful patterns or that repeat recent failures.
 - Long-only US equities, no margin, no shorting, no options, no crypto.
@@ -151,6 +154,7 @@ Latest price: {latest_price}
 Trades today: {cycle_inputs.get("trades_today")}
 Trades in recent lookback: {cycle_inputs.get("recent_trade_count")}
 Trades in recent lookback for {symbol}: {cycle_inputs.get("recent_symbol_trade_count")}
+Daily trade cap enabled: {cycle_inputs.get("daily_trade_cap_enabled")}
 Approaching daily cap: {cycle_inputs.get("approaching_daily_trade_cap")}
 Open position context:
 {json.dumps(cycle_inputs.get("open_position") or {}, indent=2, default=str)}
