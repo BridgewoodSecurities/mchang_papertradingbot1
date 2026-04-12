@@ -5,10 +5,5 @@
       "source": "/",
       "destination": "/api/index"
     }
-  ],
-  "functions": {
-    "api/**/*.py": {
-      "excludeFiles": "{tests/**,__tests__/**,runtime/**,results/**,assets/**,.venv/**}"
-    }
-  }
+  ]
 }
