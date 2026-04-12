@@ -31,7 +31,8 @@ from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.default_config import DEFAULT_CONFIG
 from tradingagents.backtest.replay import ReplayRunner
 from tradingagents.brokers.alpaca import AlpacaPaperBroker, BrokerConfigurationError
-from tradingagents.dashboard.server import DashboardDataService, DashboardServer
+from tradingagents.dashboard import build_dashboard_data_service
+from tradingagents.dashboard.server import DashboardServer
 from tradingagents.daemon.service import DaemonService
 from tradingagents.execution.config import load_execution_config, load_risk_config
 from tradingagents.execution.models import RunMode
@@ -1371,31 +1372,13 @@ def _build_daemon_service_with_overrides(
         store,
     )
 
-
-class _StatusOnlyRunner:
-    def __init__(self, risk_config):
-        self.risk_config = risk_config
-
-
 def _build_dashboard_data_service(
     *,
     refresh_seconds: int,
-) -> DashboardDataService:
-    execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=True)
-    risk_config = load_risk_config()
-    store = _build_store(execution_config)
-    broker = _build_broker(required=False)
-    daemon_service = DaemonService(
-        execution_config=execution_config,
-        store=store,
-        runner=_StatusOnlyRunner(risk_config),
-        broker=broker,
-    )
-    return DashboardDataService(
-        execution_config=execution_config,
-        store=store,
-        daemon_service=daemon_service,
+) -> object:
+    return build_dashboard_data_service(
         refresh_seconds=refresh_seconds,
+        project_dir=str(Path.cwd()),
     )
 
 

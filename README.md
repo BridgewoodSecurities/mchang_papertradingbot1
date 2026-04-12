@@ -194,6 +194,8 @@ tradingagents dashboard run
 
 The dashboard shows live daemon state, heartbeat updates, memory, positions, orders, reflections, cycles, news, and recent errors.
 
+You can also deploy the dashboard UI to Vercel. The repo now includes `api/index.py` and `vercel.json` so Vercel can build it as a Python deployment. For live data, set `TRADINGAGENTS_DASHBOARD_PROXY_URL` in Vercel so the hosted UI can proxy snapshots from a real daemon host. See [docs/dashboard.md](docs/dashboard.md).
+
 ## Python Usage
 
 If you want to use the underlying research graph directly, you can still import `TradingAgentsGraph` and work with it as a Python package:

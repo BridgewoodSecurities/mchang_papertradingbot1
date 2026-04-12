@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import date, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 from urllib.parse import urlparse
+
+import requests
 
 from tradingagents.arena.memory import AgentMemoryService
 
@@ -36,6 +39,104 @@ def _tail_file(path: Path, *, lines: int = 80) -> dict[str, Any] | None:
         "lines": content[-lines:],
         "updated_at": datetime.fromtimestamp(path.stat().st_mtime).isoformat(),
     }
+
+
+def _proxy_endpoint(proxy_url: str) -> str:
+    normalized = proxy_url.rstrip("/")
+    if normalized.endswith("/api/overview"):
+        return normalized
+    return f"{normalized}/api/overview"
+
+
+def build_unavailable_snapshot(
+    *,
+    reason: str,
+    refresh_seconds: int = 15,
+    proxy_url: str | None = None,
+) -> dict[str, Any]:
+    guidance = [
+        reason,
+        "Vercel can host the dashboard UI, but it does not share your local daemon process or sqlite runtime by default.",
+    ]
+    if proxy_url:
+        guidance.append(
+            f"Configured proxy target: {_proxy_endpoint(proxy_url)}"
+        )
+    else:
+        guidance.append(
+            "Set TRADINGAGENTS_DASHBOARD_PROXY_URL to a public dashboard base URL or /api/overview endpoint if you want live remote data."
+        )
+    return {
+        "generated_at": datetime.now().astimezone().isoformat(),
+        "refresh_seconds": refresh_seconds,
+        "overview": {
+            "daemon_status": {
+                "running": False,
+                "pid": None,
+                "last_heartbeat_at": None,
+                "last_cycle_started_at": None,
+                "last_cycle_completed_at": None,
+                "last_cycle_bucket": None,
+                "symbols_processed": [],
+                "last_error": reason,
+                "paused": False,
+                "stop_requested": False,
+                "account": None,
+                "open_positions": [],
+                "learning_summary": "Dashboard is online, but no live runtime is attached yet.",
+                "performance_snapshot": None,
+                "trades_today": 0,
+                "trades_per_symbol_today": {},
+                "daily_trade_cap_reached": False,
+            },
+            "heartbeat": None,
+            "artifacts": {
+                "db_path": None,
+                "log_dir": None,
+                "audit_dir": None,
+                "results_dir": None,
+                "heartbeat_path": None,
+                "daily_summary_dir": None,
+                "proxy_url": proxy_url,
+            },
+        },
+        "learning_state": {
+            "learning_summary": "No live runtime connected yet.",
+            "recent_lessons": guidance,
+            "recurring_mistakes": [],
+            "recurring_success_patterns": [],
+        },
+        "symbol_memory": {},
+        "positions": [],
+        "account": None,
+        "performance_snapshot": None,
+        "recent_pnl": [],
+        "recent_orders": [],
+        "recent_closed_trades": [],
+        "recent_decisions": [],
+        "recent_reflections": [],
+        "recent_cycles": [],
+        "recent_runs": [],
+        "recent_errors": [{"error": reason, "created_at": datetime.now().astimezone().isoformat()}],
+        "recent_news": [],
+        "logs": {},
+    }
+
+
+def fetch_remote_snapshot(
+    *,
+    proxy_url: str,
+    refresh_seconds: int = 15,
+    timeout: float = 10.0,
+) -> dict[str, Any]:
+    endpoint = _proxy_endpoint(proxy_url)
+    response = requests.get(endpoint, timeout=timeout)
+    response.raise_for_status()
+    payload = response.json()
+    if isinstance(payload, dict):
+        payload.setdefault("refresh_seconds", refresh_seconds)
+        return payload
+    raise ValueError(f"Dashboard proxy response from {endpoint} was not a JSON object")
 
 
 class DashboardDataService:
@@ -250,7 +351,7 @@ INDEX_HTML = """<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TradingAgents Monitor</title>
+  <title>TradingBot Monitor</title>
   <style>
     :root {
       --bg: #f4efe6;
@@ -454,7 +555,7 @@ INDEX_HTML = """<!doctype html>
 </head>
 <body>
   <header>
-    <h1>TradingAgents Monitor</h1>
+    <h1>TradingBot Monitor</h1>
     <div class="subhead">
       Live dashboard for the paper-trading daemon. It auto-refreshes so you can watch heartbeat changes, memory updates,
       positions, orders, reflections, cycles, news, and recent errors without tailing files by hand.

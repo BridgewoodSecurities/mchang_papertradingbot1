@@ -248,7 +248,7 @@ class DashboardServerTests(unittest.TestCase):
                 server.shutdown()
                 thread.join(timeout=2)
 
-            self.assertIn("TradingAgents Monitor", html)
+            self.assertIn("TradingBot Monitor", html)
             self.assertEqual(payload["account"]["account_id"], "paper-123")
             self.assertEqual(payload["recent_news"][0]["symbol"], "NVDA")
 

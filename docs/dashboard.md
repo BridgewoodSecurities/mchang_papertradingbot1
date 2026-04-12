@@ -40,6 +40,46 @@ You can change how often the page polls:
 tradingagents dashboard run --refresh-seconds 5
 ```
 
+## Deploy To Vercel
+
+This repo now includes a Vercel-compatible Python entrypoint at `api/index.py` plus `vercel.json`, so the dashboard can deploy without the "No python entrypoint found" error.
+
+There are two deployment modes:
+
+1. UI-only or placeholder mode
+   The Vercel deployment serves the dashboard shell successfully, but it cannot read your local sqlite runtime by itself.
+
+2. Proxy mode
+   Set `TRADINGAGENTS_DASHBOARD_PROXY_URL` in Vercel to a public dashboard backend that exposes `/api/overview`.
+   In this mode, Vercel hosts the dashboard UI and proxies live snapshot data from your real daemon host.
+
+Suggested Vercel environment variables:
+
+```bash
+TRADINGAGENTS_DASHBOARD_PROXY_URL=https://your-daemon-host.example.com
+TRADINGAGENTS_VERCEL_REFRESH_SECONDS=15
+```
+
+Notes:
+
+- if `TRADINGAGENTS_DASHBOARD_PROXY_URL` already ends with `/api/overview`, it will be used directly
+- otherwise the deployment appends `/api/overview`
+- without a proxy URL, the deployment returns an informative placeholder snapshot instead of failing
+- Vercel is a good fit for the dashboard frontend, not for the long-running trading daemon itself
+
+### Vercel Steps
+
+1. Import the repo into Vercel.
+2. Leave the framework preset as `Other`.
+3. Set `TRADINGAGENTS_DASHBOARD_PROXY_URL` if you want live remote data.
+4. Deploy.
+
+Routes after deployment:
+
+- `/` for the dashboard
+- `/api/overview` for the JSON snapshot
+- `/healthz` for a simple health check
+
 ## What The Dashboard Reads
 
 The dashboard is read-only. It pulls from the existing runtime state:
