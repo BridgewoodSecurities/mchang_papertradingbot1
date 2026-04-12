@@ -33,7 +33,7 @@ def app(environ, start_response):
 
 def _load_snapshot() -> dict:
     refresh_seconds = int(os.getenv("TRADINGAGENTS_VERCEL_REFRESH_SECONDS", "15"))
-    proxy_url = os.getenv("TRADINGAGENTS_DASHBOARD_PROXY_URL")
+    proxy_url = os.getenv("TRADINGAGENTS_DASHBOARD_PROXY_URL") or _read_proxy_url_file()
 
     if proxy_url:
         try:
@@ -70,8 +70,17 @@ def _build_local_dashboard_data_service(*, refresh_seconds: int):
     )
 
 
+def _read_proxy_url_file() -> str | None:
+    path = os.path.join(os.getcwd(), "dashboard_proxy_url.txt")
+    if not os.path.exists(path):
+        return None
+    with open(path, "r", encoding="utf-8") as handle:
+        value = handle.read().strip()
+    return value or None
+
+
 def _deployment_target() -> str:
-    proxy_url = os.getenv("TRADINGAGENTS_DASHBOARD_PROXY_URL")
+    proxy_url = os.getenv("TRADINGAGENTS_DASHBOARD_PROXY_URL") or _read_proxy_url_file()
     return "proxy" if proxy_url else "local"
 
 
