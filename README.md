@@ -90,7 +90,7 @@ pip install .
 
 Alternatively, run with Docker:
 ```bash
-cp .env.example .env  # add your API keys
+cp env.template .env  # add your API keys
 docker compose run --rm tradingagents
 ```
 
@@ -114,9 +114,9 @@ export ALPHA_VANTAGE_API_KEY=...   # Alpha Vantage
 
 For local models, configure Ollama with `llm_provider: "ollama"` in your config.
 
-Alternatively, copy `.env.example` to `.env` and fill in your keys:
+Alternatively, copy `env.template` to `.env` and fill in your keys:
 ```bash
-cp .env.example .env
+cp env.template .env
 ```
 
 ### CLI Usage
@@ -159,7 +159,7 @@ Important safety defaults:
 - no margin, shorting, options, or crypto
 - no broker submission unless `--execute` is passed and `PAPER_TRADING_ENABLED=true`
 
-Create a root `.env` file from `.env.example`, add your LLM provider key, and only add Alpaca paper keys when you are ready to connect paper execution.
+Create a root `.env` file from `env.template`, add your LLM provider key, and only add Alpaca paper keys when you are ready to connect paper execution.
 
 Examples:
 

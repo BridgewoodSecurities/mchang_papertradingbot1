@@ -31,7 +31,7 @@ cd <your-repo-directory>
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
-cp .env.example .env
+cp env.template .env
 ```
 
 ## Environment Variables

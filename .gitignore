@@ -218,3 +218,7 @@ __marimo__/
 
 # Cache
 **/data_cache/
+
+# macOS Finder metadata
+.DS_Store
+**/.DS_Store
