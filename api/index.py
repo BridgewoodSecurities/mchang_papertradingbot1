@@ -4,8 +4,7 @@ import json
 import os
 from typing import Callable
 
-from tradingagents.dashboard import build_dashboard_data_service
-from tradingagents.dashboard.server import (
+from tradingagents.dashboard.vercel import (
     INDEX_HTML,
     build_unavailable_snapshot,
     fetch_remote_snapshot,
@@ -51,11 +50,7 @@ def _load_snapshot() -> dict:
             )
 
     try:
-        service = build_dashboard_data_service(
-            refresh_seconds=refresh_seconds,
-            project_dir=os.getcwd(),
-            include_broker=os.getenv("TRADINGAGENTS_VERCEL_ENABLE_BROKER", "false").lower() == "true",
-        )
+        service = _build_local_dashboard_data_service(refresh_seconds=refresh_seconds)
         return service.build_snapshot()
     except Exception as exc:
         return build_unavailable_snapshot(
@@ -63,6 +58,16 @@ def _load_snapshot() -> dict:
             refresh_seconds=refresh_seconds,
             proxy_url=proxy_url,
         )
+
+
+def _build_local_dashboard_data_service(*, refresh_seconds: int):
+    from tradingagents.dashboard.runtime import build_dashboard_data_service
+
+    return build_dashboard_data_service(
+        refresh_seconds=refresh_seconds,
+        project_dir=os.getcwd(),
+        include_broker=os.getenv("TRADINGAGENTS_VERCEL_ENABLE_BROKER", "false").lower() == "true",
+    )
 
 
 def _deployment_target() -> str:

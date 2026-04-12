@@ -1,1 +1,2 @@
-.
+# Vercel dashboard deployment only. Full local installs use `pip install .`.
+requests>=2.32.4

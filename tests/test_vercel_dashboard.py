@@ -42,7 +42,7 @@ class VercelDashboardTests(unittest.TestCase):
         self.assertEqual(headers["Content-Type"], "application/json; charset=utf-8")
         self.assertIn('"running": true', body)
 
-    @patch("api.index.build_dashboard_data_service", side_effect=RuntimeError("missing runtime"))
+    @patch("api.index._build_local_dashboard_data_service", side_effect=RuntimeError("missing runtime"))
     @patch.dict("os.environ", {}, clear=True)
     def test_api_overview_returns_placeholder_when_no_runtime(self, _build_service):
         status, _, body = self._invoke("/api/overview")
