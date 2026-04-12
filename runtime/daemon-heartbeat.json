@@ -1,0 +1,12 @@
+{
+  "pid": 36215,
+  "status": "market-closed",
+  "last_heartbeat_at": "2026-04-12T01:49:41.212125Z",
+  "last_cycle_started_at": null,
+  "last_cycle_completed_at": null,
+  "last_cycle_bucket": null,
+  "symbols_processed": [],
+  "last_error": null,
+  "paused": false,
+  "stop_requested": false
+}

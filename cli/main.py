@@ -1,5 +1,9 @@
 from typing import Optional
 import datetime
+import os
+import signal
+import subprocess
+import sys
 import typer
 from pathlib import Path
 from functools import wraps
@@ -25,6 +29,14 @@ from rich.rule import Rule
 
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.default_config import DEFAULT_CONFIG
+from tradingagents.backtest.replay import ReplayRunner
+from tradingagents.brokers.alpaca import AlpacaPaperBroker, BrokerConfigurationError
+from tradingagents.dashboard.server import DashboardDataService, DashboardServer
+from tradingagents.daemon.service import DaemonService
+from tradingagents.execution.config import load_execution_config, load_risk_config
+from tradingagents.execution.models import RunMode
+from tradingagents.orchestration.runner import TradingAgentsAnalysisEngine, TradingCycleRunner
+from tradingagents.persistence.sqlite_store import SQLitePersistence
 from cli.models import AnalystType
 from cli.utils import *
 from cli.announcements import fetch_announcements, display_announcements
@@ -33,10 +45,19 @@ from cli.stats_handler import StatsCallbackHandler
 console = Console()
 
 app = typer.Typer(
-    name="TradingAgents",
-    help="TradingAgents CLI: Multi-Agents LLM Financial Trading Framework",
+    name="TradingBot",
+    help="TradingBot CLI: autonomous paper-trading system inspired by TradingAgents",
     add_completion=True,  # Enable shell completion
+    invoke_without_command=True,
 )
+daemon_app = typer.Typer(
+    help="Long-running paper-trading automation service",
+)
+app.add_typer(daemon_app, name="daemon")
+dashboard_app = typer.Typer(
+    help="Web dashboard for monitoring the paper-trading daemon",
+)
+app.add_typer(dashboard_app, name="dashboard")
 
 
 # Create a deque to store recent messages with a maximum length
@@ -256,9 +277,9 @@ def update_display(layout, spinner_text=None, stats_handler=None, start_time=Non
     # Header with welcome message
     layout["header"].update(
         Panel(
-            "[bold green]Welcome to TradingAgents CLI[/bold green]\n"
-            "[dim]© [Tauric Research](https://github.com/TauricResearch)[/dim]",
-            title="Welcome to TradingAgents",
+            "[bold green]Welcome to TradingBot CLI[/bold green]\n"
+            "[dim]Inspired by TradingAgents and extended for autonomous paper trading[/dim]",
+            title="Welcome to TradingBot",
             border_style="green",
             padding=(1, 2),
             expand=True,
@@ -467,11 +488,11 @@ def get_user_selections():
 
     # Create welcome box content
     welcome_content = f"{welcome_ascii}\n"
-    welcome_content += "[bold green]TradingAgents: Multi-Agents LLM Financial Trading Framework - CLI[/bold green]\n\n"
+    welcome_content += "[bold green]TradingBot: Autonomous Paper-Trading System[/bold green]\n\n"
     welcome_content += "[bold]Workflow Steps:[/bold]\n"
     welcome_content += "I. Analyst Team → II. Research Team → III. Trader → IV. Risk Management → V. Portfolio Management\n\n"
     welcome_content += (
-        "[dim]Built by [Tauric Research](https://github.com/TauricResearch)[/dim]"
+        "[dim]Inspired by TradingAgents and extended with paper execution, daemon automation, and monitoring[/dim]"
     )
 
     # Create and center the welcome box
@@ -479,8 +500,8 @@ def get_user_selections():
         welcome_content,
         border_style="green",
         padding=(1, 2),
-        title="Welcome to TradingAgents",
-        subtitle="Multi-Agents LLM Financial Trading Framework",
+        title="Welcome to TradingBot",
+        subtitle="Autonomous paper trading inspired by TradingAgents",
     )
     console.print(Align.center(welcome_box))
     console.print()
@@ -1197,6 +1218,698 @@ def run_analysis():
     display_choice = typer.prompt("\nDisplay full report on screen?", default="Y").strip().upper()
     if display_choice in ("Y", "YES", ""):
         display_complete_report(final_state)
+
+
+@app.callback(invoke_without_command=True)
+def main_callback(ctx: typer.Context):
+    if ctx.invoked_subcommand is None:
+        run_analysis()
+
+
+def _parse_symbols(symbols: str) -> list[str]:
+    parsed = [normalize_ticker_symbol(symbol) for symbol in symbols.split(",") if symbol.strip()]
+    if not parsed:
+        raise typer.BadParameter("At least one symbol is required.")
+    return parsed
+
+
+def _build_store(execution_config) -> SQLitePersistence:
+    return SQLitePersistence(execution_config.db_path)
+
+
+def _build_broker(*, required: bool, logger=None):
+    try:
+        return AlpacaPaperBroker.from_env(logger=logger)
+    except BrokerConfigurationError:
+        if required:
+            raise
+        return None
+
+
+def _build_trading_cycle_runner(*, execute: bool, require_broker: bool) -> TradingCycleRunner:
+    execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=execute)
+    risk_config = load_risk_config()
+    store = _build_store(execution_config)
+    analysis_engine = TradingAgentsAnalysisEngine(execution_config)
+    broker = _build_broker(required=require_broker)
+    return TradingCycleRunner(
+        execution_config=execution_config,
+        risk_config=risk_config,
+        store=store,
+        analysis_engine=analysis_engine,
+        broker=broker,
+    )
+
+
+def _collect_llm_overrides(
+    *,
+    llm_provider: str | None,
+    deep_model: str | None,
+    quick_model: str | None,
+    backend_url: str | None,
+    openai_reasoning_effort: str | None,
+    google_thinking_level: str | None,
+    anthropic_effort: str | None,
+) -> dict[str, str]:
+    return {
+        "llm_provider": llm_provider.lower() if llm_provider else None,
+        "deep_think_llm": deep_model,
+        "quick_think_llm": quick_model,
+        "backend_url": backend_url,
+        "openai_reasoning_effort": openai_reasoning_effort,
+        "google_thinking_level": google_thinking_level,
+        "anthropic_effort": anthropic_effort,
+    }
+
+
+def _build_trading_cycle_runner_with_overrides(
+    *,
+    execute: bool,
+    require_broker: bool,
+    llm_overrides: dict[str, str] | None,
+) -> TradingCycleRunner:
+    execution_config = load_execution_config(
+        project_dir=str(Path.cwd()),
+        execute=execute,
+        llm_overrides=llm_overrides,
+    )
+    risk_config = load_risk_config()
+    store = _build_store(execution_config)
+    analysis_engine = TradingAgentsAnalysisEngine(execution_config)
+    broker = _build_broker(required=require_broker)
+    return TradingCycleRunner(
+        execution_config=execution_config,
+        risk_config=risk_config,
+        store=store,
+        analysis_engine=analysis_engine,
+        broker=broker,
+    )
+
+
+def _build_replay_runner() -> tuple[ReplayRunner, SQLitePersistence]:
+    execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=False)
+    risk_config = load_risk_config()
+    store = _build_store(execution_config)
+    analysis_engine = TradingAgentsAnalysisEngine(execution_config)
+    runner = ReplayRunner(
+        execution_config=execution_config,
+        risk_config=risk_config,
+        store=store,
+        analysis_engine=analysis_engine,
+    )
+    return runner, store
+
+
+def _build_replay_runner_with_overrides(
+    *,
+    llm_overrides: dict[str, str] | None,
+) -> tuple[ReplayRunner, SQLitePersistence]:
+    execution_config = load_execution_config(
+        project_dir=str(Path.cwd()),
+        execute=False,
+        llm_overrides=llm_overrides,
+    )
+    risk_config = load_risk_config()
+    store = _build_store(execution_config)
+    analysis_engine = TradingAgentsAnalysisEngine(execution_config)
+    runner = ReplayRunner(
+        execution_config=execution_config,
+        risk_config=risk_config,
+        store=store,
+        analysis_engine=analysis_engine,
+    )
+    return runner, store
+
+
+def _build_daemon_service_with_overrides(
+    *,
+    llm_overrides: dict[str, str] | None,
+) -> tuple[DaemonService, SQLitePersistence]:
+    execution_config = load_execution_config(
+        project_dir=str(Path.cwd()),
+        execute=True,
+        llm_overrides=llm_overrides,
+    )
+    risk_config = load_risk_config()
+    store = _build_store(execution_config)
+    analysis_engine = TradingAgentsAnalysisEngine(execution_config)
+    broker = _build_broker(required=False)
+    runner = TradingCycleRunner(
+        execution_config=execution_config,
+        risk_config=risk_config,
+        store=store,
+        analysis_engine=analysis_engine,
+        broker=broker,
+    )
+    return (
+        DaemonService(
+            execution_config=execution_config,
+            store=store,
+            runner=runner,
+            broker=broker,
+        ),
+        store,
+    )
+
+
+class _StatusOnlyRunner:
+    def __init__(self, risk_config):
+        self.risk_config = risk_config
+
+
+def _build_dashboard_data_service(
+    *,
+    refresh_seconds: int,
+) -> DashboardDataService:
+    execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=True)
+    risk_config = load_risk_config()
+    store = _build_store(execution_config)
+    broker = _build_broker(required=False)
+    daemon_service = DaemonService(
+        execution_config=execution_config,
+        store=store,
+        runner=_StatusOnlyRunner(risk_config),
+        broker=broker,
+    )
+    return DashboardDataService(
+        execution_config=execution_config,
+        store=store,
+        daemon_service=daemon_service,
+        refresh_seconds=refresh_seconds,
+    )
+
+
+def _render_cycle_result(result) -> None:
+    summary = Table(title=f"{result.mode.value} summary")
+    summary.add_column("Symbol", style="cyan")
+    summary.add_column("Status", style="green")
+    summary.add_column("Risk", style="yellow")
+    summary.add_column("Order", style="magenta")
+    summary.add_column("Error", style="red")
+
+    for item in result.symbol_results:
+        risk_text = ", ".join(item.risk_decision.reasons[:2]) if item.risk_decision else "-"
+        order_text = (
+            f"{item.submitted_order.side.value} {item.submitted_order.qty or item.submitted_order.notional_usd or '-'}"
+            if item.submitted_order
+            else "-"
+        )
+        error_text = item.error or "-"
+        summary.add_row(item.symbol, item.execution_status, risk_text, order_text, error_text)
+
+    console.print(summary)
+    console.print(f"DB: {result.db_path}")
+    console.print(f"Logs: {result.log_path}")
+    console.print(f"Audit: {result.audit_path}")
+    console.print(f"Results: {result.result_path}")
+
+
+def _render_account(account) -> None:
+    table = Table(title="Alpaca Paper Account")
+    table.add_column("Field", style="cyan")
+    table.add_column("Value", style="green")
+    table.add_row("Account ID", account.account_id or "-")
+    table.add_row("Status", account.status or "-")
+    table.add_row("Cash", f"${account.cash:,.2f}")
+    table.add_row("Equity", f"${account.equity:,.2f}")
+    table.add_row("Buying Power", f"${account.buying_power:,.2f}")
+    table.add_row("Paper Endpoint", "Yes" if account.paper else "No")
+    console.print(table)
+
+
+def _render_positions(positions) -> None:
+    table = Table(title="Positions")
+    table.add_column("Symbol", style="cyan")
+    table.add_column("Qty", style="green")
+    table.add_column("Avg Entry", style="yellow")
+    table.add_column("Market Value", style="magenta")
+    table.add_column("Unrealized P/L", style="white")
+    for position in positions:
+        table.add_row(
+            position.symbol,
+            f"{position.qty:.4f}",
+            f"${(position.avg_entry_price or 0.0):,.2f}",
+            f"${(position.market_value or 0.0):,.2f}",
+            f"${(position.unrealized_pl or 0.0):,.2f}",
+        )
+    console.print(table)
+
+
+def _render_orders(orders) -> None:
+    table = Table(title="Orders")
+    table.add_column("Submitted", style="cyan")
+    table.add_column("Symbol", style="green")
+    table.add_column("Side", style="yellow")
+    table.add_column("Status", style="magenta")
+    table.add_column("Qty/Notional", style="white")
+    for order in orders:
+        size = f"{order.qty:.4f}" if order.qty else f"${(order.notional_usd or 0.0):,.2f}"
+        submitted = order.submitted_at.isoformat() if order.submitted_at else "-"
+        table.add_row(submitted, order.symbol, order.side.value, order.status, size)
+    console.print(table)
+
+
+def _render_daemon_status(status) -> None:
+    table = Table(title="Daemon Status")
+    table.add_column("Field", style="cyan")
+    table.add_column("Value", style="green")
+    table.add_row("Running", "Yes" if status.running else "No")
+    table.add_row("PID", str(status.pid or "-"))
+    table.add_row(
+        "Last Heartbeat",
+        status.last_heartbeat_at.isoformat() if status.last_heartbeat_at else "-",
+    )
+    table.add_row(
+        "Last Cycle Start",
+        status.last_cycle_started_at.isoformat() if status.last_cycle_started_at else "-",
+    )
+    table.add_row(
+        "Last Cycle End",
+        status.last_cycle_completed_at.isoformat() if status.last_cycle_completed_at else "-",
+    )
+    table.add_row("Last Bucket", status.last_cycle_bucket or "-")
+    table.add_row("Paused", "Yes" if status.paused else "No")
+    table.add_row("Stop Requested", "Yes" if status.stop_requested else "No")
+    table.add_row("Symbols Processed", ", ".join(status.symbols_processed) or "-")
+    table.add_row("Last Error", status.last_error or "-")
+    table.add_row("Trades Today", str(status.trades_today))
+    table.add_row(
+        "Trades/Symbol Today",
+        ", ".join(f"{symbol}:{count}" for symbol, count in status.trades_per_symbol_today.items()) or "-",
+    )
+    table.add_row("Daily Cap Reached", "Yes" if status.daily_trade_cap_reached else "No")
+    if status.account:
+        table.add_row("Cash", f"${status.account.cash:,.2f}")
+        table.add_row("Equity", f"${status.account.equity:,.2f}")
+    table.add_row("Open Positions", str(len(status.open_positions)))
+    table.add_row("Learning Summary", status.learning_summary or "-")
+    performance = status.performance_snapshot or {}
+    if performance:
+        table.add_row("Account Value", f"${performance.get('account_value', 0.0):,.2f}")
+        table.add_row("Realized PnL", f"${performance.get('realized_pnl', 0.0):,.2f}")
+        table.add_row("Unrealized PnL", f"${performance.get('unrealized_pnl', 0.0):,.2f}")
+        win_rate = performance.get("win_rate")
+        table.add_row("Win Rate", f"{win_rate:.1%}" if isinstance(win_rate, (int, float)) else "-")
+    console.print(table)
+
+
+def _render_learning_state(state) -> None:
+    if not state:
+        console.print("No learning state recorded yet.")
+        return
+    table = Table(title="Agent Learning State")
+    table.add_column("Field", style="cyan")
+    table.add_column("Value", style="green")
+    table.add_row("Learning Summary", state.get("learning_summary") or "-")
+    table.add_row(
+        "Recurring Mistakes",
+        "\n".join(state.get("recurring_mistakes") or []) or "-",
+    )
+    table.add_row(
+        "Recurring Successes",
+        "\n".join(state.get("recurring_success_patterns") or []) or "-",
+    )
+    table.add_row(
+        "Recent Lessons",
+        "\n".join(state.get("recent_lessons") or []) or "-",
+    )
+    console.print(table)
+
+
+def _print_cli_error(message: str) -> None:
+    console.print(f"[red]{message}[/red]")
+    raise typer.Exit(code=1)
+
+
+@app.command("dry-run")
+def dry_run(
+    symbols: str = typer.Option(..., help="Comma-separated symbols, e.g. NVDA,AAPL"),
+    date: str = typer.Option(..., help="Analysis date in YYYY-MM-DD format"),
+    llm_provider: str = typer.Option(None, help="Override provider: openai, google, anthropic, xai, openrouter, ollama"),
+    deep_model: str = typer.Option(None, help="Override deep-thinking model"),
+    quick_model: str = typer.Option(None, help="Override quick-thinking model"),
+    backend_url: str = typer.Option(None, help="Override provider base URL"),
+    openai_reasoning_effort: str = typer.Option(None, help="Override OpenAI reasoning effort"),
+    google_thinking_level: str = typer.Option(None, help="Override Google thinking level"),
+    anthropic_effort: str = typer.Option(None, help="Override Anthropic effort"),
+):
+    try:
+        runner = _build_trading_cycle_runner_with_overrides(
+            execute=False,
+            require_broker=False,
+            llm_overrides=_collect_llm_overrides(
+                llm_provider=llm_provider,
+                deep_model=deep_model,
+                quick_model=quick_model,
+                backend_url=backend_url,
+                openai_reasoning_effort=openai_reasoning_effort,
+                google_thinking_level=google_thinking_level,
+                anthropic_effort=anthropic_effort,
+            ),
+        )
+        result = runner.run_cycle(
+            symbols=_parse_symbols(symbols),
+            analysis_date=date,
+            mode=RunMode.DRY_RUN,
+            execute=False,
+        )
+        _render_cycle_result(result)
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@app.command("paper-run")
+def paper_run(
+    symbols: str = typer.Option(..., help="Comma-separated symbols, e.g. NVDA,AAPL"),
+    date: str = typer.Option(..., help="Analysis date in YYYY-MM-DD format"),
+    execute: bool = typer.Option(
+        False,
+        "--execute",
+        help="Actually submit orders to Alpaca paper trading after risk approval.",
+    ),
+    llm_provider: str = typer.Option(None, help="Override provider: openai, google, anthropic, xai, openrouter, ollama"),
+    deep_model: str = typer.Option(None, help="Override deep-thinking model"),
+    quick_model: str = typer.Option(None, help="Override quick-thinking model"),
+    backend_url: str = typer.Option(None, help="Override provider base URL"),
+    openai_reasoning_effort: str = typer.Option(None, help="Override OpenAI reasoning effort"),
+    google_thinking_level: str = typer.Option(None, help="Override Google thinking level"),
+    anthropic_effort: str = typer.Option(None, help="Override Anthropic effort"),
+):
+    try:
+        runner = _build_trading_cycle_runner_with_overrides(
+            execute=execute,
+            require_broker=execute,
+            llm_overrides=_collect_llm_overrides(
+                llm_provider=llm_provider,
+                deep_model=deep_model,
+                quick_model=quick_model,
+                backend_url=backend_url,
+                openai_reasoning_effort=openai_reasoning_effort,
+                google_thinking_level=google_thinking_level,
+                anthropic_effort=anthropic_effort,
+            ),
+        )
+        result = runner.run_cycle(
+            symbols=_parse_symbols(symbols),
+            analysis_date=date,
+            mode=RunMode.PAPER,
+            execute=execute,
+        )
+        _render_cycle_result(result)
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@app.command()
+def account():
+    try:
+        broker = _build_broker(required=True)
+        _render_account(broker.get_account())
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@app.command()
+def positions():
+    try:
+        broker = _build_broker(required=True)
+        _render_positions(broker.list_positions())
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@app.command()
+def orders(
+    status: str = typer.Option("all", help="Order status filter: open, closed, all"),
+    limit: int = typer.Option(20, help="Number of orders to show"),
+):
+    try:
+        broker = _build_broker(required=True)
+        _render_orders(broker.list_orders(status=status, limit=limit))
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@app.command()
+def pnl(
+    limit: int = typer.Option(30, help="Number of recent daily PnL rows to show"),
+):
+    try:
+        execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=False)
+        store = _build_store(execution_config)
+        rows = store.get_recent_pnl(limit=limit)
+        table = Table(title="Daily PnL")
+        table.add_column("Date", style="cyan")
+        table.add_column("Equity", style="green")
+        table.add_column("Cash", style="yellow")
+        table.add_column("Realized", style="magenta")
+        table.add_column("Unrealized", style="white")
+        table.add_column("Gross Exposure", style="blue")
+        for row in rows:
+            table.add_row(
+                row["trade_date"],
+                f"${row['equity']:,.2f}",
+                f"${row['cash']:,.2f}",
+                f"${row['realized_pnl']:,.2f}",
+                f"${row['unrealized_pnl']:,.2f}",
+                f"${row['gross_exposure']:,.2f}",
+            )
+        console.print(table)
+        console.print(f"DB: {store.db_path}")
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@app.command()
+def replay(
+    symbols: str = typer.Option(..., help="Comma-separated symbols, e.g. NVDA,AAPL"),
+    from_date: str = typer.Option(..., "--from", help="Replay start date YYYY-MM-DD"),
+    to_date: str = typer.Option(..., "--to", help="Replay end date YYYY-MM-DD"),
+    llm_provider: str = typer.Option(None, help="Override provider: openai, google, anthropic, xai, openrouter, ollama"),
+    deep_model: str = typer.Option(None, help="Override deep-thinking model"),
+    quick_model: str = typer.Option(None, help="Override quick-thinking model"),
+    backend_url: str = typer.Option(None, help="Override provider base URL"),
+    openai_reasoning_effort: str = typer.Option(None, help="Override OpenAI reasoning effort"),
+    google_thinking_level: str = typer.Option(None, help="Override Google thinking level"),
+    anthropic_effort: str = typer.Option(None, help="Override Anthropic effort"),
+):
+    try:
+        runner, _ = _build_replay_runner_with_overrides(
+            llm_overrides=_collect_llm_overrides(
+                llm_provider=llm_provider,
+                deep_model=deep_model,
+                quick_model=quick_model,
+                backend_url=backend_url,
+                openai_reasoning_effort=openai_reasoning_effort,
+                google_thinking_level=google_thinking_level,
+                anthropic_effort=anthropic_effort,
+            )
+        )
+        result = runner.run(
+            symbols=_parse_symbols(symbols),
+            from_date=from_date,
+            to_date=to_date,
+        )
+        _render_cycle_result(result)
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@daemon_app.command("run")
+def daemon_run(
+    llm_provider: str = typer.Option(None, help="Override provider: openai, google, anthropic, xai, openrouter, ollama"),
+    deep_model: str = typer.Option(None, help="Override deep-thinking model"),
+    quick_model: str = typer.Option(None, help="Override quick-thinking model"),
+    backend_url: str = typer.Option(None, help="Override provider base URL"),
+    openai_reasoning_effort: str = typer.Option(None, help="Override OpenAI reasoning effort"),
+    google_thinking_level: str = typer.Option(None, help="Override Google thinking level"),
+    anthropic_effort: str = typer.Option(None, help="Override Anthropic effort"),
+):
+    try:
+        service, _ = _build_daemon_service_with_overrides(
+            llm_overrides=_collect_llm_overrides(
+                llm_provider=llm_provider,
+                deep_model=deep_model,
+                quick_model=quick_model,
+                backend_url=backend_url,
+                openai_reasoning_effort=openai_reasoning_effort,
+                google_thinking_level=google_thinking_level,
+                anthropic_effort=anthropic_effort,
+            )
+        )
+        service.run_forever()
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@daemon_app.command("start")
+def daemon_start(
+    llm_provider: str = typer.Option(None, help="Override provider: openai, google, anthropic, xai, openrouter, ollama"),
+    deep_model: str = typer.Option(None, help="Override deep-thinking model"),
+    quick_model: str = typer.Option(None, help="Override quick-thinking model"),
+    backend_url: str = typer.Option(None, help="Override provider base URL"),
+    openai_reasoning_effort: str = typer.Option(None, help="Override OpenAI reasoning effort"),
+    google_thinking_level: str = typer.Option(None, help="Override Google thinking level"),
+    anthropic_effort: str = typer.Option(None, help="Override Anthropic effort"),
+):
+    try:
+        execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=True)
+        pid_path = Path(execution_config.daemon_pid_path)
+        if pid_path.exists():
+            try:
+                pid = int(pid_path.read_text(encoding="utf-8").strip())
+                os.kill(pid, 0)
+                _print_cli_error(f"Daemon already running with pid {pid}.")
+            except Exception:
+                pid_path.unlink(missing_ok=True)
+
+        log_path = Path(execution_config.log_dir) / "daemon.stdout.log"
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        args = [sys.executable, "-m", "cli.main", "daemon", "run"]
+        option_map = {
+            "--llm-provider": llm_provider,
+            "--deep-model": deep_model,
+            "--quick-model": quick_model,
+            "--backend-url": backend_url,
+            "--openai-reasoning-effort": openai_reasoning_effort,
+            "--google-thinking-level": google_thinking_level,
+            "--anthropic-effort": anthropic_effort,
+        }
+        for flag, value in option_map.items():
+            if value:
+                args.extend([flag, value])
+
+        with log_path.open("a", encoding="utf-8") as handle:
+            process = subprocess.Popen(
+                args,
+                cwd=str(Path.cwd()),
+                stdout=handle,
+                stderr=handle,
+                start_new_session=True,
+            )
+        console.print(f"Daemon starting with pid {process.pid}")
+        console.print(f"Stdout/stderr: {log_path}")
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@daemon_app.command("status")
+def daemon_status():
+    try:
+        service, _ = _build_daemon_service_with_overrides(llm_overrides=None)
+        _render_daemon_status(service.get_status())
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@daemon_app.command("memory")
+def daemon_memory():
+    try:
+        execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=True)
+        store = _build_store(execution_config)
+        _render_learning_state(store.get_learning_state(agent_id=execution_config.agent_id))
+        snapshots = store.get_recent_performance_snapshots(agent_id=execution_config.agent_id, limit=5)
+        if snapshots:
+            table = Table(title="Recent Performance Snapshots")
+            table.add_column("Date", style="cyan")
+            table.add_column("Bucket", style="green")
+            table.add_column("Account Value", style="yellow")
+            table.add_column("Total PnL", style="magenta")
+            table.add_column("Win Rate", style="white")
+            for snapshot in snapshots:
+                win_rate = snapshot.get("win_rate")
+                table.add_row(
+                    snapshot.get("trade_date", "-"),
+                    snapshot.get("cycle_bucket") or "-",
+                    f"${snapshot.get('account_value', 0.0):,.2f}",
+                    f"${snapshot.get('total_pnl', 0.0):,.2f}",
+                    f"{win_rate:.1%}" if isinstance(win_rate, (int, float)) else "-",
+                )
+            console.print(table)
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@daemon_app.command("heartbeat")
+def daemon_heartbeat():
+    try:
+        execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=True)
+        heartbeat_path = Path(execution_config.daemon_heartbeat_path)
+        if not heartbeat_path.exists():
+            _print_cli_error("No daemon heartbeat file found.")
+        console.print(heartbeat_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@daemon_app.command("pause")
+def daemon_pause():
+    try:
+        execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=True)
+        store = _build_store(execution_config)
+        store.set_paused(True)
+        console.print("Daemon paused.")
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@daemon_app.command("resume")
+def daemon_resume():
+    try:
+        execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=True)
+        store = _build_store(execution_config)
+        store.set_paused(False)
+        store.set_stop_requested(False)
+        console.print("Daemon resumed.")
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@daemon_app.command("stop")
+def daemon_stop():
+    try:
+        execution_config = load_execution_config(project_dir=str(Path.cwd()), execute=True)
+        store = _build_store(execution_config)
+        store.set_stop_requested(True)
+        pid_path = Path(execution_config.daemon_pid_path)
+        if pid_path.exists():
+            pid = int(pid_path.read_text(encoding="utf-8").strip())
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except OSError:
+                pass
+            console.print(f"Stop requested for daemon pid {pid}.")
+        else:
+            console.print("Stop requested; no pid file present.")
+    except Exception as exc:
+        _print_cli_error(str(exc))
+
+
+@dashboard_app.command("run")
+def dashboard_run(
+    host: str = typer.Option("127.0.0.1", help="Bind host. Use 0.0.0.0 for LAN/VPS access."),
+    port: int = typer.Option(8000, help="HTTP port for the dashboard."),
+    refresh_seconds: int = typer.Option(
+        5,
+        help="Dashboard polling interval in seconds.",
+        min=1,
+    ),
+):
+    try:
+        data_service = _build_dashboard_data_service(refresh_seconds=refresh_seconds)
+        server = DashboardServer(
+            data_service=data_service,
+            host=host,
+            port=port,
+        )
+        console.print(f"Dashboard listening on http://{host}:{port}")
+        if host == "0.0.0.0":
+            console.print(f"Local browser URL: http://127.0.0.1:{port}")
+        server.serve_forever()
+    except KeyboardInterrupt:
+        console.print("Dashboard stopped.")
+    except Exception as exc:
+        _print_cli_error(str(exc))
 
 
 @app.command()

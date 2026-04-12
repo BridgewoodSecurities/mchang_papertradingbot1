@@ -1,69 +1,37 @@
-<p align="center">
-  <img src="assets/TauricResearch.png" style="width: 60%; height: auto;">
-</p>
+# TradingBot
 
-<div align="center" style="line-height: 1;">
-  <a href="https://arxiv.org/abs/2412.20138" target="_blank"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2412.20138-B31B1B?logo=arxiv"/></a>
-  <a href="https://discord.com/invite/hk9PGKShPK" target="_blank"><img alt="Discord" src="https://img.shields.io/badge/Discord-TradingResearch-7289da?logo=discord&logoColor=white&color=7289da"/></a>
-  <a href="./assets/wechat.png" target="_blank"><img alt="WeChat" src="https://img.shields.io/badge/WeChat-TauricResearch-brightgreen?logo=wechat&logoColor=white"/></a>
-  <a href="https://x.com/TauricResearch" target="_blank"><img alt="X Follow" src="https://img.shields.io/badge/X-TauricResearch-white?logo=x&logoColor=white"/></a>
-  <br>
-  <a href="https://github.com/TauricResearch/" target="_blank"><img alt="Community" src="https://img.shields.io/badge/Join_GitHub_Community-TauricResearch-14C290?logo=discourse"/></a>
-</div>
+Autonomous paper-trading system for US equities, built around the `TradingAgentsGraph` research workflow and extended with execution, daemon automation, persistent memory, risk controls, replay tools, and a live monitoring dashboard.
 
-<div align="center">
-  <!-- Keep these links. Translations will automatically update with the README. -->
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=de">Deutsch</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=es">Español</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=fr">français</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=ja">日本語</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=ko">한국어</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=pt">Português</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=ru">Русский</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=zh">中文</a>
-</div>
-
----
-
-# TradingAgents: Multi-Agents LLM Financial Trading Framework
-
-## News
-- [2026-03] **TradingAgents v0.2.3** released with multi-language support, GPT-5.4 family models, unified model catalog, backtesting date fidelity, and proxy support.
-- [2026-03] **TradingAgents v0.2.2** released with GPT-5.4/Gemini 3.1/Claude 4.6 model coverage, five-tier rating scale, OpenAI Responses API, Anthropic effort control, and cross-platform stability.
-- [2026-02] **TradingAgents v0.2.0** released with multi-provider LLM support (GPT-5.x, Gemini 3.x, Claude 4.x, Grok 4.x) and improved system architecture.
-- [2026-01] **Trading-R1** [Technical Report](https://arxiv.org/abs/2509.11420) released, with [Terminal](https://github.com/TauricResearch/Trading-R1) expected to land soon.
-
-<div align="center">
-<a href="https://www.star-history.com/#TauricResearch/TradingAgents&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=TauricResearch/TradingAgents&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=TauricResearch/TradingAgents&type=Date" />
-   <img alt="TradingAgents Star History" src="https://api.star-history.com/svg?repos=TauricResearch/TradingAgents&type=Date" style="width: 80%; height: auto;" />
- </picture>
-</a>
-</div>
-
-> 🎉 **TradingAgents** officially released! We have received numerous inquiries about the work, and we would like to express our thanks for the enthusiasm in our community.
->
-> So we decided to fully open-source the framework. Looking forward to building impactful projects with you!
+This repository is inspired by the original [TradingAgents](https://github.com/TauricResearch/TradingAgents) framework from Tauric Research, but it is documented and operated here as its own project: a stateful paper-trading stack designed for long-running simulation and monitoring.
 
 <div align="center">
 
-🚀 [TradingAgents](#tradingagents-framework) | ⚡ [Installation & CLI](#installation-and-cli) | 🎬 [Demo](https://www.youtube.com/watch?v=90gr5lwjIho) | 📦 [Package Usage](#tradingagents-package) | 🤝 [Contributing](#contributing) | 📄 [Citation](#citation)
+🚀 [Overview](#overview) | ⚡ [Installation & CLI](#installation-and-cli) | 🧠 [Research Engine](#research-engine) | 📈 [Paper Trading](#paper-trading-cli) | 🤖 [Daemon And Monitoring](#daemon-and-monitoring) | 📦 [Python Usage](#python-usage) | 🙌 [Acknowledgments](#acknowledgments)
 
 </div>
 
-## TradingAgents Framework
+## Overview
 
-TradingAgents is a multi-agent trading framework that mirrors the dynamics of real-world trading firms. By deploying specialized LLM-powered agents: from fundamental analysts, sentiment experts, and technical analysts, to trader, risk management team, the platform collaboratively evaluates market conditions and informs trading decisions. Moreover, these agents engage in dynamic discussions to pinpoint the optimal strategy.
+TradingBot uses the existing `tradingagents` package as the multi-agent analysis and debate engine, then layers on the missing operational pieces needed to run a safe paper-trading workflow:
+
+- structured decision parsing
+- conservative risk controls with a strong HOLD bias
+- Alpaca paper broker execution
+- sqlite-backed persistence
+- 15-minute daemon scheduling
+- persistent memory and reflection
+- replay/backtest-lite mode
+- a live web dashboard for status, heartbeat, memory, positions, orders, and logs
 
 <p align="center">
   <img src="assets/schema.png" style="width: 100%; height: auto;">
 </p>
 
-> TradingAgents framework is designed for research purposes. Trading performance may vary based on many factors, including the chosen backbone language models, model temperature, trading periods, the quality of data, and other non-deterministic factors. [It is not intended as financial, investment, or trading advice.](https://tauric.ai/disclaimer/)
+> This repository is experimental software for paper trading and research workflows. It is not financial advice, it is not suitable for live capital, and safe no-op behavior is preferred over risky execution.
 
-Our framework decomposes complex trading tasks into specialized roles. This ensures the system achieves a robust, scalable approach to market analysis and decision-making.
+## Research Engine
+
+The underlying analysis still follows the multi-agent structure from TradingAgents. Different agent roles debate the market from multiple angles before the final portfolio decision is parsed and passed into the execution stack.
 
 ### Analyst Team
 - Fundamentals Analyst: Evaluates company financials and performance metrics, identifying intrinsic values and potential red flags.
@@ -101,10 +69,10 @@ Our framework decomposes complex trading tasks into specialized roles. This ensu
 
 ### Installation
 
-Clone TradingAgents:
+Clone your repo:
 ```bash
-git clone https://github.com/TauricResearch/TradingAgents.git
-cd TradingAgents
+git clone <your-repo-url>
+cd <your-repo-directory>
 ```
 
 Create a virtual environment in any of your favorite environment managers:
@@ -133,7 +101,7 @@ docker compose --profile ollama run --rm tradingagents-ollama
 
 ### Required APIs
 
-TradingAgents supports multiple LLM providers. Set the API key for your chosen provider:
+This project supports multiple LLM providers. Set the API key for your chosen provider:
 
 ```bash
 export OPENAI_API_KEY=...          # OpenAI (GPT)
@@ -158,6 +126,8 @@ Launch the interactive CLI:
 tradingagents          # installed command
 python -m cli.main     # alternative: run directly from source
 ```
+The command name remains `tradingagents` for compatibility with the underlying package, but the repo itself is positioned here as `TradingBot`.
+
 You will see a screen where you can select your desired tickers, analysis date, LLM provider, research depth, and more.
 
 <p align="center">
@@ -174,15 +144,59 @@ An interface will appear showing results as they load, letting you track the age
   <img src="assets/cli/cli_transaction.png" width="100%" style="display: inline-block; margin: 0 2%;">
 </p>
 
-## TradingAgents Package
+### Paper Trading CLI
 
-### Implementation Details
+`TradingAgentsGraph` remains the research engine. This repository adds a safe paper-trading execution layer around it with:
+- decision parsing into structured trade intents
+- configurable risk guardrails
+- Alpaca paper broker integration
+- local sqlite persistence, logs, and audit trails
+- replay/backtest-lite support
 
-We built TradingAgents with LangGraph to ensure flexibility and modularity. The framework supports multiple LLM providers: OpenAI, Google, Anthropic, xAI, OpenRouter, and Ollama.
+Important safety defaults:
+- paper trading only
+- no live Alpaca endpoint
+- no margin, shorting, options, or crypto
+- no broker submission unless `--execute` is passed and `PAPER_TRADING_ENABLED=true`
 
-### Python Usage
+Create a root `.env` file from `.env.example`, add your LLM provider key, and only add Alpaca paper keys when you are ready to connect paper execution.
 
-To use TradingAgents inside your code, you can import the `tradingagents` module and initialize a `TradingAgentsGraph()` object. The `.propagate()` function will return a decision. You can run `main.py`, here's also a quick example:
+Examples:
+
+```bash
+tradingagents dry-run --symbols NVDA,AAPL --date 2026-04-11
+tradingagents paper-run --symbols NVDA,AAPL --date 2026-04-11
+tradingagents paper-run --symbols NVDA,AAPL --date 2026-04-11 --execute
+tradingagents account
+tradingagents positions
+tradingagents orders
+tradingagents pnl
+tradingagents replay --symbols NVDA,AAPL --from 2026-03-01 --to 2026-03-31
+```
+
+See [docs/paper_trading.md](docs/paper_trading.md) for setup, architecture, safety controls, replay assumptions, database paths, and paper-trading-only guidance.
+See [docs/daemon.md](docs/daemon.md) for the unattended 15-minute paper-trading daemon, controls, and monitoring.
+See [docs/dashboard.md](docs/dashboard.md) for the live monitoring web app.
+
+## Daemon And Monitoring
+
+For unattended operation:
+
+```bash
+tradingagents daemon run
+```
+
+For browser-based monitoring:
+
+```bash
+tradingagents dashboard run
+```
+
+The dashboard shows live daemon state, heartbeat updates, memory, positions, orders, reflections, cycles, news, and recent errors.
+
+## Python Usage
+
+If you want to use the underlying research graph directly, you can still import `TradingAgentsGraph` and work with it as a Python package:
 
 ```python
 from tradingagents.graph.trading_graph import TradingAgentsGraph
@@ -216,20 +230,17 @@ See `tradingagents/default_config.py` for all configuration options.
 
 ## Contributing
 
-We welcome contributions from the community! Whether it's fixing a bug, improving documentation, or suggesting a new feature, your input helps make this project better. If you are interested in this line of research, please consider joining our open-source financial AI research community [Tauric Research](https://tauric.ai/).
+Contributions that improve reliability, observability, safer execution, and paper-trading research workflows are all good fits for this repo.
 
-## Citation
+## Acknowledgments
 
-Please reference our work if you find *TradingAgents* provides you with some help :)
+This project is inspired by the original TradingAgents paper and open-source framework:
 
+```text
+Xiao, Yijia and Sun, Edward and Luo, Di and Wang, Wei.
+"TradingAgents: Multi-Agents LLM Financial Trading Framework."
+arXiv:2412.20138
+https://arxiv.org/abs/2412.20138
 ```
-@misc{xiao2025tradingagentsmultiagentsllmfinancial,
-      title={TradingAgents: Multi-Agents LLM Financial Trading Framework}, 
-      author={Yijia Xiao and Edward Sun and Di Luo and Wei Wang},
-      year={2025},
-      eprint={2412.20138},
-      archivePrefix={arXiv},
-      primaryClass={q-fin.TR},
-      url={https://arxiv.org/abs/2412.20138}, 
-}
-```
+
+The underlying `tradingagents` package structure and research workflow come from that lineage, while this repository extends it into a stateful paper-trading and monitoring system.
