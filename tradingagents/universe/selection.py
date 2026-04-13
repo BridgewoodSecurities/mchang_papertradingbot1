@@ -33,6 +33,7 @@ def select_symbols_for_cycle(
             ranked=ranked,
             limit=limit,
             sector_by_symbol={key.upper(): value for key, value in (sector_by_symbol or {}).items()},
+            held_symbols={symbol.upper() for symbol in (held_symbols or set())},
         )
     return _rotate_symbols(symbols=symbols, limit=limit, as_of=as_of)
 
@@ -143,17 +144,33 @@ def _select_diversified(
     ranked: list[tuple[str, float]],
     limit: int,
     sector_by_symbol: dict[str, str],
+    held_symbols: set[str],
 ) -> list[str]:
     selected: list[str] = []
     selected_set: set[str] = set()
     seen_sectors: set[str] = set()
 
     for symbol, _score in ranked:
+        key = symbol.upper()
+        if key not in held_symbols:
+            continue
+        selected.append(symbol)
+        selected_set.add(key)
+        sector = (sector_by_symbol.get(key) or "").strip().upper()
+        if sector:
+            seen_sectors.add(sector)
+        if len(selected) >= limit:
+            return selected
+
+    for symbol, _score in ranked:
+        key = symbol.upper()
+        if key in selected_set:
+            continue
         sector = (sector_by_symbol.get(symbol.upper()) or "").strip().upper()
         if not sector or sector in seen_sectors:
             continue
         selected.append(symbol)
-        selected_set.add(symbol.upper())
+        selected_set.add(key)
         seen_sectors.add(sector)
         if len(selected) >= limit:
             return selected

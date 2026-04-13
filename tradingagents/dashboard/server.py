@@ -525,6 +525,54 @@ INDEX_HTML = """<!doctype html>
       display: block;
       margin-bottom: 4px;
     }
+    .decision-card {
+      padding: 14px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      display: grid;
+      gap: 10px;
+    }
+    .decision-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .decision-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .decision-meta {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    .decision-copy {
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+    .decision-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    .decision-block {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.68);
+      border: 1px solid var(--line);
+    }
+    .decision-block-label {
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
     .raw-panel {
       padding: 16px;
     }
@@ -701,6 +749,66 @@ INDEX_HTML = """<!doctype html>
       return items.map((item) => `<div class="list-item">${renderItem(item)}</div>`).join("");
     }
 
+    function renderDecisionCards(items) {
+      if (!items || items.length === 0) {
+        return `<div class="muted">No decisions yet.</div>`;
+      }
+      return items.map((item) => {
+        const signals = (item.supporting_signals || []).join(", ") || "-";
+        const risks = (item.risks || []).join(", ") || "-";
+        const warnings = [...(item.warnings || []), ...(item.protocol_warnings || [])].join(" | ") || "-";
+        const notes = (item.execution_notes || []).join(" | ") || "-";
+        return `
+          <div class="decision-card">
+            <div class="decision-top">
+              <div class="decision-title">
+                <strong>${esc(item.symbol || "-")}</strong>
+                <span class="pill">${esc(item.action || "-")}</span>
+                <span class="decision-meta">Confidence ${item.confidence !== null && item.confidence !== undefined ? esc(Number(item.confidence).toFixed(2)) : "-"}</span>
+              </div>
+              <div class="decision-meta">${fmtTime(item.created_at)}</div>
+            </div>
+            <div class="decision-copy">${esc(item.rationale || "No rationale recorded.")}</div>
+            <div class="decision-grid">
+              <div class="decision-block">
+                <div class="decision-block-label">Expected Edge</div>
+                <div class="decision-copy">${esc(item.expected_edge || "-")}</div>
+              </div>
+              <div class="decision-block">
+                <div class="decision-block-label">Why Market Is Wrong</div>
+                <div class="decision-copy">${esc(item.why_market_wrong || "-")}</div>
+              </div>
+              <div class="decision-block">
+                <div class="decision-block-label">Signals</div>
+                <div class="decision-copy">${esc(signals)}</div>
+              </div>
+              <div class="decision-block">
+                <div class="decision-block-label">Risks</div>
+                <div class="decision-copy">${esc(risks)}</div>
+              </div>
+              <div class="decision-block">
+                <div class="decision-block-label">Sizing</div>
+                <div class="decision-copy">${esc(item.position_sizing_rationale || "-")}</div>
+              </div>
+              <div class="decision-block">
+                <div class="decision-block-label">Warnings</div>
+                <div class="decision-copy">${esc(warnings)}</div>
+              </div>
+            </div>
+            <details>
+              <summary>More</summary>
+              <pre>${esc(JSON.stringify({
+                time_horizon: item.time_horizon || null,
+                previous_reasoning_change: item.previous_reasoning_change || null,
+                execution_notes: notes,
+                cycle_bucket: item.cycle_bucket || null,
+              }, null, 2))}</pre>
+            </details>
+          </div>
+        `;
+      }).join("");
+    }
+
     function setHTML(id, html) {
       const node = document.getElementById(id);
       if (node) node.innerHTML = html;
@@ -793,16 +901,7 @@ INDEX_HTML = """<!doctype html>
         snapshot.recent_orders || []
       ));
 
-      setHTML("decisions-table", renderTable(
-        [
-          { label: "Time", render: (row) => fmtTime(row.created_at) },
-          { label: "Symbol", key: "symbol" },
-          { label: "Action", render: (row) => `<span class="pill">${esc(row.action)}</span>` },
-          { label: "Confidence", render: (row) => row.confidence !== null && row.confidence !== undefined ? esc(Number(row.confidence).toFixed(2)) : "-" },
-          { label: "Signals", render: (row) => esc((row.supporting_signals || []).join(", ") || "-") },
-        ],
-        snapshot.recent_decisions || []
-      ));
+      setHTML("decisions-table", renderDecisionCards(snapshot.recent_decisions || []));
 
       setHTML("reflections-list", renderList(snapshot.recent_reflections || [], (item) => `
         <strong>${esc(item.symbol)} • ${fmtTime(item.created_at)}</strong>

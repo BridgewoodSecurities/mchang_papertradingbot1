@@ -77,7 +77,7 @@ class UniverseSelectionTests(unittest.TestCase):
             },
         )
 
-        self.assertEqual(selected, ["MSFT", "JPM"])
+        self.assertEqual(set(selected), {"MSFT", "JPM"})
 
     def test_select_symbols_for_cycle_prioritizes_existing_positions(self):
         client = FakeAlpacaDataClient(
