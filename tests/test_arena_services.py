@@ -6,6 +6,8 @@ from pathlib import Path
 from tradingagents.arena.decider import ArenaDecisionEngine
 from tradingagents.arena.memory import AgentMemoryService
 from tradingagents.arena.performance import PerformanceTracker
+from tradingagents.execution.parser import DecisionParser
+from tradingagents.execution.policy import ExecutionPolicy
 from tradingagents.execution.models import (
     AgentMemorySnapshot,
     AgentReflection,
@@ -18,6 +20,7 @@ from tradingagents.execution.models import (
     TradeAction,
 )
 from tradingagents.persistence.sqlite_store import SQLitePersistence
+from tradingagents.risk.engine import RiskEngine
 
 
 class FakeBroker:
@@ -192,6 +195,83 @@ class ArenaServiceTests(unittest.TestCase):
         self.assertIn("Favor patience, capital preservation, and disciplined sizing", prompt)
         self.assertIn("Trades today", prompt)
         self.assertIn("Open position context", prompt)
+
+    def test_disabled_arena_keeps_tradable_structured_buy(self):
+        config = ExecutionConfig(
+            arena_enabled=False,
+            allow_fractional_shares=False,
+            default_position_size_pct=0.02,
+            max_order_notional_usd=1000.0,
+            min_order_notional_usd=100.0,
+        )
+        risk_config = RiskConfig(market_hours_only=False)
+        parser = DecisionParser()
+        raw_decision = """Rating: Buy
+
+Executive Summary:
+Initiate a partial long position in SPY now, with the balance added only on constructive pullbacks into the 674-679 support zone.
+Keep initial sizing moderate because the technical setup is favorable but the macro backdrop remains headline-sensitive.
+The key swing-risk level is the 200-day moving average near 664; a decisive break below that area would invalidate the bullish thesis.
+
+Investment Thesis:
+SPY is trading above the 10 EMA, 50-day SMA, and 200-day SMA.
+MACD is improving, the histogram has turned positive, and RSI is constructive without being overbought.
+The bullish case is supported by what the market is actually doing now, while the main macro risks remain conditional rather than confirmed breakdown drivers.
+Buy in tranches and respect the 200-day moving average as the key invalidation threshold.
+"""
+        parsed = parser.parse(raw_decision, default_symbol="SPY")
+        base_intent = parsed.intents[0]
+        account = BrokerAccountSnapshot(
+            account_id="paper",
+            cash=100000.0,
+            equity=100000.0,
+            buying_power=100000.0,
+            paper=True,
+        )
+        policy = ExecutionPolicy(config)
+        resolved = policy.resolve(
+            base_intent,
+            account=account,
+            positions={},
+            latest_price=682.35,
+        )
+        decider = ArenaDecisionEngine(config, risk_config)
+        intent, _ = decider.decide(
+            symbol="SPY",
+            analysis_date="2026-04-13",
+            raw_decision_text=raw_decision,
+            parsed_decision=parsed,
+            base_intent=resolved,
+            cycle_inputs={
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "news": [{"seen_before": False}],
+                "portfolio": {"gross_exposure": 0.0, "equity": account.equity},
+                "recent_pnl": [],
+                "latest_price": 682.35,
+                "trades_today": 0,
+                "recent_trade_count": 0,
+                "recent_symbol_trade_count": 0,
+                "daily_trade_cap_enabled": False,
+                "approaching_daily_trade_cap": False,
+                "open_position": {},
+                "last_trade": {},
+                "cooldowns": {},
+            },
+            memory_snapshot=AgentMemorySnapshot(symbol="SPY"),
+        )
+        risk = RiskEngine(risk_config).evaluate(
+            intent,
+            account=account,
+            positions=[],
+            open_orders=[],
+            latest_price=682.35,
+        )
+
+        self.assertEqual(intent.action, TradeAction.BUY)
+        self.assertGreaterEqual(len(intent.supporting_signals), 2)
+        self.assertTrue(intent.expected_edge)
+        self.assertTrue(intent.position_sizing_rationale)
+        self.assertTrue(risk.approved)
 
 
 if __name__ == "__main__":

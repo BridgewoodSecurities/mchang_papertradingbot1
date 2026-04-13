@@ -1,4 +1,5 @@
 import os
+from copy import deepcopy
 
 DEFAULT_CONFIG = {
     "project_dir": os.path.abspath(os.path.join(os.path.dirname(__file__), ".")),
@@ -26,13 +27,17 @@ DEFAULT_CONFIG = {
     # Data vendor configuration
     # Category-level configuration (default for all tools in category)
     "data_vendors": {
-        "core_stock_apis": "yfinance",       # Options: alpha_vantage, yfinance
-        "technical_indicators": "yfinance",  # Options: alpha_vantage, yfinance
-        "fundamental_data": "yfinance",      # Options: alpha_vantage, yfinance
-        "news_data": "yfinance",             # Options: alpha_vantage, yfinance
+        "core_stock_apis": "alpaca",         # Options: alpaca, alpha_vantage, yfinance
+        "technical_indicators": "alpaca",    # Options: alpaca, alpha_vantage, yfinance
+        "fundamental_data": "alpaca",        # Options: alpaca, alpha_vantage, yfinance
+        "news_data": "alpaca",               # Options: alpaca, alpha_vantage, yfinance
     },
     # Tool-level configuration (takes precedence over category-level)
     "tool_vendors": {
         # Example: "get_stock_data": "alpha_vantage",  # Override category default
     },
 }
+
+
+def copy_default_config() -> dict:
+    return deepcopy(DEFAULT_CONFIG)

@@ -27,6 +27,22 @@ class DecisionParserTests(unittest.TestCase):
         self.assertEqual(intent.take_profit, 140.0)
         self.assertAlmostEqual(intent.confidence, 0.8)
 
+    def test_numbered_confidence_line_is_parsed(self):
+        result = self.parser.parse(
+            """1. Rating: Buy
+            2. Confidence: 86%
+            3. Executive Summary: Initiate a starter NVDA position with a $1,200 allocation.
+            4. Investment Thesis: Trend, momentum, and demand remain aligned.
+            """,
+            default_symbol="NVDA",
+        )
+
+        self.assertFalse(result.rejected)
+        intent = result.intents[0]
+        self.assertEqual(intent.action, TradeAction.BUY)
+        self.assertAlmostEqual(intent.confidence, 0.86)
+        self.assertEqual(intent.notional_usd, 1200.0)
+
     def test_explicit_sell(self):
         result = self.parser.parse(
             """Rating: Sell

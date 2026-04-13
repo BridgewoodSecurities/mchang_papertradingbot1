@@ -4,8 +4,7 @@ import hashlib
 from datetime import datetime, timezone
 from typing import Any
 
-import yfinance as yf
-
+from tradingagents.dataflows.alpaca import fetch_global_news_items, fetch_symbol_news_items
 from tradingagents.execution.models import NewsItem
 
 
@@ -14,34 +13,21 @@ class ContextCacheService:
         self.store = store
 
     def fetch_symbol_news(self, symbol: str, *, limit: int = 10) -> list[NewsItem]:
-        ticker = yf.Ticker(symbol)
-        raw_items = ticker.get_news(count=limit) or []
+        raw_items = fetch_symbol_news_items(symbol, limit=limit)
         items = [self._map_item(article, symbol=symbol, is_global=False) for article in raw_items]
         return self.store.upsert_news_items(items)
 
     def fetch_global_news(self, *, limit: int = 10) -> list[NewsItem]:
-        queries = [
-            "stock market economy",
-            "Federal Reserve interest rates",
-            "inflation economic outlook",
-            "global markets trading",
-        ]
         mapped: list[NewsItem] = []
         seen_hashes: set[str] = set()
-        for query in queries:
-            search = yf.Search(
-                query=query,
-                news_count=limit,
-                enable_fuzzy_query=True,
-            )
-            for article in search.news or []:
-                item = self._map_item(article, symbol=None, is_global=True)
-                if item.content_hash in seen_hashes:
-                    continue
-                seen_hashes.add(item.content_hash)
-                mapped.append(item)
-                if len(mapped) >= limit:
-                    return self.store.upsert_news_items(mapped)
+        for article in fetch_global_news_items(limit=limit):
+            item = self._map_item(article, symbol=None, is_global=True)
+            if item.content_hash in seen_hashes:
+                continue
+            seen_hashes.add(item.content_hash)
+            mapped.append(item)
+            if len(mapped) >= limit:
+                break
         return self.store.upsert_news_items(mapped)
 
     def fetch_cycle_context(
@@ -68,14 +54,11 @@ class ContextCacheService:
         symbol: str | None,
         is_global: bool,
     ) -> NewsItem:
-        content = article.get("content", article)
-        provider = content.get("provider", {}) or {}
-        title = content.get("title") or article.get("title") or "Untitled"
-        summary = content.get("summary") or article.get("summary") or ""
-        source = provider.get("displayName") or article.get("publisher") or "Unknown"
-        url_obj = content.get("canonicalUrl") or content.get("clickThroughUrl") or {}
-        url = url_obj.get("url") or article.get("link") or None
-        pub_date = content.get("pubDate")
+        title = article.get("headline") or article.get("title") or "Untitled"
+        summary = article.get("summary") or ""
+        source = article.get("source") or "Unknown"
+        url = article.get("url") or None
+        pub_date = article.get("created_at") or article.get("updated_at")
         published_at = None
         if pub_date:
             try:

@@ -172,11 +172,13 @@ class ExecutionConfig(BaseModel):
     allow_fractional_shares: bool = False
     daily_summary_dir: str = "./results/daily"
     agent_id: str = "primary"
-    arena_enabled: bool = True
+    arena_enabled: bool = False
     arena_model: str | None = None
     agent_memory_limit: int = Field(default=10, ge=1)
-    max_trades_per_cycle: int = Field(default=2, ge=1)
+    max_trades_per_cycle: int = Field(default=0, ge=0)
     conservative_spread_bps: float = Field(default=10.0, ge=0.0)
+    symbol_analysis_timeout_seconds: int = Field(default=180, ge=5)
+    cycle_context_timeout_seconds: int = Field(default=45, ge=5)
 
 
 class RiskConfig(BaseModel):
@@ -187,7 +189,7 @@ class RiskConfig(BaseModel):
     max_new_positions_per_day: int = Field(default=3, ge=0)
     max_open_positions: int = Field(default=5, ge=0)
     max_daily_loss_pct: float = Field(default=0.03, ge=0.0, le=1.0)
-    min_confidence_threshold: float = Field(default=0.65, ge=0.0, le=1.0)
+    min_confidence_threshold: float = Field(default=0.80, ge=0.0, le=1.0)
     reject_short_selling: bool = True
     reject_fractional_shares: bool = True
     market_hours_only: bool = True
@@ -196,10 +198,10 @@ class RiskConfig(BaseModel):
     max_daily_trades: int = Field(default=0, ge=0)
     max_daily_trades_per_symbol: int = Field(default=0, ge=0)
     allow_position_scaling: bool = False
-    max_trades_per_cycle: int = Field(default=2, ge=1)
+    max_trades_per_cycle: int = Field(default=0, ge=0)
     default_to_hold: bool = True
     require_multiple_signals: bool = True
-    min_signals_required: int = Field(default=2, ge=1)
+    min_signals_required: int = Field(default=3, ge=1)
     require_expected_edge: bool = True
     require_market_mispricing_reason: bool = True
     require_new_information_check: bool = True

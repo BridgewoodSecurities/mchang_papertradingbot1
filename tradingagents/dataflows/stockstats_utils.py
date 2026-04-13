@@ -8,6 +8,7 @@ from stockstats import wrap
 from typing import Annotated
 import os
 from .config import get_config
+from .alpaca import AlpacaDataError, load_ohlcv_alpaca
 
 logger = logging.getLogger(__name__)
 
@@ -59,15 +60,23 @@ def load_ohlcv(symbol: str, curr_date: str) -> pd.DataFrame:
     start_date = today_date - pd.DateOffset(years=5)
     start_str = start_date.strftime("%Y-%m-%d")
     end_str = today_date.strftime("%Y-%m-%d")
+    vendor = (config.get("data_vendors", {}) or {}).get("technical_indicators", "yfinance")
 
     os.makedirs(config["data_cache_dir"], exist_ok=True)
+    cache_prefix = "alpaca" if vendor.startswith("alpaca") else "yfinance"
     data_file = os.path.join(
         config["data_cache_dir"],
-        f"{symbol}-YFin-data-{start_str}-{end_str}.csv",
+        f"{symbol}-{cache_prefix}-data-{start_str}-{end_str}.csv",
     )
 
     if os.path.exists(data_file):
         data = pd.read_csv(data_file, on_bad_lines="skip")
+    elif vendor.startswith("alpaca"):
+        try:
+            data = load_ohlcv_alpaca(symbol, curr_date)
+        except AlpacaDataError:
+            data = pd.DataFrame(columns=["Date", "Open", "High", "Low", "Close", "Volume"])
+        data.to_csv(data_file, index=False)
     else:
         data = yf_retry(lambda: yf.download(
             symbol,

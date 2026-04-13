@@ -11,6 +11,17 @@ from .y_finance import (
     get_insider_transactions as get_yfinance_insider_transactions,
 )
 from .yfinance_news import get_news_yfinance, get_global_news_yfinance
+from .alpaca import (
+    AlpacaDataError,
+    get_balance_sheet_alpaca,
+    get_cashflow_alpaca,
+    get_fundamentals_alpaca,
+    get_global_news_alpaca,
+    get_income_statement_alpaca,
+    get_insider_transactions_alpaca,
+    get_news_alpaca,
+    get_stock_data_alpaca,
+)
 from .alpha_vantage import (
     get_stock as get_alpha_vantage_stock,
     get_indicator as get_alpha_vantage_indicator,
@@ -61,6 +72,7 @@ TOOLS_CATEGORIES = {
 }
 
 VENDOR_LIST = [
+    "alpaca",
     "yfinance",
     "alpha_vantage",
 ]
@@ -69,41 +81,50 @@ VENDOR_LIST = [
 VENDOR_METHODS = {
     # core_stock_apis
     "get_stock_data": {
+        "alpaca": get_stock_data_alpaca,
         "alpha_vantage": get_alpha_vantage_stock,
         "yfinance": get_YFin_data_online,
     },
     # technical_indicators
     "get_indicators": {
+        "alpaca": get_stock_stats_indicators_window,
         "alpha_vantage": get_alpha_vantage_indicator,
         "yfinance": get_stock_stats_indicators_window,
     },
     # fundamental_data
     "get_fundamentals": {
+        "alpaca": get_fundamentals_alpaca,
         "alpha_vantage": get_alpha_vantage_fundamentals,
         "yfinance": get_yfinance_fundamentals,
     },
     "get_balance_sheet": {
+        "alpaca": get_balance_sheet_alpaca,
         "alpha_vantage": get_alpha_vantage_balance_sheet,
         "yfinance": get_yfinance_balance_sheet,
     },
     "get_cashflow": {
+        "alpaca": get_cashflow_alpaca,
         "alpha_vantage": get_alpha_vantage_cashflow,
         "yfinance": get_yfinance_cashflow,
     },
     "get_income_statement": {
+        "alpaca": get_income_statement_alpaca,
         "alpha_vantage": get_alpha_vantage_income_statement,
         "yfinance": get_yfinance_income_statement,
     },
     # news_data
     "get_news": {
+        "alpaca": get_news_alpaca,
         "alpha_vantage": get_alpha_vantage_news,
         "yfinance": get_news_yfinance,
     },
     "get_global_news": {
+        "alpaca": get_global_news_alpaca,
         "yfinance": get_global_news_yfinance,
         "alpha_vantage": get_alpha_vantage_global_news,
     },
     "get_insider_transactions": {
+        "alpaca": get_insider_transactions_alpaca,
         "alpha_vantage": get_alpha_vantage_insider_transactions,
         "yfinance": get_yfinance_insider_transactions,
     },
@@ -156,7 +177,7 @@ def route_to_vendor(method: str, *args, **kwargs):
 
         try:
             return impl_func(*args, **kwargs)
-        except AlphaVantageRateLimitError:
+        except (AlphaVantageRateLimitError, AlpacaDataError):
             continue  # Only rate limits trigger fallback
 
     raise RuntimeError(f"No available vendor for '{method}'")

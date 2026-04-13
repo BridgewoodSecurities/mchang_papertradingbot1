@@ -7,9 +7,9 @@ from datetime import datetime
 from typing import Any
 
 import requests
-import yfinance as yf
 
 from tradingagents.brokers.base import BaseBroker, BrokerError
+from tradingagents.dataflows.alpaca import AlpacaDataClient, AlpacaDataError
 from tradingagents.execution.logging_utils import redact_secrets
 from tradingagents.execution.models import (
     BrokerAccountSnapshot,
@@ -67,6 +67,8 @@ class AlpacaPaperBroker(BaseBroker):
             api_key=api_key,
             secret_key=secret_key,
             base_url=base_url,
+            timeout=float(os.getenv("ALPACA_REQUEST_TIMEOUT_SECONDS", "10")),
+            max_retries=int(os.getenv("ALPACA_REQUEST_MAX_RETRIES", "3")),
             logger=logger,
         )
 
@@ -140,29 +142,26 @@ class AlpacaPaperBroker(BaseBroker):
         return self._map_order(payload)
 
     def get_latest_price(self, symbol: str) -> float:
-        history = yf.Ticker(symbol).history(period="5d", interval="1d", auto_adjust=False)
-        if history.empty:
-            raise BrokerError(f"Unable to retrieve a latest price for {symbol}.")
-        close_price = history["Close"].dropna()
-        if close_price.empty:
-            raise BrokerError(f"Latest close price for {symbol} is unavailable.")
-        return float(close_price.iloc[-1])
+        try:
+            trade = self._market_data().get_latest_trade(symbol)
+            if trade.get("p") is not None:
+                return float(trade["p"])
+        except AlpacaDataError as exc:
+            raise BrokerError(str(exc)) from exc
+        raise BrokerError(f"Unable to retrieve a latest price for {symbol}.")
 
     def get_latest_bid_price(self, symbol: str) -> float | None:
-        ticker = yf.Ticker(symbol)
-        fast_info = getattr(ticker, "fast_info", None)
-        bid = None
-        if fast_info is not None:
-            try:
-                bid = fast_info.get("bid")
-            except Exception:
-                bid = None
-        if bid is None:
-            info = getattr(ticker, "info", {}) or {}
-            bid = info.get("bid")
+        try:
+            quote = self._market_data().get_latest_quote(symbol)
+        except AlpacaDataError:
+            return None
+        bid = quote.get("bp")
         if bid in (None, 0):
             return None
         return float(bid)
+
+    def get_asset(self, symbol: str) -> dict[str, Any]:
+        return self._request("GET", f"/v2/assets/{symbol.upper()}")
 
     def _request(
         self,
@@ -241,3 +240,12 @@ class AlpacaPaperBroker(BaseBroker):
 
     def _format_number(self, value: float) -> str:
         return f"{value:.6f}".rstrip("0").rstrip(".")
+
+    def _market_data(self) -> AlpacaDataClient:
+        return AlpacaDataClient(
+            api_key=self.api_key,
+            secret_key=self.secret_key,
+            timeout=self.timeout,
+            max_retries=self.max_retries,
+            client_logger=self.logger,
+        )

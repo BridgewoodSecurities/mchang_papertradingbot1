@@ -13,9 +13,12 @@ from typing import Iterator
 
 from tradingagents.execution.logging_utils import setup_logging
 from tradingagents.execution.models import DaemonHeartbeat, DaemonStatus, RunMode
+from tradingagents.execution.timeouts import time_limit
 from tradingagents.news.context import ContextCacheService
 from tradingagents.scheduler.market import MarketSession, get_market_date, is_market_open, is_trading_day
 from tradingagents.scheduler.timing import align_to_bucket_start, next_bucket_start
+from tradingagents.universe.selection import select_symbols_for_cycle
+from tradingagents.universe.sp500 import load_sp500_metadata
 
 try:
     import fcntl
@@ -139,7 +142,7 @@ class DaemonService:
             self._maybe_generate_daily_summary(now=now)
             return {"bucket_start": bucket_key, "symbols": [], "status": "outside-market-hours"}
 
-        watchlist = self.execution_config.watchlist[: self.execution_config.max_symbols_per_cycle]
+        watchlist = self._select_cycle_watchlist(now=now)
         remaining_symbols = [
             symbol
             for symbol in watchlist
@@ -159,7 +162,19 @@ class DaemonService:
             last_cycle_bucket=bucket_key,
         )
 
-        cycle_context = self.context_service.fetch_cycle_context(symbols=remaining_symbols)
+        self._write_heartbeat(
+            status="context-loading",
+            last_cycle_started_at=now,
+            last_cycle_bucket=bucket_key,
+        )
+        with time_limit(
+            self.execution_config.cycle_context_timeout_seconds,
+            timeout_message=(
+                "cycle context fetch exceeded "
+                f"{self.execution_config.cycle_context_timeout_seconds}s"
+            ),
+        ):
+            cycle_context = self.context_service.fetch_cycle_context(symbols=remaining_symbols)
         self.store.record_cycle_context(
             cycle_id=cycle_id,
             bucket_start=bucket_key,
@@ -167,6 +182,11 @@ class DaemonService:
                 key: [item.model_dump(mode="json") for item in value]
                 for key, value in cycle_context.items()
             },
+        )
+        self._write_heartbeat(
+            status="running",
+            last_cycle_started_at=now,
+            last_cycle_bucket=bucket_key,
         )
 
         result = self.runner.run_cycle(
@@ -180,6 +200,12 @@ class DaemonService:
                 for key, value in cycle_context.items()
             },
             cycle_timestamp=now,
+            progress_callback=lambda **payload: self._write_heartbeat(
+                status=payload.get("status", "running"),
+                last_cycle_started_at=now,
+                last_cycle_bucket=bucket_key,
+                last_error=payload.get("last_error"),
+            ),
         )
 
         processed_symbols: list[str] = []
@@ -208,6 +234,42 @@ class DaemonService:
             symbols_processed=processed_symbols,
         )
         return {"bucket_start": bucket_key, "symbols": processed_symbols, "status": "completed"}
+
+    def _select_cycle_watchlist(self, *, now: datetime) -> list[str]:
+        watchlist = list(self.execution_config.watchlist)
+        if len(watchlist) <= self.execution_config.max_symbols_per_cycle:
+            return watchlist[: self.execution_config.max_symbols_per_cycle]
+
+        held_symbols: set[str] = set()
+        if self.broker is not None:
+            try:
+                held_symbols = {
+                    position.symbol.upper()
+                    for position in self.broker.list_positions()
+                    if position.qty > 0
+                }
+            except Exception:
+                held_symbols = set()
+
+        metadata = load_sp500_metadata(
+            cache_path=Path(self.execution_config.project_dir) / "runtime" / "sp500_constituents.json",
+            refresh=False,
+        )
+        sector_by_symbol = {
+            symbol: (payload.get("sector") or "")
+            for symbol, payload in metadata.items()
+        }
+
+        try:
+            return select_symbols_for_cycle(
+                symbols=watchlist,
+                limit=self.execution_config.max_symbols_per_cycle,
+                as_of=now,
+                held_symbols=held_symbols,
+                sector_by_symbol=sector_by_symbol,
+            )
+        except Exception:
+            return watchlist[: self.execution_config.max_symbols_per_cycle]
 
     def get_status(self) -> DaemonStatus:
         state = self.store.get_daemon_state()

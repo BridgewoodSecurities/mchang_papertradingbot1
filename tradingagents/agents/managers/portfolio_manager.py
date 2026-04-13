@@ -42,8 +42,9 @@ def create_portfolio_manager(llm, memory):
 
 **Required Output Structure:**
 1. **Rating**: State one of Buy / Overweight / Hold / Underweight / Sell.
-2. **Executive Summary**: A concise action plan covering entry strategy, position sizing, key risk levels, and time horizon.
-3. **Investment Thesis**: Detailed reasoning anchored in the analysts' debate and past reflections.
+2. **Confidence**: State a numeric confidence as a percentage from 0% to 100%.
+3. **Executive Summary**: A concise action plan covering entry strategy, position sizing, key risk levels, and time horizon.
+4. **Investment Thesis**: Detailed reasoning anchored in the analysts' debate and past reflections.
 
 ---
 
@@ -52,7 +53,9 @@ def create_portfolio_manager(llm, memory):
 
 ---
 
-Be decisive and ground every conclusion in specific evidence from the analysts.{get_language_instruction()}"""
+Be decisive and ground every conclusion in specific evidence from the analysts.
+Do not omit the Confidence line.
+Use confidence above 80% only when the setup has unusually strong, multi-signal confirmation and limited conflicting evidence.{get_language_instruction()}"""
 
         response = llm.invoke(prompt)
 

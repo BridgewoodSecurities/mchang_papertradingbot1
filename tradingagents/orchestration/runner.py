@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+import threading
+from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Callable, Iterator
 from uuid import uuid4
 
 from tradingagents.arena import AgentMemoryService, ArenaDecisionEngine, PerformanceTracker
@@ -24,6 +27,7 @@ from tradingagents.execution.models import (
 )
 from tradingagents.execution.parser import DecisionParser
 from tradingagents.execution.policy import ExecutionPolicy
+from tradingagents.execution.timeouts import time_limit
 from tradingagents.persistence.sqlite_store import SQLitePersistence
 from tradingagents.risk.engine import RiskEngine
 
@@ -86,6 +90,7 @@ class TradingCycleRunner:
         cycle_bucket: str | None = None,
         cycle_context: dict | None = None,
         cycle_timestamp: datetime | None = None,
+        progress_callback: Callable[..., None] | None = None,
     ) -> TradingCycleResult:
         started_at = cycle_timestamp or datetime.now(timezone.utc)
         run_id = f"{mode.value}-{analysis_date}-{uuid4().hex[:8]}"
@@ -148,7 +153,21 @@ class TradingCycleRunner:
 
                 processed_symbols.add(symbol)
                 logger.info("symbol_start", extra={"run_id": run_id, "symbol": symbol})
-                final_state, raw_decision_text = self.analysis_engine.generate(symbol, analysis_date)
+                if progress_callback is not None:
+                    progress_callback(status=f"analyzing:{symbol}", symbol=symbol)
+                with time_limit(
+                    self.execution_config.symbol_analysis_timeout_seconds,
+                    timeout_message=(
+                        f"analysis for {symbol} exceeded "
+                        f"{self.execution_config.symbol_analysis_timeout_seconds}s"
+                    ),
+                ):
+                    with self._heartbeat_keepalive(
+                        progress_callback,
+                        status=f"analyzing:{symbol}",
+                        symbol=symbol,
+                    ):
+                        final_state, raw_decision_text = self.analysis_engine.generate(symbol, analysis_date)
                 self.store.record_raw_decision(run_id=run_id, symbol=symbol, raw_text=raw_decision_text)
                 audit.write("raw_decision", run_id=run_id, symbol=symbol, text=raw_decision_text)
 
@@ -162,6 +181,8 @@ class TradingCycleRunner:
                     "parsed_decision",
                     extra={"run_id": run_id, "symbol": symbol, "payload": parsed.model_dump(mode="json")},
                 )
+                if progress_callback is not None:
+                    progress_callback(status=f"decision-ready:{symbol}", symbol=symbol)
                 audit.write("parsed_decision", run_id=run_id, symbol=symbol, payload=parsed.model_dump(mode="json"))
 
                 base_intent = self._select_primary_intent(parsed, symbol=symbol)
@@ -293,9 +314,17 @@ class TradingCycleRunner:
                     "symbol_complete",
                     extra={"run_id": run_id, "symbol": symbol, "status": status},
                 )
+                if progress_callback is not None:
+                    progress_callback(status=f"symbol-complete:{symbol}", symbol=symbol)
             except Exception as exc:
                 logger.exception("symbol_failed", extra={"run_id": run_id, "symbol": symbol})
                 normalized_error = self._format_execution_error(exc)
+                if progress_callback is not None:
+                    progress_callback(
+                        status=f"symbol-failed:{symbol}",
+                        symbol=symbol,
+                        last_error=normalized_error,
+                    )
                 audit.write("symbol_failed", run_id=run_id, symbol=symbol, error=normalized_error)
                 results.append(
                     SymbolExecutionResult(
@@ -468,6 +497,33 @@ class TradingCycleRunner:
                 payload=order.model_dump(mode="json"),
             )
         return order
+
+    @contextmanager
+    def _heartbeat_keepalive(
+        self,
+        callback: Callable[..., None] | None,
+        *,
+        status: str,
+        symbol: str,
+        interval_seconds: float = 10.0,
+    ) -> Iterator[None]:
+        if callback is None:
+            yield
+            return
+
+        stop_event = threading.Event()
+
+        def _emit_keepalive() -> None:
+            while not stop_event.wait(interval_seconds):
+                callback(status=status, symbol=symbol)
+
+        worker = threading.Thread(target=_emit_keepalive, daemon=True)
+        worker.start()
+        try:
+            yield
+        finally:
+            stop_event.set()
+            worker.join(timeout=1.0)
 
     def _build_simulated_order(self, *, intent: OrderIntent, latest_price: float | None) -> BrokerOrder:
         return BrokerOrder(

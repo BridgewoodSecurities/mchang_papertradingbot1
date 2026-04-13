@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import os
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
 from tradingagents.default_config import DEFAULT_CONFIG
 from tradingagents.execution.models import ExecutionConfig, RiskConfig
+from tradingagents.universe.sp500 import load_sp500_symbols
 
 
 def _parse_bool(value: str | None, default: bool) -> bool:
@@ -42,6 +44,7 @@ def _parse_csv_preserve_case(value: str | None) -> list[str] | None:
 
 def _load_watchlist(env: dict[str, str], *, project_dir: str) -> list[str]:
     watchlist_file = env.get("WATCHLIST_FILE")
+    watchlist_preset = (env.get("WATCHLIST_PRESET") or "sp500").strip().lower()
     symbols: list[str] = []
 
     if watchlist_file:
@@ -62,6 +65,12 @@ def _load_watchlist(env: dict[str, str], *, project_dir: str) -> list[str]:
         env_symbols = _parse_csv(env.get("WATCHLIST"))
         if env_symbols:
             symbols = env_symbols
+
+    if not symbols and watchlist_preset == "sp500":
+        symbols = load_sp500_symbols(
+            cache_path=Path(project_dir) / "runtime" / "sp500_constituents.json",
+            refresh=True,
+        )
 
     normalized = []
     seen = set()
@@ -152,11 +161,19 @@ def load_execution_config(
         ),
         daily_summary_dir=env.get("DAILY_SUMMARY_DIR", "./results/daily"),
         agent_id=env.get("AGENT_ID", "primary"),
-        arena_enabled=_parse_bool(env.get("ARENA_ENABLED"), True),
+        arena_enabled=_parse_bool(env.get("ARENA_ENABLED"), False),
         arena_model=env.get("ARENA_MODEL"),
         agent_memory_limit=_parse_int(env.get("AGENT_MEMORY_LIMIT"), 10),
-        max_trades_per_cycle=_parse_int(env.get("MAX_TRADES_PER_CYCLE"), 2),
+        max_trades_per_cycle=_parse_int(env.get("MAX_TRADES_PER_CYCLE"), 0),
         conservative_spread_bps=_parse_float(env.get("CONSERVATIVE_SPREAD_BPS"), 10.0),
+        symbol_analysis_timeout_seconds=_parse_int(
+            env.get("SYMBOL_ANALYSIS_TIMEOUT_SECONDS"),
+            180,
+        ),
+        cycle_context_timeout_seconds=_parse_int(
+            env.get("CYCLE_CONTEXT_TIMEOUT_SECONDS"),
+            45,
+        ),
     )
     config.llm_config_overrides = _build_llm_overrides(env, cli_overrides=llm_overrides)
     return config
@@ -182,7 +199,7 @@ def load_risk_config(env: dict[str, str] | None = None) -> RiskConfig:
         max_open_positions=_parse_int(env.get("MAX_OPEN_POSITIONS"), 5),
         max_daily_loss_pct=_parse_float(env.get("MAX_DAILY_LOSS_PCT"), 0.03),
         min_confidence_threshold=_parse_float(
-            env.get("MIN_CONFIDENCE_THRESHOLD"), 0.65
+            env.get("MIN_CONFIDENCE_THRESHOLD"), 0.80
         ),
         reject_short_selling=_parse_bool(env.get("REJECT_SHORT_SELLING"), True),
         reject_fractional_shares=_parse_bool(
@@ -209,13 +226,13 @@ def load_risk_config(env: dict[str, str] | None = None) -> RiskConfig:
             else env.get("ALLOW_SCALING_IN"),
             False,
         ),
-        max_trades_per_cycle=_parse_int(env.get("MAX_TRADES_PER_CYCLE"), 2),
+        max_trades_per_cycle=_parse_int(env.get("MAX_TRADES_PER_CYCLE"), 0),
         default_to_hold=_parse_bool(env.get("DEFAULT_TO_HOLD"), True),
         require_multiple_signals=_parse_bool(
             env.get("REQUIRE_MULTIPLE_SIGNALS"),
             True,
         ),
-        min_signals_required=_parse_int(env.get("MIN_SIGNALS_REQUIRED"), 2),
+        min_signals_required=_parse_int(env.get("MIN_SIGNALS_REQUIRED"), 3),
         require_expected_edge=_parse_bool(env.get("REQUIRE_EXPECTED_EDGE"), True),
         require_market_mispricing_reason=_parse_bool(
             env.get("REQUIRE_MARKET_MISPRICING_REASON"), True
@@ -266,8 +283,14 @@ def build_analysis_config(
     execution_config: ExecutionConfig,
     overrides: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    config = DEFAULT_CONFIG.copy()
+    config = deepcopy(DEFAULT_CONFIG)
     config["results_dir"] = execution_config.results_dir
+    config["data_vendors"] = {
+        "core_stock_apis": os.getenv("TRADINGAGENTS_CORE_STOCK_VENDOR", "alpaca"),
+        "technical_indicators": os.getenv("TRADINGAGENTS_TECHNICAL_VENDOR", "alpaca"),
+        "fundamental_data": os.getenv("TRADINGAGENTS_FUNDAMENTAL_VENDOR", "alpaca"),
+        "news_data": os.getenv("TRADINGAGENTS_NEWS_VENDOR", "alpaca"),
+    }
     config.update(execution_config.llm_config_overrides)
     if overrides:
         config.update(overrides)

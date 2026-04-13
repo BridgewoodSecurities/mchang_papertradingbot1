@@ -246,7 +246,7 @@ class RiskEngine:
             reasons.append(
                 f"Daily trade count for {intent.symbol} reached max of {self.config.max_daily_trades_per_symbol}."
             )
-        if cycle_trade_count >= self.config.max_trades_per_cycle:
+        if self.config.max_trades_per_cycle > 0 and cycle_trade_count >= self.config.max_trades_per_cycle:
             reasons.append(
                 f"Cycle trade count {cycle_trade_count} reached max of {self.config.max_trades_per_cycle}."
             )

@@ -29,7 +29,11 @@ class RiskEngineTests(unittest.TestCase):
             "notional_usd": 500.0,
             "rationale": "Fresh news, trend confirmation, and disciplined sizing all support a selective starter entry.",
             "expected_edge": "Positive revision momentum is still underpriced.",
-            "supporting_signals": ["fresh news catalyst", "price/trend confirmation"],
+            "supporting_signals": [
+                "fresh news catalyst",
+                "price/trend confirmation",
+                "portfolio/risk alignment",
+            ],
             "risks": ["Volatility", "Earnings risk"],
             "why_market_wrong": "Consensus is not fully pricing the improved demand outlook.",
             "is_new_information": True,
@@ -148,7 +152,7 @@ class RiskEngineTests(unittest.TestCase):
 
     def test_rejects_insufficient_supporting_signals(self):
         engine = RiskEngine(RiskConfig(market_hours_only=False))
-        intent = self._intent(supporting_signals=["fresh news catalyst"])
+        intent = self._intent(supporting_signals=["fresh news catalyst", "price/trend confirmation"])
         decision = engine.evaluate(
             intent,
             account=self.account,
@@ -158,6 +162,24 @@ class RiskEngineTests(unittest.TestCase):
         )
         self.assertFalse(decision.approved)
         self.assertIn("supporting signal", " ".join(decision.reasons))
+
+    def test_three_supporting_signals_can_pass_signal_gate(self):
+        engine = RiskEngine(RiskConfig(market_hours_only=False))
+        intent = self._intent(
+            supporting_signals=[
+                "fresh news catalyst",
+                "price/trend confirmation",
+                "portfolio/risk alignment",
+            ]
+        )
+        decision = engine.evaluate(
+            intent,
+            account=self.account,
+            positions=[],
+            open_orders=[],
+            latest_price=100.0,
+        )
+        self.assertTrue(decision.approved)
 
     def test_rejects_generic_reasoning(self):
         engine = RiskEngine(RiskConfig(market_hours_only=False))
@@ -204,11 +226,11 @@ class RiskEngineTests(unittest.TestCase):
         engine = RiskEngine(
             RiskConfig(
                 market_hours_only=False,
-                min_confidence_threshold=0.65,
+                min_confidence_threshold=0.80,
                 extra_confidence_threshold_after_recent_trade=0.1,
             )
         )
-        intent = self._intent(confidence=0.7)
+        intent = self._intent(confidence=0.85)
         decision = engine.evaluate(
             intent,
             account=self.account,
@@ -218,7 +240,20 @@ class RiskEngineTests(unittest.TestCase):
             recent_trade_count=1,
         )
         self.assertFalse(decision.approved)
-        self.assertIn("0.75", " ".join(decision.reasons))
+        self.assertIn("0.90", " ".join(decision.reasons))
+
+    def test_cycle_trade_cap_disabled_when_zero(self):
+        engine = RiskEngine(RiskConfig(market_hours_only=False, max_trades_per_cycle=0))
+        intent = self._intent()
+        decision = engine.evaluate(
+            intent,
+            account=self.account,
+            positions=[],
+            open_orders=[],
+            latest_price=100.0,
+            cycle_trade_count=99,
+        )
+        self.assertTrue(decision.approved)
 
     def test_open_position_blocks_reentry(self):
         engine = RiskEngine(RiskConfig(market_hours_only=False, block_reentry_while_position_open=True))
