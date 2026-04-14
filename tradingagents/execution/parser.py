@@ -44,6 +44,7 @@ class DecisionParser:
         r"\b(\d+\s*(?:day|week|month|year)s?|intraday|swing|long(?:er)? term)\b",
         re.IGNORECASE,
     )
+    SENTENCE_SPLIT_PATTERN = re.compile(r"(?<=[.!?])\s+|\n+")
 
     def parse(self, raw_text: str, *, default_symbol: str | None = None) -> ParsedDecisionResult:
         text = (raw_text or "").strip()
@@ -135,6 +136,30 @@ class DecisionParser:
         take_profit = self._extract_float(self.TAKE_PROFIT_PATTERN, normalized_text)
         time_horizon = self._extract_horizon(normalized_text)
         rationale = self._extract_rationale(normalized_text)
+        expected_edge = self._extract_expected_edge(normalized_text)
+        supporting_signals = self._detect_supporting_signals(normalized_text)
+        risks = self._extract_risks(normalized_text)
+        why_market_wrong = self._extract_single_sentence(
+            normalized_text,
+            keywords=["market is", "consensus", "priced in", "underestimating", "overestimating"],
+        )
+        position_sizing_rationale = self._extract_single_sentence(
+            normalized_text,
+            keywords=[
+                "sizing",
+                "position size",
+                "allocation",
+                "starter",
+                "tranche",
+                "one-third",
+                "one-half",
+                "partial",
+            ],
+        )
+        is_new_information = not any(
+            phrase in normalized_text.lower()
+            for phrase in ("no new information", "stale", "same as before", "unchanged")
+        )
 
         order_type = OrderType.LIMIT if limit_price else OrderType.MARKET
 
@@ -153,6 +178,12 @@ class DecisionParser:
             stop_loss=stop_loss,
             take_profit=take_profit,
             time_horizon=time_horizon,
+            expected_edge=expected_edge,
+            supporting_signals=supporting_signals,
+            risks=risks,
+            position_sizing_rationale=position_sizing_rationale,
+            why_market_wrong=why_market_wrong,
+            is_new_information=is_new_information,
             source_raw_text=text,
             source_rating=rating,
             warnings=warnings,
@@ -292,3 +323,86 @@ class DecisionParser:
             return None
         cleaned = " ".join(paragraphs[0].split())
         return cleaned[:600]
+
+    def _extract_expected_edge(self, text: str) -> str | None:
+        thesis = self._extract_section(text, "Investment Thesis")
+        thesis_sentences = self._split_sentences(thesis)
+        if thesis_sentences:
+            return " ".join(thesis_sentences[:2])[:600]
+
+        matches = self._extract_sentences_matching(
+            text,
+            keywords=["edge", "mispriced", "underpriced", "overpriced", "asymmetry", "catalyst"],
+            max_results=2,
+        )
+        if matches:
+            return " ".join(matches)[:600]
+        return None
+
+    def _extract_risks(self, text: str) -> list[str]:
+        statements: list[str] = []
+        for line in text.splitlines():
+            cleaned = " ".join(line.strip(" -*\t").split())
+            if cleaned and "risk" in cleaned.lower():
+                statements.append(cleaned)
+            if len(statements) >= 3:
+                break
+
+        if len(statements) < 3:
+            for sentence in self._extract_sentences_matching(text, keywords=["risk"], max_results=3):
+                if sentence not in statements:
+                    statements.append(sentence)
+                if len(statements) >= 3:
+                    break
+        return statements[:3]
+
+    def _extract_single_sentence(self, text: str, *, keywords: list[str]) -> str | None:
+        matches = self._extract_sentences_matching(text, keywords=keywords, max_results=1)
+        return matches[0] if matches else None
+
+    def _extract_section(self, text: str, heading: str) -> str:
+        pattern = re.compile(
+            rf"{re.escape(heading)}\s*[:\-]?\s*(.+?)(?=\n[A-Z][A-Za-z ]+\s*[:\-]|\Z)",
+            re.IGNORECASE | re.DOTALL,
+        )
+        match = pattern.search(text)
+        if not match:
+            return ""
+        return " ".join(match.group(1).strip().split())
+
+    def _split_sentences(self, text: str) -> list[str]:
+        sentences: list[str] = []
+        for segment in self.SENTENCE_SPLIT_PATTERN.split(text or ""):
+            cleaned = " ".join(segment.split()).strip(" -")
+            if cleaned:
+                sentences.append(cleaned)
+        return sentences
+
+    def _extract_sentences_matching(
+        self, text: str, keywords: list[str], max_results: int = 3
+    ) -> list[str]:
+        lowered_keywords = [keyword.lower() for keyword in keywords]
+        matches: list[str] = []
+        for sentence in self._split_sentences(text):
+            lowered_sentence = sentence.lower()
+            if any(keyword in lowered_sentence for keyword in lowered_keywords):
+                matches.append(sentence)
+            if len(matches) >= max_results:
+                break
+        return matches
+
+    def _detect_supporting_signals(self, text: str) -> list[str]:
+        signal_keywords = (
+            (("news", "catalyst", "headline"), "fresh news catalyst"),
+            (("trend", "moving average", "above the 50", "above the 200", "reclaimed"), "price/trend confirmation"),
+            (("rsi", "macd", "momentum", "technical", "indicator"), "technical confirmation"),
+            (("portfolio", "risk", "exposure", "sizing", "allocation"), "portfolio/risk alignment"),
+            (("memory", "reflection", "lesson", "previous"), "reflection/memory support"),
+            (("edge", "mispriced", "asymmetry"), "strong edge explanation"),
+        )
+        lowered = text.lower()
+        detected: list[str] = []
+        for keywords, label in signal_keywords:
+            if any(keyword in lowered for keyword in keywords):
+                detected.append(label)
+        return detected

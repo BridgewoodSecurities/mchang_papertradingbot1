@@ -305,6 +305,64 @@ class DaemonServiceTests(unittest.TestCase):
             self.assertFalse(status.daily_trade_cap_reached)
             self.assertEqual(status.trades_per_symbol_today["NVDA"], 1)
 
+    def test_select_cycle_watchlist_moves_past_recent_symbols(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            config = self._make_config(tmpdir)
+            config.watchlist = ["AAA", "BBB", "CCC", "DDD"]
+            config.max_symbols_per_cycle = 2
+            store = SQLitePersistence(config.db_path)
+            for symbol in ["AAA", "BBB"]:
+                store.record_symbol_bucket(
+                    bucket_key="2026-04-13T14:00:00+00:00",
+                    symbol=symbol,
+                    cycle_id="cycle-1",
+                    run_id="run-1",
+                    status="completed",
+                    error=None,
+                )
+            service = DaemonService(
+                execution_config=config,
+                store=store,
+                runner=FakeRunner(self._result_factory),
+                broker=FakeBroker(),
+            )
+            service.runner.risk_config.cooldown_minutes_per_symbol = 60
+
+            selected = service._select_cycle_watchlist(
+                now=datetime(2026, 4, 13, 14, 15, tzinfo=timezone.utc)
+            )
+
+            self.assertEqual(selected, ["CCC", "DDD"])
+
+    def test_select_cycle_watchlist_uses_time_based_symbol_cooldown(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            config = self._make_config(tmpdir)
+            config.watchlist = ["AAA", "BBB", "CCC", "DDD", "EEE"]
+            config.max_symbols_per_cycle = 3
+            store = SQLitePersistence(config.db_path)
+            for symbol in ["AAA", "BBB", "CCC"]:
+                store.record_symbol_bucket(
+                    bucket_key="2026-04-13T14:00:00+00:00",
+                    symbol=symbol,
+                    cycle_id="cycle-1",
+                    run_id="run-1",
+                    status="completed",
+                    error=None,
+                )
+            service = DaemonService(
+                execution_config=config,
+                store=store,
+                runner=FakeRunner(self._result_factory),
+                broker=FakeBroker(),
+            )
+            service.runner.risk_config.cooldown_minutes_per_symbol = 120
+
+            selected = service._select_cycle_watchlist(
+                now=datetime(2026, 4, 13, 14, 30, tzinfo=timezone.utc)
+            )
+
+            self.assertEqual(selected, ["DDD", "EEE"])
+
 
 if __name__ == "__main__":
     unittest.main()

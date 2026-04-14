@@ -71,12 +71,19 @@ def _build_local_dashboard_data_service(*, refresh_seconds: int):
 
 
 def _read_proxy_url_file() -> str | None:
-    path = os.path.join(os.getcwd(), "dashboard_proxy_url.txt")
-    if not os.path.exists(path):
-        return None
-    with open(path, "r", encoding="utf-8") as handle:
-        value = handle.read().strip()
-    return value or None
+    for relative_path in (
+        os.path.join("runtime", "public_backend_api_url.txt"),
+        os.path.join("runtime", "public_backend_url.txt"),
+        "dashboard_proxy_url.txt",
+    ):
+        path = os.path.join(os.getcwd(), relative_path)
+        if not os.path.exists(path):
+            continue
+        with open(path, "r", encoding="utf-8") as handle:
+            value = handle.read().strip()
+        if value:
+            return value
+    return None
 
 
 def _deployment_target() -> str:

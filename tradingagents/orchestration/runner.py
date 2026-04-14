@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import threading
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
@@ -187,6 +188,10 @@ class TradingCycleRunner:
 
                 base_intent = self._select_primary_intent(parsed, symbol=symbol)
                 latest_price = self._get_latest_price(symbol)
+                research_data_summary = self._extract_research_data_summary(
+                    final_state=final_state,
+                    latest_price=latest_price,
+                )
                 if base_intent is not None:
                     base_intent = self.policy.resolve(
                         base_intent,
@@ -194,6 +199,43 @@ class TradingCycleRunner:
                         positions=positions_map,
                         latest_price=latest_price,
                     )
+                if (
+                    base_intent is not None
+                    and base_intent.action == TradeAction.SELL
+                    and (symbol not in positions_map or positions_map[symbol].qty <= 0)
+                ):
+                    held_intent, reflection = self._convert_sell_without_position_to_hold(
+                        intent=base_intent,
+                    )
+                    self.memory.record_decision(
+                        run_id=run_id,
+                        cycle_bucket=cycle_bucket,
+                        intent=held_intent,
+                    )
+                    learning_state = self.memory.record_reflection(
+                        run_id=run_id,
+                        cycle_bucket=cycle_bucket,
+                        reflection=reflection,
+                    )
+                    results.append(
+                        SymbolExecutionResult(
+                            symbol=symbol,
+                            raw_decision_text=raw_decision_text,
+                            parsed_decision=parsed,
+                            arena_decision=held_intent,
+                            execution_status="skipped",
+                            latest_price=latest_price,
+                            warnings=list(parsed.warnings) + list(held_intent.execution_notes),
+                            reflection=reflection.model_dump(mode="json"),
+                        )
+                    )
+                    logger.info(
+                        "symbol_complete",
+                        extra={"run_id": run_id, "symbol": symbol, "status": "skipped"},
+                    )
+                    if progress_callback is not None:
+                        progress_callback(status=f"symbol-complete:{symbol}", symbol=symbol)
+                    continue
                 memory_snapshot = self.memory.build_snapshot(symbol=symbol)
                 arena_intent, reflection = self.arena_engine.decide(
                     symbol=symbol,
@@ -208,6 +250,7 @@ class TradingCycleRunner:
                         account=account,
                         positions=list(positions_map.values()),
                         latest_price=latest_price,
+                        research_data_summary=research_data_summary,
                     ),
                     memory_snapshot=memory_snapshot,
                 )
@@ -245,6 +288,14 @@ class TradingCycleRunner:
                     last_exit_at=last_exit_at,
                     recent_symbol_actions=recent_symbol_actions,
                     now=started_at,
+                )
+                self._record_counterfactual_if_needed(
+                    run_id=run_id,
+                    trade_date=analysis_date,
+                    base_intent=base_intent,
+                    final_intent=arena_intent,
+                    risk_decision=risk_decision,
+                    latest_price=latest_price,
                 )
                 self.memory.record_decision(
                     run_id=run_id,
@@ -563,6 +614,7 @@ class TradingCycleRunner:
         account: BrokerAccountSnapshot,
         positions: list[BrokerPosition],
         latest_price: float | None,
+        research_data_summary: dict | None,
     ) -> dict:
         trades_today = self.store.count_trades_for_date(
             trade_date=cycle_timestamp.astimezone(timezone.utc).date().isoformat()
@@ -596,6 +648,7 @@ class TradingCycleRunner:
             },
             "recent_pnl": self.store.get_recent_pnl(limit=5),
             "news": (cycle_context.get("_global") or []) + (cycle_context.get(symbol) or []),
+            "research_data_summary": research_data_summary,
             "open_position": open_position,
             "last_trade": last_trade,
             "cooldowns": {
@@ -615,6 +668,86 @@ class TradingCycleRunner:
             },
         }
 
+    def _extract_research_data_summary(
+        self,
+        *,
+        final_state: dict,
+        latest_price: float | None,
+    ) -> dict | None:
+        market_report = str(final_state.get("market_report") or "").strip()
+        if not market_report:
+            return None
+
+        indicators = {
+            "rsi": self._extract_numeric_indicator(market_report, [r"\brsi\b"]),
+            "macd": self._extract_numeric_indicator(market_report, [r"\bmacd\b(?!\s*(?:signal|histogram))"]),
+            "macd_signal": self._extract_numeric_indicator(market_report, [r"\bmacd signal\b", r"\bmacds\b"]),
+            "macd_histogram": self._extract_numeric_indicator(
+                market_report,
+                [r"\bmacd histogram\b", r"\bmacdh\b"],
+            ),
+            "sma_50": self._extract_numeric_indicator(
+                market_report,
+                [r"\b50(?:-day)?\s+sma\b", r"\bclose_50_sma\b"],
+            ),
+            "sma_200": self._extract_numeric_indicator(
+                market_report,
+                [r"\b200(?:-day)?\s+sma\b", r"\bclose_200_sma\b"],
+            ),
+            "ema_10": self._extract_numeric_indicator(
+                market_report,
+                [r"\b10(?:-day)?\s+ema\b", r"\bclose_10_ema\b"],
+            ),
+            "vwma": self._extract_numeric_indicator(market_report, [r"\bvwma\b"]),
+            "atr": self._extract_numeric_indicator(market_report, [r"\batr\b"]),
+        }
+        if not any(value is not None for value in indicators.values()):
+            return None
+
+        comparisons: list[str] = []
+        if latest_price is not None:
+            for label, key in (("10EMA", "ema_10"), ("50SMA", "sma_50"), ("200SMA", "sma_200")):
+                value = indicators.get(key)
+                if value is None:
+                    continue
+                direction = "above" if latest_price >= value else "below"
+                comparisons.append(f"{direction} {label}")
+
+        if comparisons:
+            price_vs_moving_averages = ", ".join(comparisons)
+        else:
+            price_vs_moving_averages = "Moving average comparison unavailable."
+
+        bullish_hits = sum(item.startswith("above") for item in comparisons)
+        bearish_hits = sum(item.startswith("below") for item in comparisons)
+        if bullish_hits >= 2:
+            trend_assessment = "bullish"
+        elif bearish_hits >= 2:
+            trend_assessment = "bearish"
+        elif "bullish" in market_report.lower():
+            trend_assessment = "bullish"
+        elif "bearish" in market_report.lower():
+            trend_assessment = "bearish"
+        else:
+            trend_assessment = "mixed"
+
+        return {
+            "indicators": indicators,
+            "price_vs_moving_averages": price_vs_moving_averages,
+            "trend_assessment": trend_assessment,
+        }
+
+    def _extract_numeric_indicator(self, text: str, patterns: list[str]) -> float | None:
+        for pattern in patterns:
+            regex = re.compile(
+                rf"(?:{pattern})[^0-9\-]{{0,30}}(-?\d+(?:\.\d+)?)",
+                re.IGNORECASE,
+            )
+            match = regex.search(text)
+            if match:
+                return float(match.group(1))
+        return None
+
     def _recent_symbol_actions(self, *, symbol: str) -> list[str]:
         decisions = self.store.get_recent_agent_decisions(
             agent_id=self.execution_config.agent_id,
@@ -622,6 +755,78 @@ class TradingCycleRunner:
             limit=10,
         )
         return [str(item.get("action", "")).upper() for item in decisions if item.get("action")]
+
+    def _record_counterfactual_if_needed(
+        self,
+        *,
+        run_id: str,
+        trade_date: str,
+        base_intent: OrderIntent | None,
+        final_intent: OrderIntent,
+        risk_decision,
+        latest_price: float | None,
+    ) -> None:
+        if (
+            base_intent is not None
+            and base_intent.action in {TradeAction.BUY, TradeAction.SELL}
+            and final_intent.action == TradeAction.HOLD
+        ):
+            reason = "; ".join(
+                list(final_intent.protocol_warnings or [])
+                + list(final_intent.execution_notes or [])
+            ) or "Arena converted actionable trade to HOLD."
+            self.store.record_counterfactual(
+                run_id=run_id,
+                symbol=final_intent.symbol,
+                trade_date=trade_date,
+                original_action=base_intent.action.value,
+                original_confidence=base_intent.confidence,
+                final_action=final_intent.action.value,
+                price_at_decision=latest_price,
+                override_reason=reason,
+            )
+            return
+
+        if (
+            risk_decision is not None
+            and not risk_decision.approved
+            and final_intent.action in {TradeAction.BUY, TradeAction.SELL}
+        ):
+            self.store.record_counterfactual(
+                run_id=run_id,
+                symbol=final_intent.symbol,
+                trade_date=trade_date,
+                original_action=final_intent.action.value,
+                original_confidence=final_intent.confidence,
+                final_action=TradeAction.HOLD.value,
+                price_at_decision=latest_price,
+                override_reason="; ".join(risk_decision.reasons[:3]),
+            )
+
+    def _convert_sell_without_position_to_hold(
+        self,
+        *,
+        intent: OrderIntent,
+    ) -> tuple[OrderIntent, AgentReflection]:
+        note = "No position to sell; converted SELL → HOLD pre-risk."
+        held_intent = intent.model_copy(
+            update={
+                "action": TradeAction.HOLD,
+                "source_rating": "HOLD",
+                "execution_notes": list(intent.execution_notes) + [note],
+            }
+        )
+        reflection = AgentReflection(
+            symbol=intent.symbol,
+            what_changed=note,
+            correct_signals=[],
+            incorrect_signals=[note],
+            lesson="SELL signal with no position is not actionable.",
+            current_reasoning=held_intent.rationale,
+            action_taken=TradeAction.HOLD,
+            confidence=held_intent.confidence,
+        )
+        return held_intent, reflection
 
     def _augment_reflection(
         self,

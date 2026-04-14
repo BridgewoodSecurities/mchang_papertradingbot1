@@ -1,7 +1,9 @@
+import os
+import tempfile
 import unittest
 from unittest.mock import patch
 
-from api.index import app
+from api.index import _read_proxy_url_file, app
 
 
 class VercelDashboardTests(unittest.TestCase):
@@ -64,6 +66,24 @@ class VercelDashboardTests(unittest.TestCase):
         self.assertEqual(headers["Content-Type"], "application/json; charset=utf-8")
         self.assertIn('"running": true', body)
         fetch_remote_snapshot.assert_called_once()
+
+    def test_read_proxy_url_prefers_runtime_files_over_repo_file(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            runtime_dir = os.path.join(tmpdir, "runtime")
+            os.makedirs(runtime_dir, exist_ok=True)
+
+            with open(os.path.join(tmpdir, "dashboard_proxy_url.txt"), "w", encoding="utf-8") as handle:
+                handle.write("https://stale-repo-proxy.example.com\n")
+            with open(os.path.join(runtime_dir, "public_backend_url.txt"), "w", encoding="utf-8") as handle:
+                handle.write("https://runtime-proxy.example.com\n")
+            with open(os.path.join(runtime_dir, "public_backend_api_url.txt"), "w", encoding="utf-8") as handle:
+                handle.write("https://runtime-proxy.example.com/api/overview\n")
+
+            with patch("os.getcwd", return_value=tmpdir):
+                self.assertEqual(
+                    _read_proxy_url_file(),
+                    "https://runtime-proxy.example.com/api/overview",
+                )
 
 
 if __name__ == "__main__":

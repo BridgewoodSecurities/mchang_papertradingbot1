@@ -7,7 +7,7 @@ import socket
 import sys
 import time
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterator
 
@@ -142,6 +142,8 @@ class DaemonService:
             self._maybe_generate_daily_summary(now=now)
             return {"bucket_start": bucket_key, "symbols": [], "status": "outside-market-hours"}
 
+        self._refresh_counterfactual_prices(as_of_date=market_date)
+
         watchlist = self._select_cycle_watchlist(now=now)
         remaining_symbols = [
             symbol
@@ -251,6 +253,17 @@ class DaemonService:
             except Exception:
                 held_symbols = set()
 
+        cooldown_minutes = max(0, self.runner.risk_config.cooldown_minutes_per_symbol)
+        recent_symbols = self._recent_symbols_within_cooldown(
+            now=now,
+            cooldown_minutes=cooldown_minutes,
+        )
+        eligible_symbols = [
+            symbol
+            for symbol in watchlist
+            if symbol.upper() in held_symbols or symbol.upper() not in recent_symbols
+        ]
+
         metadata = load_sp500_metadata(
             cache_path=Path(self.execution_config.project_dir) / "runtime" / "sp500_constituents.json",
             refresh=False,
@@ -262,14 +275,25 @@ class DaemonService:
 
         try:
             return select_symbols_for_cycle(
-                symbols=watchlist,
+                symbols=eligible_symbols,
                 limit=self.execution_config.max_symbols_per_cycle,
                 as_of=now,
                 held_symbols=held_symbols,
                 sector_by_symbol=sector_by_symbol,
             )
         except Exception:
-            return watchlist[: self.execution_config.max_symbols_per_cycle]
+            return eligible_symbols[: self.execution_config.max_symbols_per_cycle]
+
+    def _recent_symbols_within_cooldown(
+        self,
+        *,
+        now: datetime,
+        cooldown_minutes: int,
+    ) -> set[str]:
+        if cooldown_minutes <= 0:
+            return set()
+        cutoff = now - timedelta(minutes=cooldown_minutes)
+        return self.store.get_processed_symbols_since(since=cutoff)
 
     def get_status(self) -> DaemonStatus:
         state = self.store.get_daemon_state()
@@ -341,8 +365,47 @@ class DaemonService:
             payload=[position.model_dump(mode="json") for position in positions],
         )
 
+    def _refresh_counterfactual_prices(self, *, as_of_date: str) -> None:
+        pending = self.store.get_pending_counterfactuals(limit=200)
+        for item in pending:
+            trading_days_elapsed = self._trading_days_between(item["trade_date"], as_of_date)
+            needs_1d = item.get("price_after_1d") is None and trading_days_elapsed >= 1
+            needs_5d = item.get("price_after_5d") is None and trading_days_elapsed >= 5
+            if not needs_1d and not needs_5d:
+                continue
+
+            latest_price = self._load_counterfactual_price(item["symbol"])
+            if latest_price is None:
+                continue
+
+            self.store.update_counterfactual_prices(
+                symbol=item["symbol"],
+                trade_date=item["trade_date"],
+                price_after_1d=latest_price if needs_1d else None,
+                price_after_5d=latest_price if needs_5d else None,
+            )
+
     def _kill_switch_active(self) -> bool:
         return Path(self.execution_config.kill_switch_path).exists()
+
+    def _load_counterfactual_price(self, symbol: str) -> float | None:
+        if self.broker is not None:
+            try:
+                price = self.broker.get_latest_price(symbol)
+                if price is not None:
+                    return float(price)
+            except Exception:
+                pass
+
+        try:
+            import yfinance as yf
+
+            history = yf.Ticker(symbol).history(period="1d")
+            if not history.empty:
+                return float(history["Close"].iloc[-1])
+        except Exception:
+            return None
+        return None
 
     def _is_market_open(self, now: datetime) -> bool:
         return is_market_open(now, self.session)
@@ -360,6 +423,17 @@ class DaemonService:
         deadline = time.time() + seconds
         while time.time() < deadline and not self.stop_requested:
             time.sleep(min(1.0, deadline - time.time()))
+
+    def _trading_days_between(self, start_date: str, end_date: str) -> int:
+        start = date.fromisoformat(start_date)
+        end = date.fromisoformat(end_date)
+        count = 0
+        current = start
+        while current < end:
+            current += timedelta(days=1)
+            if current.weekday() < 5:
+                count += 1
+        return count
 
     def _maybe_log_market_closed(self, *, logger, now: datetime) -> None:
         throttle_seconds = max(60, self.execution_config.market_closed_sleep_seconds)

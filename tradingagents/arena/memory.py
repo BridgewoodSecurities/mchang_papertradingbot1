@@ -53,6 +53,7 @@ class AgentMemoryService:
             recurring_successes = self._derive_success_patterns(winning)
 
         previous_reasoning = decisions[0].get("reasoning") if decisions else None
+        counterfactual_summary = self.store.get_counterfactual_summary()
         return AgentMemorySnapshot(
             symbol=symbol,
             recent_decisions=decisions,
@@ -63,6 +64,7 @@ class AgentMemoryService:
             recurring_success_patterns=recurring_successes[: self.memory_limit],
             learning_summary=learning_state.get("learning_summary"),
             previous_reasoning=previous_reasoning,
+            counterfactual_summary=counterfactual_summary,
         )
 
     def record_decision(

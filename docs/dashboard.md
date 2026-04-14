@@ -52,7 +52,7 @@ There are two deployment modes:
 2. Proxy mode
    Set `TRADINGAGENTS_DASHBOARD_PROXY_URL` in Vercel to a public dashboard backend that exposes `/api/overview`.
    In this mode, Vercel hosts the dashboard UI and proxies live snapshot data from your real daemon host.
-   If you do not set the env var, the deployment also falls back to the repo-level `dashboard_proxy_url.txt` file when present.
+   If you do not set the env var, the app falls back to local runtime tunnel files when present and finally to the repo-level `dashboard_proxy_url.txt` file.
 
 Suggested Vercel environment variables:
 
@@ -65,7 +65,9 @@ Notes:
 
 - if `TRADINGAGENTS_DASHBOARD_PROXY_URL` already ends with `/api/overview`, it will be used directly
 - otherwise the deployment appends `/api/overview`
-- if `dashboard_proxy_url.txt` exists in the repo root, Vercel can use that as the proxy target without an extra env var
+- local runtime reads `./runtime/public_backend_api_url.txt` and `./runtime/public_backend_url.txt` before any checked-in fallback
+- if `dashboard_proxy_url.txt` exists in the repo root, Vercel can still use that as a manual fallback without an extra env var
+- automatic git commit/push sync for proxy URL updates is intentionally disabled; set `TRADINGAGENTS_SYNC_DASHBOARD_PROXY_TO_REPO=true` only if you explicitly want to refresh `dashboard_proxy_url.txt`
 - without a proxy URL, the deployment returns an informative placeholder snapshot instead of failing
 - Vercel is a good fit for the dashboard frontend, not for the long-running trading daemon itself
 

@@ -1,0 +1,868 @@
+{
+  "run_id": "daemon-2026-04-13-6fcde420",
+  "mode": "daemon",
+  "trade_date": "2026-04-13",
+  "symbols": [
+    "CAG",
+    "CRM",
+    "BEN",
+    "ZBH",
+    "DIS"
+  ],
+  "symbol_results": [
+    {
+      "symbol": "CAG",
+      "raw_decision_text": "1. **Rating**: Sell\n\n2. **Confidence**: 78%\n\n3. **Executive Summary**:  \nSell or avoid `CAG` now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding `CAG`, reduce or exit exposure rather than averaging down. Any residual exposure should be small and only maintained if tied to a broader defensive allocation, with risk managed against failure to reclaim the near resistance zone around 15.53–15.61. Time horizon: near- to medium-term capital preservation until `CAG` shows both technical stabilization and operating improvement.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CAG`**, consistent with both the Research Manager’s plan and the Trader’s transaction proposal, and supported by the strongest common thread across the analysts: `CAG` is still a turnaround story without confirmation.\n\nThe most important evidence is the current, observable setup. `CAG` is trading around 14.485, materially below the cited 50 SMA near 17.54 and 200 SMA near 18.15, and also below the 10 EMA, VWMA, and Bollinger mid-band. That is not just weakness; it is a broad multi-timeframe bearish structure. The conservative analyst was right that this alignment means sellers still control the tape, and the aggressive analyst ultimately agreed that, despite possible future upside optionality, the disciplined action **today** is still to sell or avoid.\n\nThe bullish elements are real but not sufficient. `CAG` is a defensive packaged-food business, sentiment is depressed, and the incoming CEO could eventually reset expectations. The aggressive analyst made the best case that deeply compressed valuation and washed-out sentiment can create asymmetry. The neutral analyst also correctly noted that waiting for perfect proof can sometimes mean missing the first leg of a rebound. But those points are still conditional. Right now, they are not backed by evidence of margin stabilization, volume recovery, stronger guidance, or a sustained reclaim of key technical levels.\n\nThat distinction matters. The bear case is stronger because it rests on facts already visible:\n- price remains in a clear downtrend,\n- momentum is still negative even if less bad than before,\n- RSI near 34 suggests weakness, not reversal,\n- MACD is still negative,\n- elevated volatility increases false-start risk,\n- and the CEO transition is only a potential catalyst, not confirmation of operational change.\n\nThe BNP Paribas downgrade to Neutral with a $16 target does not improve the case enough to offset those risks. Yes, the target sits modestly above the current price, but as the conservative analyst argued, that implies limited upside rather than compelling reward relative to downside risk. It reinforces caution, not conviction.\n\nMacro also does not rescue the thesis. While staples can sometimes benefit from defensive rotation, the more direct effect discussed in the debate is cost pressure from higher oil through freight, packaging, and logistics. For `CAG`, that creates another reason to avoid getting ahead of proof.\n\nSo the portfolio conclusion is straightforward: `CAG` may become investable later, but not yet. The right process is to protect capital first and revisit only if the company and stock start proving the turnaround. Specifically, reconsideration would require some combination of:\n- reclaiming and holding above the 10 EMA and VWMA,\n- then challenging and ideally recovering the 50-day average,\n- management outlining a credible operating plan under the new CEO,\n- and results showing stabilization in margins, volumes, or cash flow.\n\nUntil then, `CAG` is better treated as a name to exit or avoid rather than a bottom-fishing opportunity.",
+      "parsed_decision": {
+        "raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 78%\n\n3. **Executive Summary**:  \nSell or avoid `CAG` now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding `CAG`, reduce or exit exposure rather than averaging down. Any residual exposure should be small and only maintained if tied to a broader defensive allocation, with risk managed against failure to reclaim the near resistance zone around 15.53–15.61. Time horizon: near- to medium-term capital preservation until `CAG` shows both technical stabilization and operating improvement.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CAG`**, consistent with both the Research Manager’s plan and the Trader’s transaction proposal, and supported by the strongest common thread across the analysts: `CAG` is still a turnaround story without confirmation.\n\nThe most important evidence is the current, observable setup. `CAG` is trading around 14.485, materially below the cited 50 SMA near 17.54 and 200 SMA near 18.15, and also below the 10 EMA, VWMA, and Bollinger mid-band. That is not just weakness; it is a broad multi-timeframe bearish structure. The conservative analyst was right that this alignment means sellers still control the tape, and the aggressive analyst ultimately agreed that, despite possible future upside optionality, the disciplined action **today** is still to sell or avoid.\n\nThe bullish elements are real but not sufficient. `CAG` is a defensive packaged-food business, sentiment is depressed, and the incoming CEO could eventually reset expectations. The aggressive analyst made the best case that deeply compressed valuation and washed-out sentiment can create asymmetry. The neutral analyst also correctly noted that waiting for perfect proof can sometimes mean missing the first leg of a rebound. But those points are still conditional. Right now, they are not backed by evidence of margin stabilization, volume recovery, stronger guidance, or a sustained reclaim of key technical levels.\n\nThat distinction matters. The bear case is stronger because it rests on facts already visible:\n- price remains in a clear downtrend,\n- momentum is still negative even if less bad than before,\n- RSI near 34 suggests weakness, not reversal,\n- MACD is still negative,\n- elevated volatility increases false-start risk,\n- and the CEO transition is only a potential catalyst, not confirmation of operational change.\n\nThe BNP Paribas downgrade to Neutral with a $16 target does not improve the case enough to offset those risks. Yes, the target sits modestly above the current price, but as the conservative analyst argued, that implies limited upside rather than compelling reward relative to downside risk. It reinforces caution, not conviction.\n\nMacro also does not rescue the thesis. While staples can sometimes benefit from defensive rotation, the more direct effect discussed in the debate is cost pressure from higher oil through freight, packaging, and logistics. For `CAG`, that creates another reason to avoid getting ahead of proof.\n\nSo the portfolio conclusion is straightforward: `CAG` may become investable later, but not yet. The right process is to protect capital first and revisit only if the company and stock start proving the turnaround. Specifically, reconsideration would require some combination of:\n- reclaiming and holding above the 10 EMA and VWMA,\n- then challenging and ideally recovering the 50-day average,\n- management outlining a credible operating plan under the new CEO,\n- and results showing stabilization in margins, volumes, or cash flow.\n\nUntil then, `CAG` is better treated as a name to exit or avoid rather than a bottom-fishing opportunity.",
+        "intents": [
+          {
+            "symbol": "CAG",
+            "action": "SELL",
+            "confidence": 0.78,
+            "rationale": "Sell or avoid CAG now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding CAG, reduce or exit exposure rather than averaging down. Any residual exposure should be small and only maintained if tied to a broader defensive allocation, with risk managed against failure to reclaim the near resistance zone around 15.53–15.61. Time horizon: near- to medium-term capital preservation until CAG shows both technical stabilization and operating improvement.",
+            "quantity": null,
+            "notional_usd": null,
+            "order_type": "market",
+            "limit_price": null,
+            "stop_loss": null,
+            "take_profit": null,
+            "time_horizon": null,
+            "expected_edge": null,
+            "supporting_signals": [],
+            "risks": [],
+            "position_sizing_rationale": null,
+            "why_market_wrong": null,
+            "is_new_information": null,
+            "fits_success_patterns": null,
+            "contradicts_recent_failures": null,
+            "previous_reasoning_change": null,
+            "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 78%\n\n3. **Executive Summary**:  \nSell or avoid `CAG` now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding `CAG`, reduce or exit exposure rather than averaging down. Any residual exposure should be small and only maintained if tied to a broader defensive allocation, with risk managed against failure to reclaim the near resistance zone around 15.53–15.61. Time horizon: near- to medium-term capital preservation until `CAG` shows both technical stabilization and operating improvement.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CAG`**, consistent with both the Research Manager’s plan and the Trader’s transaction proposal, and supported by the strongest common thread across the analysts: `CAG` is still a turnaround story without confirmation.\n\nThe most important evidence is the current, observable setup. `CAG` is trading around 14.485, materially below the cited 50 SMA near 17.54 and 200 SMA near 18.15, and also below the 10 EMA, VWMA, and Bollinger mid-band. That is not just weakness; it is a broad multi-timeframe bearish structure. The conservative analyst was right that this alignment means sellers still control the tape, and the aggressive analyst ultimately agreed that, despite possible future upside optionality, the disciplined action **today** is still to sell or avoid.\n\nThe bullish elements are real but not sufficient. `CAG` is a defensive packaged-food business, sentiment is depressed, and the incoming CEO could eventually reset expectations. The aggressive analyst made the best case that deeply compressed valuation and washed-out sentiment can create asymmetry. The neutral analyst also correctly noted that waiting for perfect proof can sometimes mean missing the first leg of a rebound. But those points are still conditional. Right now, they are not backed by evidence of margin stabilization, volume recovery, stronger guidance, or a sustained reclaim of key technical levels.\n\nThat distinction matters. The bear case is stronger because it rests on facts already visible:\n- price remains in a clear downtrend,\n- momentum is still negative even if less bad than before,\n- RSI near 34 suggests weakness, not reversal,\n- MACD is still negative,\n- elevated volatility increases false-start risk,\n- and the CEO transition is only a potential catalyst, not confirmation of operational change.\n\nThe BNP Paribas downgrade to Neutral with a $16 target does not improve the case enough to offset those risks. Yes, the target sits modestly above the current price, but as the conservative analyst argued, that implies limited upside rather than compelling reward relative to downside risk. It reinforces caution, not conviction.\n\nMacro also does not rescue the thesis. While staples can sometimes benefit from defensive rotation, the more direct effect discussed in the debate is cost pressure from higher oil through freight, packaging, and logistics. For `CAG`, that creates another reason to avoid getting ahead of proof.\n\nSo the portfolio conclusion is straightforward: `CAG` may become investable later, but not yet. The right process is to protect capital first and revisit only if the company and stock start proving the turnaround. Specifically, reconsideration would require some combination of:\n- reclaiming and holding above the 10 EMA and VWMA,\n- then challenging and ideally recovering the 50-day average,\n- management outlining a credible operating plan under the new CEO,\n- and results showing stabilization in margins, volumes, or cash flow.\n\nUntil then, `CAG` is better treated as a name to exit or avoid rather than a bottom-fishing opportunity.",
+            "source_rating": "SELL",
+            "warnings": [
+              "Position sizing was not explicit in the decision text."
+            ],
+            "protocol_warnings": [],
+            "execution_notes": []
+          }
+        ],
+        "warnings": [],
+        "rejected": false
+      },
+      "arena_decision": {
+        "symbol": "CAG",
+        "action": "SELL",
+        "confidence": 0.78,
+        "rationale": "Sell or avoid CAG now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding CAG, reduce or exit exposure rather than averaging down. Any residual exposure should be small and only maintained if tied to a broader defensive allocation, with risk managed against failure to reclaim the near resistance zone around 15.53–15.61. Time horizon: near- to medium-term capital preservation until CAG shows both technical stabilization and operating improvement.",
+        "quantity": null,
+        "notional_usd": null,
+        "order_type": "market",
+        "limit_price": null,
+        "stop_loss": null,
+        "take_profit": null,
+        "time_horizon": null,
+        "expected_edge": "Sell or avoid CAG now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding CAG, reduce or exit exposure rather than averaging down. Any residual expo",
+        "supporting_signals": [
+          "fresh news catalyst",
+          "price/trend confirmation",
+          "technical confirmation",
+          "portfolio/risk alignment"
+        ],
+        "risks": [
+          "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+        ],
+        "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+        "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+        "is_new_information": true,
+        "fits_success_patterns": true,
+        "contradicts_recent_failures": false,
+        "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+        "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 78%\n\n3. **Executive Summary**:  \nSell or avoid `CAG` now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding `CAG`, reduce or exit exposure rather than averaging down. Any residual exposure should be small and only maintained if tied to a broader defensive allocation, with risk managed against failure to reclaim the near resistance zone around 15.53–15.61. Time horizon: near- to medium-term capital preservation until `CAG` shows both technical stabilization and operating improvement.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CAG`**, consistent with both the Research Manager’s plan and the Trader’s transaction proposal, and supported by the strongest common thread across the analysts: `CAG` is still a turnaround story without confirmation.\n\nThe most important evidence is the current, observable setup. `CAG` is trading around 14.485, materially below the cited 50 SMA near 17.54 and 200 SMA near 18.15, and also below the 10 EMA, VWMA, and Bollinger mid-band. That is not just weakness; it is a broad multi-timeframe bearish structure. The conservative analyst was right that this alignment means sellers still control the tape, and the aggressive analyst ultimately agreed that, despite possible future upside optionality, the disciplined action **today** is still to sell or avoid.\n\nThe bullish elements are real but not sufficient. `CAG` is a defensive packaged-food business, sentiment is depressed, and the incoming CEO could eventually reset expectations. The aggressive analyst made the best case that deeply compressed valuation and washed-out sentiment can create asymmetry. The neutral analyst also correctly noted that waiting for perfect proof can sometimes mean missing the first leg of a rebound. But those points are still conditional. Right now, they are not backed by evidence of margin stabilization, volume recovery, stronger guidance, or a sustained reclaim of key technical levels.\n\nThat distinction matters. The bear case is stronger because it rests on facts already visible:\n- price remains in a clear downtrend,\n- momentum is still negative even if less bad than before,\n- RSI near 34 suggests weakness, not reversal,\n- MACD is still negative,\n- elevated volatility increases false-start risk,\n- and the CEO transition is only a potential catalyst, not confirmation of operational change.\n\nThe BNP Paribas downgrade to Neutral with a $16 target does not improve the case enough to offset those risks. Yes, the target sits modestly above the current price, but as the conservative analyst argued, that implies limited upside rather than compelling reward relative to downside risk. It reinforces caution, not conviction.\n\nMacro also does not rescue the thesis. While staples can sometimes benefit from defensive rotation, the more direct effect discussed in the debate is cost pressure from higher oil through freight, packaging, and logistics. For `CAG`, that creates another reason to avoid getting ahead of proof.\n\nSo the portfolio conclusion is straightforward: `CAG` may become investable later, but not yet. The right process is to protect capital first and revisit only if the company and stock start proving the turnaround. Specifically, reconsideration would require some combination of:\n- reclaiming and holding above the 10 EMA and VWMA,\n- then challenging and ideally recovering the 50-day average,\n- management outlining a credible operating plan under the new CEO,\n- and results showing stabilization in margins, volumes, or cash flow.\n\nUntil then, `CAG` is better treated as a name to exit or avoid rather than a bottom-fishing opportunity.",
+        "source_rating": "SELL",
+        "warnings": [
+          "Position sizing was not explicit in the decision text."
+        ],
+        "protocol_warnings": [],
+        "execution_notes": []
+      },
+      "risk_decision": {
+        "approved": false,
+        "reasons": [
+          "Could not determine order notional safely.",
+          "No long position exists in CAG; short selling is disabled."
+        ],
+        "normalized_intent": {
+          "symbol": "CAG",
+          "action": "SELL",
+          "confidence": 0.78,
+          "rationale": "Sell or avoid CAG now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding CAG, reduce or exit exposure rather than averaging down. Any residual exposure should be small and only maintained if tied to a broader defensive allocation, with risk managed against failure to reclaim the near resistance zone around 15.53–15.61. Time horizon: near- to medium-term capital preservation until CAG shows both technical stabilization and operating improvement.",
+          "quantity": null,
+          "notional_usd": null,
+          "order_type": "market",
+          "limit_price": null,
+          "stop_loss": null,
+          "take_profit": null,
+          "time_horizon": null,
+          "expected_edge": "Sell or avoid CAG now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding CAG, reduce or exit exposure rather than averaging down. Any residual expo",
+          "supporting_signals": [
+            "fresh news catalyst",
+            "price/trend confirmation",
+            "technical confirmation",
+            "portfolio/risk alignment"
+          ],
+          "risks": [
+            "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+          ],
+          "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+          "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+          "is_new_information": true,
+          "fits_success_patterns": true,
+          "contradicts_recent_failures": false,
+          "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+          "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 78%\n\n3. **Executive Summary**:  \nSell or avoid `CAG` now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding `CAG`, reduce or exit exposure rather than averaging down. Any residual exposure should be small and only maintained if tied to a broader defensive allocation, with risk managed against failure to reclaim the near resistance zone around 15.53–15.61. Time horizon: near- to medium-term capital preservation until `CAG` shows both technical stabilization and operating improvement.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CAG`**, consistent with both the Research Manager’s plan and the Trader’s transaction proposal, and supported by the strongest common thread across the analysts: `CAG` is still a turnaround story without confirmation.\n\nThe most important evidence is the current, observable setup. `CAG` is trading around 14.485, materially below the cited 50 SMA near 17.54 and 200 SMA near 18.15, and also below the 10 EMA, VWMA, and Bollinger mid-band. That is not just weakness; it is a broad multi-timeframe bearish structure. The conservative analyst was right that this alignment means sellers still control the tape, and the aggressive analyst ultimately agreed that, despite possible future upside optionality, the disciplined action **today** is still to sell or avoid.\n\nThe bullish elements are real but not sufficient. `CAG` is a defensive packaged-food business, sentiment is depressed, and the incoming CEO could eventually reset expectations. The aggressive analyst made the best case that deeply compressed valuation and washed-out sentiment can create asymmetry. The neutral analyst also correctly noted that waiting for perfect proof can sometimes mean missing the first leg of a rebound. But those points are still conditional. Right now, they are not backed by evidence of margin stabilization, volume recovery, stronger guidance, or a sustained reclaim of key technical levels.\n\nThat distinction matters. The bear case is stronger because it rests on facts already visible:\n- price remains in a clear downtrend,\n- momentum is still negative even if less bad than before,\n- RSI near 34 suggests weakness, not reversal,\n- MACD is still negative,\n- elevated volatility increases false-start risk,\n- and the CEO transition is only a potential catalyst, not confirmation of operational change.\n\nThe BNP Paribas downgrade to Neutral with a $16 target does not improve the case enough to offset those risks. Yes, the target sits modestly above the current price, but as the conservative analyst argued, that implies limited upside rather than compelling reward relative to downside risk. It reinforces caution, not conviction.\n\nMacro also does not rescue the thesis. While staples can sometimes benefit from defensive rotation, the more direct effect discussed in the debate is cost pressure from higher oil through freight, packaging, and logistics. For `CAG`, that creates another reason to avoid getting ahead of proof.\n\nSo the portfolio conclusion is straightforward: `CAG` may become investable later, but not yet. The right process is to protect capital first and revisit only if the company and stock start proving the turnaround. Specifically, reconsideration would require some combination of:\n- reclaiming and holding above the 10 EMA and VWMA,\n- then challenging and ideally recovering the 50-day average,\n- management outlining a credible operating plan under the new CEO,\n- and results showing stabilization in margins, volumes, or cash flow.\n\nUntil then, `CAG` is better treated as a name to exit or avoid rather than a bottom-fishing opportunity.",
+          "source_rating": "SELL",
+          "warnings": [
+            "Position sizing was not explicit in the decision text."
+          ],
+          "protocol_warnings": [],
+          "execution_notes": []
+        },
+        "checks": {
+          "paper_only": true,
+          "allowed_symbols": true,
+          "effective_confidence_threshold": 0.75,
+          "confidence": true,
+          "supporting_signal_count": 4,
+          "multiple_signals": true,
+          "expected_edge": true,
+          "market_mispricing_reason": true,
+          "reasoning_quality": true,
+          "edge_quality": true,
+          "market_wrong_quality": true,
+          "risks_present": true,
+          "new_information": true,
+          "position_sizing_rationale": true,
+          "fits_success_patterns": true,
+          "recent_failures": true,
+          "open_order_conflict": true,
+          "order_notional": null,
+          "projected_symbol_value": 0.0,
+          "projected_gross_exposure": 1296.54,
+          "flip_flop_count": 0,
+          "flip_flop": true
+        }
+      },
+      "submitted_order": null,
+      "execution_status": "rejected",
+      "latest_price": 14.495,
+      "error": null,
+      "warnings": [],
+      "reflection": {
+        "symbol": "CAG",
+        "what_changed": "Fallback decision path used.",
+        "correct_signals": [],
+        "incorrect_signals": [
+          "Could not determine order notional safely.",
+          "No long position exists in CAG; short selling is disabled."
+        ],
+        "lesson": "When structured reasoning fails, default to HOLD or require a stronger edge.",
+        "previous_reasoning": null,
+        "current_reasoning": "Sell or avoid CAG now. Do not initiate new positions while the stock remains in a confirmed downtrend below the 10 EMA, VWMA, 50 SMA, and 200 SMA. If already holding CAG, reduce or exit exposure rather than averaging down. Any residual exposure should be small and only maintained if tied to a broader defensive allocation, with risk managed against failure to reclaim the near resistance zone around 15.53–15.61. Time horizon: near- to medium-term capital preservation until CAG shows both technical stabilization and operating improvement.",
+        "action_taken": "SELL",
+        "confidence": 0.78
+      }
+    },
+    {
+      "symbol": "CRM",
+      "raw_decision_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nExit or materially reduce long exposure in `CRM` now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a tactical bearish trade is considered, keep size modest given elevated volatility. Key risk levels for reassessment are the `178–181` zone, where `CRM` would need to reclaim and hold above the 10 EMA/VWMA area, with further confirmation above the 50-day moving average. Time horizon: near- to medium-term trading posture over the next several weeks to few months, focused on capital preservation until price action improves.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CRM`** because the bearish case is more actionable, more evidence-based, and requires fewer assumptions than the bullish one.\n\nThe aggressive analyst made the best possible bull argument: `CRM` is a high-quality enterprise software leader, sentiment is washed out, RSI is oversold, MACD has improved from deeply negative levels, and AI could ultimately become a monetization tailwind rather than a disruption. Those points matter, especially for a longer-term strategic investor. But they are still mostly arguments about what *could* happen.\n\nThe conservative analyst had the stronger trading case because it is anchored in what is already visible in the tape:\n\n- `CRM` remains below the **10 EMA**, **50-day SMA**, **200-day SMA**, and **VWMA**\n- Price is still below the key **178–181** acceptance zone\n- **MACD remains negative**, even if less negative than before\n- **Volatility is elevated** with ATR around 7.33, increasing execution risk\n- The broader **software sector remains under pressure** from AI-related repricing and multiple compression concerns\n\nThat is the profile of a stock still in technical damage, not one that has completed repair.\n\nThe neutral analyst correctly noted that this is not a broken business, and that a full liquidation can sometimes be too blunt when weakness is partly sector-driven rather than company-specific. That tempers conviction somewhat and prevents an extremely high confidence score. But the neutral case still supports risk reduction over optimism. Even that middle-ground view emphasizes waiting for confirmation above `178–181` before becoming constructive again.\n\nWhat ultimately separates **Sell** from **Hold** is the combination of weak trend structure and lack of confirmed accumulation. A “good company, bad stock” setup is precisely where investors get trapped by anchoring to business quality while ignoring market behavior. The bull thesis may eventually work, but right now it depends on:\n\n- AI sentiment improving\n- software multiples stabilizing\n- `CRM` being re-rated as an AI beneficiary\n- price reclaiming overhead levels\n\nNone of that is confirmed today.\n\nMeanwhile, the bearish thesis does not require business collapse. It only requires that the market continue withholding the benefit of the doubt, and the current chart supports that outcome. In other words, the downside case is simpler and more probable in the current window.\n\n**Portfolio decision framework for `CRM`:**\n- **If already long**: reduce or exit rather than wait for an unproven rebound\n- **If not invested**: stay out for now; do not try to catch the falling knife\n- **If tactically bearish**: use defined risk and small sizing because oversold names can squeeze sharply\n- **Re-entry condition**: reconsider only if `CRM` reclaims and holds above the `178–181` zone, with improving momentum and better sector participation\n\nBottom line: `CRM` remains a fundamentally credible company, but the stock is still under technical and narrative pressure. Until there is actual evidence of trend repair, the disciplined portfolio action is **Sell**.",
+      "parsed_decision": {
+        "raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nExit or materially reduce long exposure in `CRM` now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a tactical bearish trade is considered, keep size modest given elevated volatility. Key risk levels for reassessment are the `178–181` zone, where `CRM` would need to reclaim and hold above the 10 EMA/VWMA area, with further confirmation above the 50-day moving average. Time horizon: near- to medium-term trading posture over the next several weeks to few months, focused on capital preservation until price action improves.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CRM`** because the bearish case is more actionable, more evidence-based, and requires fewer assumptions than the bullish one.\n\nThe aggressive analyst made the best possible bull argument: `CRM` is a high-quality enterprise software leader, sentiment is washed out, RSI is oversold, MACD has improved from deeply negative levels, and AI could ultimately become a monetization tailwind rather than a disruption. Those points matter, especially for a longer-term strategic investor. But they are still mostly arguments about what *could* happen.\n\nThe conservative analyst had the stronger trading case because it is anchored in what is already visible in the tape:\n\n- `CRM` remains below the **10 EMA**, **50-day SMA**, **200-day SMA**, and **VWMA**\n- Price is still below the key **178–181** acceptance zone\n- **MACD remains negative**, even if less negative than before\n- **Volatility is elevated** with ATR around 7.33, increasing execution risk\n- The broader **software sector remains under pressure** from AI-related repricing and multiple compression concerns\n\nThat is the profile of a stock still in technical damage, not one that has completed repair.\n\nThe neutral analyst correctly noted that this is not a broken business, and that a full liquidation can sometimes be too blunt when weakness is partly sector-driven rather than company-specific. That tempers conviction somewhat and prevents an extremely high confidence score. But the neutral case still supports risk reduction over optimism. Even that middle-ground view emphasizes waiting for confirmation above `178–181` before becoming constructive again.\n\nWhat ultimately separates **Sell** from **Hold** is the combination of weak trend structure and lack of confirmed accumulation. A “good company, bad stock” setup is precisely where investors get trapped by anchoring to business quality while ignoring market behavior. The bull thesis may eventually work, but right now it depends on:\n\n- AI sentiment improving\n- software multiples stabilizing\n- `CRM` being re-rated as an AI beneficiary\n- price reclaiming overhead levels\n\nNone of that is confirmed today.\n\nMeanwhile, the bearish thesis does not require business collapse. It only requires that the market continue withholding the benefit of the doubt, and the current chart supports that outcome. In other words, the downside case is simpler and more probable in the current window.\n\n**Portfolio decision framework for `CRM`:**\n- **If already long**: reduce or exit rather than wait for an unproven rebound\n- **If not invested**: stay out for now; do not try to catch the falling knife\n- **If tactically bearish**: use defined risk and small sizing because oversold names can squeeze sharply\n- **Re-entry condition**: reconsider only if `CRM` reclaims and holds above the `178–181` zone, with improving momentum and better sector participation\n\nBottom line: `CRM` remains a fundamentally credible company, but the stock is still under technical and narrative pressure. Until there is actual evidence of trend repair, the disciplined portfolio action is **Sell**.",
+        "intents": [
+          {
+            "symbol": "CRM",
+            "action": "SELL",
+            "confidence": 0.74,
+            "rationale": "Exit or materially reduce long exposure in CRM now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a tactical bearish trade is considered, keep size modest given elevated volatility. Key risk levels for reassessment are the 178–181 zone, where CRM would need to reclaim and hold above the 10 EMA/VWMA area, with further confirmation above the 50-day moving average. Time horizon: near- to medium-term trading posture over the next several weeks to few months, ",
+            "quantity": null,
+            "notional_usd": null,
+            "order_type": "market",
+            "limit_price": null,
+            "stop_loss": null,
+            "take_profit": null,
+            "time_horizon": null,
+            "expected_edge": null,
+            "supporting_signals": [],
+            "risks": [],
+            "position_sizing_rationale": null,
+            "why_market_wrong": null,
+            "is_new_information": null,
+            "fits_success_patterns": null,
+            "contradicts_recent_failures": null,
+            "previous_reasoning_change": null,
+            "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nExit or materially reduce long exposure in `CRM` now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a tactical bearish trade is considered, keep size modest given elevated volatility. Key risk levels for reassessment are the `178–181` zone, where `CRM` would need to reclaim and hold above the 10 EMA/VWMA area, with further confirmation above the 50-day moving average. Time horizon: near- to medium-term trading posture over the next several weeks to few months, focused on capital preservation until price action improves.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CRM`** because the bearish case is more actionable, more evidence-based, and requires fewer assumptions than the bullish one.\n\nThe aggressive analyst made the best possible bull argument: `CRM` is a high-quality enterprise software leader, sentiment is washed out, RSI is oversold, MACD has improved from deeply negative levels, and AI could ultimately become a monetization tailwind rather than a disruption. Those points matter, especially for a longer-term strategic investor. But they are still mostly arguments about what *could* happen.\n\nThe conservative analyst had the stronger trading case because it is anchored in what is already visible in the tape:\n\n- `CRM` remains below the **10 EMA**, **50-day SMA**, **200-day SMA**, and **VWMA**\n- Price is still below the key **178–181** acceptance zone\n- **MACD remains negative**, even if less negative than before\n- **Volatility is elevated** with ATR around 7.33, increasing execution risk\n- The broader **software sector remains under pressure** from AI-related repricing and multiple compression concerns\n\nThat is the profile of a stock still in technical damage, not one that has completed repair.\n\nThe neutral analyst correctly noted that this is not a broken business, and that a full liquidation can sometimes be too blunt when weakness is partly sector-driven rather than company-specific. That tempers conviction somewhat and prevents an extremely high confidence score. But the neutral case still supports risk reduction over optimism. Even that middle-ground view emphasizes waiting for confirmation above `178–181` before becoming constructive again.\n\nWhat ultimately separates **Sell** from **Hold** is the combination of weak trend structure and lack of confirmed accumulation. A “good company, bad stock” setup is precisely where investors get trapped by anchoring to business quality while ignoring market behavior. The bull thesis may eventually work, but right now it depends on:\n\n- AI sentiment improving\n- software multiples stabilizing\n- `CRM` being re-rated as an AI beneficiary\n- price reclaiming overhead levels\n\nNone of that is confirmed today.\n\nMeanwhile, the bearish thesis does not require business collapse. It only requires that the market continue withholding the benefit of the doubt, and the current chart supports that outcome. In other words, the downside case is simpler and more probable in the current window.\n\n**Portfolio decision framework for `CRM`:**\n- **If already long**: reduce or exit rather than wait for an unproven rebound\n- **If not invested**: stay out for now; do not try to catch the falling knife\n- **If tactically bearish**: use defined risk and small sizing because oversold names can squeeze sharply\n- **Re-entry condition**: reconsider only if `CRM` reclaims and holds above the `178–181` zone, with improving momentum and better sector participation\n\nBottom line: `CRM` remains a fundamentally credible company, but the stock is still under technical and narrative pressure. Until there is actual evidence of trend repair, the disciplined portfolio action is **Sell**.",
+            "source_rating": "SELL",
+            "warnings": [
+              "Position sizing was not explicit in the decision text."
+            ],
+            "protocol_warnings": [],
+            "execution_notes": []
+          }
+        ],
+        "warnings": [],
+        "rejected": false
+      },
+      "arena_decision": {
+        "symbol": "CRM",
+        "action": "SELL",
+        "confidence": 0.74,
+        "rationale": "Exit or materially reduce long exposure in CRM now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a tactical bearish trade is considered, keep size modest given elevated volatility. Key risk levels for reassessment are the 178–181 zone, where CRM would need to reclaim and hold above the 10 EMA/VWMA area, with further confirmation above the 50-day moving average. Time horizon: near- to medium-term trading posture over the next several weeks to few months, ",
+        "quantity": null,
+        "notional_usd": null,
+        "order_type": "market",
+        "limit_price": null,
+        "stop_loss": null,
+        "take_profit": null,
+        "time_horizon": null,
+        "expected_edge": "Exit or materially reduce long exposure in CRM now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a",
+        "supporting_signals": [
+          "fresh news catalyst",
+          "price/trend confirmation",
+          "technical confirmation",
+          "portfolio/risk alignment"
+        ],
+        "risks": [
+          "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+        ],
+        "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+        "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+        "is_new_information": true,
+        "fits_success_patterns": true,
+        "contradicts_recent_failures": false,
+        "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+        "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nExit or materially reduce long exposure in `CRM` now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a tactical bearish trade is considered, keep size modest given elevated volatility. Key risk levels for reassessment are the `178–181` zone, where `CRM` would need to reclaim and hold above the 10 EMA/VWMA area, with further confirmation above the 50-day moving average. Time horizon: near- to medium-term trading posture over the next several weeks to few months, focused on capital preservation until price action improves.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CRM`** because the bearish case is more actionable, more evidence-based, and requires fewer assumptions than the bullish one.\n\nThe aggressive analyst made the best possible bull argument: `CRM` is a high-quality enterprise software leader, sentiment is washed out, RSI is oversold, MACD has improved from deeply negative levels, and AI could ultimately become a monetization tailwind rather than a disruption. Those points matter, especially for a longer-term strategic investor. But they are still mostly arguments about what *could* happen.\n\nThe conservative analyst had the stronger trading case because it is anchored in what is already visible in the tape:\n\n- `CRM` remains below the **10 EMA**, **50-day SMA**, **200-day SMA**, and **VWMA**\n- Price is still below the key **178–181** acceptance zone\n- **MACD remains negative**, even if less negative than before\n- **Volatility is elevated** with ATR around 7.33, increasing execution risk\n- The broader **software sector remains under pressure** from AI-related repricing and multiple compression concerns\n\nThat is the profile of a stock still in technical damage, not one that has completed repair.\n\nThe neutral analyst correctly noted that this is not a broken business, and that a full liquidation can sometimes be too blunt when weakness is partly sector-driven rather than company-specific. That tempers conviction somewhat and prevents an extremely high confidence score. But the neutral case still supports risk reduction over optimism. Even that middle-ground view emphasizes waiting for confirmation above `178–181` before becoming constructive again.\n\nWhat ultimately separates **Sell** from **Hold** is the combination of weak trend structure and lack of confirmed accumulation. A “good company, bad stock” setup is precisely where investors get trapped by anchoring to business quality while ignoring market behavior. The bull thesis may eventually work, but right now it depends on:\n\n- AI sentiment improving\n- software multiples stabilizing\n- `CRM` being re-rated as an AI beneficiary\n- price reclaiming overhead levels\n\nNone of that is confirmed today.\n\nMeanwhile, the bearish thesis does not require business collapse. It only requires that the market continue withholding the benefit of the doubt, and the current chart supports that outcome. In other words, the downside case is simpler and more probable in the current window.\n\n**Portfolio decision framework for `CRM`:**\n- **If already long**: reduce or exit rather than wait for an unproven rebound\n- **If not invested**: stay out for now; do not try to catch the falling knife\n- **If tactically bearish**: use defined risk and small sizing because oversold names can squeeze sharply\n- **Re-entry condition**: reconsider only if `CRM` reclaims and holds above the `178–181` zone, with improving momentum and better sector participation\n\nBottom line: `CRM` remains a fundamentally credible company, but the stock is still under technical and narrative pressure. Until there is actual evidence of trend repair, the disciplined portfolio action is **Sell**.",
+        "source_rating": "SELL",
+        "warnings": [
+          "Position sizing was not explicit in the decision text."
+        ],
+        "protocol_warnings": [],
+        "execution_notes": []
+      },
+      "risk_decision": {
+        "approved": false,
+        "reasons": [
+          "Confidence 0.74 is below the threshold of 0.75.",
+          "Could not determine order notional safely.",
+          "No long position exists in CRM; short selling is disabled."
+        ],
+        "normalized_intent": {
+          "symbol": "CRM",
+          "action": "SELL",
+          "confidence": 0.74,
+          "rationale": "Exit or materially reduce long exposure in CRM now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a tactical bearish trade is considered, keep size modest given elevated volatility. Key risk levels for reassessment are the 178–181 zone, where CRM would need to reclaim and hold above the 10 EMA/VWMA area, with further confirmation above the 50-day moving average. Time horizon: near- to medium-term trading posture over the next several weeks to few months, ",
+          "quantity": null,
+          "notional_usd": null,
+          "order_type": "market",
+          "limit_price": null,
+          "stop_loss": null,
+          "take_profit": null,
+          "time_horizon": null,
+          "expected_edge": "Exit or materially reduce long exposure in CRM now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a",
+          "supporting_signals": [
+            "fresh news catalyst",
+            "price/trend confirmation",
+            "technical confirmation",
+            "portfolio/risk alignment"
+          ],
+          "risks": [
+            "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+          ],
+          "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+          "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+          "is_new_information": true,
+          "fits_success_patterns": true,
+          "contradicts_recent_failures": false,
+          "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+          "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nExit or materially reduce long exposure in `CRM` now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a tactical bearish trade is considered, keep size modest given elevated volatility. Key risk levels for reassessment are the `178–181` zone, where `CRM` would need to reclaim and hold above the 10 EMA/VWMA area, with further confirmation above the 50-day moving average. Time horizon: near- to medium-term trading posture over the next several weeks to few months, focused on capital preservation until price action improves.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `CRM`** because the bearish case is more actionable, more evidence-based, and requires fewer assumptions than the bullish one.\n\nThe aggressive analyst made the best possible bull argument: `CRM` is a high-quality enterprise software leader, sentiment is washed out, RSI is oversold, MACD has improved from deeply negative levels, and AI could ultimately become a monetization tailwind rather than a disruption. Those points matter, especially for a longer-term strategic investor. But they are still mostly arguments about what *could* happen.\n\nThe conservative analyst had the stronger trading case because it is anchored in what is already visible in the tape:\n\n- `CRM` remains below the **10 EMA**, **50-day SMA**, **200-day SMA**, and **VWMA**\n- Price is still below the key **178–181** acceptance zone\n- **MACD remains negative**, even if less negative than before\n- **Volatility is elevated** with ATR around 7.33, increasing execution risk\n- The broader **software sector remains under pressure** from AI-related repricing and multiple compression concerns\n\nThat is the profile of a stock still in technical damage, not one that has completed repair.\n\nThe neutral analyst correctly noted that this is not a broken business, and that a full liquidation can sometimes be too blunt when weakness is partly sector-driven rather than company-specific. That tempers conviction somewhat and prevents an extremely high confidence score. But the neutral case still supports risk reduction over optimism. Even that middle-ground view emphasizes waiting for confirmation above `178–181` before becoming constructive again.\n\nWhat ultimately separates **Sell** from **Hold** is the combination of weak trend structure and lack of confirmed accumulation. A “good company, bad stock” setup is precisely where investors get trapped by anchoring to business quality while ignoring market behavior. The bull thesis may eventually work, but right now it depends on:\n\n- AI sentiment improving\n- software multiples stabilizing\n- `CRM` being re-rated as an AI beneficiary\n- price reclaiming overhead levels\n\nNone of that is confirmed today.\n\nMeanwhile, the bearish thesis does not require business collapse. It only requires that the market continue withholding the benefit of the doubt, and the current chart supports that outcome. In other words, the downside case is simpler and more probable in the current window.\n\n**Portfolio decision framework for `CRM`:**\n- **If already long**: reduce or exit rather than wait for an unproven rebound\n- **If not invested**: stay out for now; do not try to catch the falling knife\n- **If tactically bearish**: use defined risk and small sizing because oversold names can squeeze sharply\n- **Re-entry condition**: reconsider only if `CRM` reclaims and holds above the `178–181` zone, with improving momentum and better sector participation\n\nBottom line: `CRM` remains a fundamentally credible company, but the stock is still under technical and narrative pressure. Until there is actual evidence of trend repair, the disciplined portfolio action is **Sell**.",
+          "source_rating": "SELL",
+          "warnings": [
+            "Position sizing was not explicit in the decision text."
+          ],
+          "protocol_warnings": [],
+          "execution_notes": []
+        },
+        "checks": {
+          "paper_only": true,
+          "allowed_symbols": true,
+          "effective_confidence_threshold": 0.75,
+          "confidence": false,
+          "supporting_signal_count": 4,
+          "multiple_signals": true,
+          "expected_edge": true,
+          "market_mispricing_reason": true,
+          "reasoning_quality": true,
+          "edge_quality": true,
+          "market_wrong_quality": true,
+          "risks_present": true,
+          "new_information": true,
+          "position_sizing_rationale": true,
+          "fits_success_patterns": true,
+          "recent_failures": true,
+          "open_order_conflict": true,
+          "order_notional": null,
+          "projected_symbol_value": 0.0,
+          "projected_gross_exposure": 1296.54,
+          "flip_flop_count": 0,
+          "flip_flop": true
+        }
+      },
+      "submitted_order": null,
+      "execution_status": "rejected",
+      "latest_price": 172.6,
+      "error": null,
+      "warnings": [],
+      "reflection": {
+        "symbol": "CRM",
+        "what_changed": "Fallback decision path used.",
+        "correct_signals": [],
+        "incorrect_signals": [
+          "Confidence 0.74 is below the threshold of 0.75.",
+          "Could not determine order notional safely."
+        ],
+        "lesson": "When structured reasoning fails, default to HOLD or require a stronger edge.",
+        "previous_reasoning": null,
+        "current_reasoning": "Exit or materially reduce long exposure in CRM now; do not initiate new long positions until the stock shows clear trend repair. For existing holders, use current liquidity to sell into strength or at market rather than averaging down. If a tactical bearish trade is considered, keep size modest given elevated volatility. Key risk levels for reassessment are the 178–181 zone, where CRM would need to reclaim and hold above the 10 EMA/VWMA area, with further confirmation above the 50-day moving average. Time horizon: near- to medium-term trading posture over the next several weeks to few months, ",
+        "action_taken": "SELL",
+        "confidence": 0.74
+      }
+    },
+    {
+      "symbol": "BEN",
+      "raw_decision_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nSell `BEN` into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranches instead of waiting for a breakout. Do not initiate a new long position in `BEN` at current levels. For any residual position, risk should be managed tightly around a failed attempt to reclaim and hold above the 50-day moving average near 25.65; a decisive move above that level with follow-through would be the main signal that this sell call may be early. Time horizon is near- to intermediate-term: capital should be redeployed now unless upcoming AUM reports and price action show multi-month improvement and a confirmed trend reversal.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `BEN`** because the bearish case was more investable than the bullish or neutral alternatives: the stock may be stabilizing, but the debate did not establish enough evidence of a durable business inflection to justify continued ownership.\n\nThe strongest bullish points were real but insufficient. `BEN` is holding above its 200-day SMA, short-term momentum has improved, RSI has recovered into the mid-50s, the 10-day EMA is rising, and monthly AUM increased from **$1.71T to $1.74T**. Those facts matter because asset managers can re-rate quickly if stabilization becomes credible. The aggressive analyst also correctly noted that low expectations can create upside if the company merely stops deteriorating.\n\nHowever, the conservative rebuttal is stronger because it focuses on what actually has to improve for `BEN` to outperform from here: **sustained net inflows, fee resilience, and better earnings power**. A single month of AUM growth does not prove that. In an asset manager, AUM can rise simply because markets went up, even if underlying flows remain weak. That distinction is critical. The bull case treated the AUM increase as an early inflection signal, but did not show that it reflected durable organic improvement rather than market-related lift.\n\nThe technical setup also does not justify overriding the fundamental uncertainty. While `BEN` is above the 200-day SMA, it is still **below the 50-day average around 25.65**, which leaves the intermediate trend unconfirmed. The aggressive analyst framed that as only a minor hurdle, but the conservative and neutral analysts were more persuasive in treating it as an important resistance level where failed rallies often stall. MACD is still negative, and RSI in the mid-50s signals recovery, not a decisive new uptrend. This is better-than-was price action, but not yet a confirmed breakout.\n\nThat distinction matters because `BEN` still operates under the same structural pressures highlighted by the bear case: **active-management headwinds, fee compression, and uncertain organic growth**. These are not abstract concerns; they are the core reason why stabilization alone may not translate into sustained equity outperformance. The neutral analyst was right that this is a transition zone, but for portfolio allocation purposes, transition stories without confirmed improvement often tie up capital without delivering enough return.\n\nStreet sentiment also supports caution. Evercore’s maintained **Underperform** and **$27 target** are not decisive on their own, but they reinforce the limited-upside argument. If current trading is already near the mid-25s, the implied upside to that target is modest, while the downside risk remains tied to disappointing AUM, failed technical breakout, or broader market weakness. That is not an attractive asymmetric setup for fresh capital.\n\nSo the portfolio-level conclusion is straightforward: `BEN` does not need to be collapsing to merit a sell. It simply needs to offer inferior expected return versus other uses of capital. Based on the debate, that is the case here. The stock appears closer to a **stabilization story than a proven turnaround**, and the burden of proof remains on the bulls.\n\nImplementation should follow the trader’s proposal:  \n- If long `BEN`, sell into current strength, especially near resistance in the mid-25s.  \n- If flat, do not open a new long.  \n- Only revisit the thesis if `BEN` can decisively reclaim and hold above the 50-day average with follow-through and if upcoming AUM reports show a **multi-month** pattern of improvement rather than a one-off increase.\n\nIn short, the evidence supports redeploying capital away from `BEN` until stabilization turns into a genuine operating inflection.",
+      "parsed_decision": {
+        "raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nSell `BEN` into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranches instead of waiting for a breakout. Do not initiate a new long position in `BEN` at current levels. For any residual position, risk should be managed tightly around a failed attempt to reclaim and hold above the 50-day moving average near 25.65; a decisive move above that level with follow-through would be the main signal that this sell call may be early. Time horizon is near- to intermediate-term: capital should be redeployed now unless upcoming AUM reports and price action show multi-month improvement and a confirmed trend reversal.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `BEN`** because the bearish case was more investable than the bullish or neutral alternatives: the stock may be stabilizing, but the debate did not establish enough evidence of a durable business inflection to justify continued ownership.\n\nThe strongest bullish points were real but insufficient. `BEN` is holding above its 200-day SMA, short-term momentum has improved, RSI has recovered into the mid-50s, the 10-day EMA is rising, and monthly AUM increased from **$1.71T to $1.74T**. Those facts matter because asset managers can re-rate quickly if stabilization becomes credible. The aggressive analyst also correctly noted that low expectations can create upside if the company merely stops deteriorating.\n\nHowever, the conservative rebuttal is stronger because it focuses on what actually has to improve for `BEN` to outperform from here: **sustained net inflows, fee resilience, and better earnings power**. A single month of AUM growth does not prove that. In an asset manager, AUM can rise simply because markets went up, even if underlying flows remain weak. That distinction is critical. The bull case treated the AUM increase as an early inflection signal, but did not show that it reflected durable organic improvement rather than market-related lift.\n\nThe technical setup also does not justify overriding the fundamental uncertainty. While `BEN` is above the 200-day SMA, it is still **below the 50-day average around 25.65**, which leaves the intermediate trend unconfirmed. The aggressive analyst framed that as only a minor hurdle, but the conservative and neutral analysts were more persuasive in treating it as an important resistance level where failed rallies often stall. MACD is still negative, and RSI in the mid-50s signals recovery, not a decisive new uptrend. This is better-than-was price action, but not yet a confirmed breakout.\n\nThat distinction matters because `BEN` still operates under the same structural pressures highlighted by the bear case: **active-management headwinds, fee compression, and uncertain organic growth**. These are not abstract concerns; they are the core reason why stabilization alone may not translate into sustained equity outperformance. The neutral analyst was right that this is a transition zone, but for portfolio allocation purposes, transition stories without confirmed improvement often tie up capital without delivering enough return.\n\nStreet sentiment also supports caution. Evercore’s maintained **Underperform** and **$27 target** are not decisive on their own, but they reinforce the limited-upside argument. If current trading is already near the mid-25s, the implied upside to that target is modest, while the downside risk remains tied to disappointing AUM, failed technical breakout, or broader market weakness. That is not an attractive asymmetric setup for fresh capital.\n\nSo the portfolio-level conclusion is straightforward: `BEN` does not need to be collapsing to merit a sell. It simply needs to offer inferior expected return versus other uses of capital. Based on the debate, that is the case here. The stock appears closer to a **stabilization story than a proven turnaround**, and the burden of proof remains on the bulls.\n\nImplementation should follow the trader’s proposal:  \n- If long `BEN`, sell into current strength, especially near resistance in the mid-25s.  \n- If flat, do not open a new long.  \n- Only revisit the thesis if `BEN` can decisively reclaim and hold above the 50-day average with follow-through and if upcoming AUM reports show a **multi-month** pattern of improvement rather than a one-off increase.\n\nIn short, the evidence supports redeploying capital away from `BEN` until stabilization turns into a genuine operating inflection.",
+        "intents": [
+          {
+            "symbol": "BEN",
+            "action": "SELL",
+            "confidence": 0.74,
+            "rationale": "Sell BEN into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranches instead of waiting for a breakout. Do not initiate a new long position in BEN at current levels. For any residual position, risk should be managed tightly around a failed attempt to reclaim and hold above the 50-day moving average near 25.65; a decisive move above that level with follow-through would be the main signal that this sell call may be early. Ti",
+            "quantity": null,
+            "notional_usd": null,
+            "order_type": "market",
+            "limit_price": null,
+            "stop_loss": null,
+            "take_profit": null,
+            "time_horizon": null,
+            "expected_edge": null,
+            "supporting_signals": [],
+            "risks": [],
+            "position_sizing_rationale": null,
+            "why_market_wrong": null,
+            "is_new_information": null,
+            "fits_success_patterns": null,
+            "contradicts_recent_failures": null,
+            "previous_reasoning_change": null,
+            "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nSell `BEN` into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranches instead of waiting for a breakout. Do not initiate a new long position in `BEN` at current levels. For any residual position, risk should be managed tightly around a failed attempt to reclaim and hold above the 50-day moving average near 25.65; a decisive move above that level with follow-through would be the main signal that this sell call may be early. Time horizon is near- to intermediate-term: capital should be redeployed now unless upcoming AUM reports and price action show multi-month improvement and a confirmed trend reversal.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `BEN`** because the bearish case was more investable than the bullish or neutral alternatives: the stock may be stabilizing, but the debate did not establish enough evidence of a durable business inflection to justify continued ownership.\n\nThe strongest bullish points were real but insufficient. `BEN` is holding above its 200-day SMA, short-term momentum has improved, RSI has recovered into the mid-50s, the 10-day EMA is rising, and monthly AUM increased from **$1.71T to $1.74T**. Those facts matter because asset managers can re-rate quickly if stabilization becomes credible. The aggressive analyst also correctly noted that low expectations can create upside if the company merely stops deteriorating.\n\nHowever, the conservative rebuttal is stronger because it focuses on what actually has to improve for `BEN` to outperform from here: **sustained net inflows, fee resilience, and better earnings power**. A single month of AUM growth does not prove that. In an asset manager, AUM can rise simply because markets went up, even if underlying flows remain weak. That distinction is critical. The bull case treated the AUM increase as an early inflection signal, but did not show that it reflected durable organic improvement rather than market-related lift.\n\nThe technical setup also does not justify overriding the fundamental uncertainty. While `BEN` is above the 200-day SMA, it is still **below the 50-day average around 25.65**, which leaves the intermediate trend unconfirmed. The aggressive analyst framed that as only a minor hurdle, but the conservative and neutral analysts were more persuasive in treating it as an important resistance level where failed rallies often stall. MACD is still negative, and RSI in the mid-50s signals recovery, not a decisive new uptrend. This is better-than-was price action, but not yet a confirmed breakout.\n\nThat distinction matters because `BEN` still operates under the same structural pressures highlighted by the bear case: **active-management headwinds, fee compression, and uncertain organic growth**. These are not abstract concerns; they are the core reason why stabilization alone may not translate into sustained equity outperformance. The neutral analyst was right that this is a transition zone, but for portfolio allocation purposes, transition stories without confirmed improvement often tie up capital without delivering enough return.\n\nStreet sentiment also supports caution. Evercore’s maintained **Underperform** and **$27 target** are not decisive on their own, but they reinforce the limited-upside argument. If current trading is already near the mid-25s, the implied upside to that target is modest, while the downside risk remains tied to disappointing AUM, failed technical breakout, or broader market weakness. That is not an attractive asymmetric setup for fresh capital.\n\nSo the portfolio-level conclusion is straightforward: `BEN` does not need to be collapsing to merit a sell. It simply needs to offer inferior expected return versus other uses of capital. Based on the debate, that is the case here. The stock appears closer to a **stabilization story than a proven turnaround**, and the burden of proof remains on the bulls.\n\nImplementation should follow the trader’s proposal:  \n- If long `BEN`, sell into current strength, especially near resistance in the mid-25s.  \n- If flat, do not open a new long.  \n- Only revisit the thesis if `BEN` can decisively reclaim and hold above the 50-day average with follow-through and if upcoming AUM reports show a **multi-month** pattern of improvement rather than a one-off increase.\n\nIn short, the evidence supports redeploying capital away from `BEN` until stabilization turns into a genuine operating inflection.",
+            "source_rating": "SELL",
+            "warnings": [
+              "Position sizing was not explicit in the decision text."
+            ],
+            "protocol_warnings": [],
+            "execution_notes": []
+          }
+        ],
+        "warnings": [],
+        "rejected": false
+      },
+      "arena_decision": {
+        "symbol": "BEN",
+        "action": "SELL",
+        "confidence": 0.74,
+        "rationale": "Sell BEN into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranches instead of waiting for a breakout. Do not initiate a new long position in BEN at current levels. For any residual position, risk should be managed tightly around a failed attempt to reclaim and hold above the 50-day moving average near 25.65; a decisive move above that level with follow-through would be the main signal that this sell call may be early. Ti",
+        "quantity": null,
+        "notional_usd": null,
+        "order_type": "market",
+        "limit_price": null,
+        "stop_loss": null,
+        "take_profit": null,
+        "time_horizon": null,
+        "expected_edge": "Sell BEN into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranch",
+        "supporting_signals": [
+          "fresh news catalyst",
+          "price/trend confirmation",
+          "technical confirmation",
+          "portfolio/risk alignment"
+        ],
+        "risks": [
+          "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+        ],
+        "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+        "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+        "is_new_information": true,
+        "fits_success_patterns": true,
+        "contradicts_recent_failures": false,
+        "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+        "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nSell `BEN` into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranches instead of waiting for a breakout. Do not initiate a new long position in `BEN` at current levels. For any residual position, risk should be managed tightly around a failed attempt to reclaim and hold above the 50-day moving average near 25.65; a decisive move above that level with follow-through would be the main signal that this sell call may be early. Time horizon is near- to intermediate-term: capital should be redeployed now unless upcoming AUM reports and price action show multi-month improvement and a confirmed trend reversal.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `BEN`** because the bearish case was more investable than the bullish or neutral alternatives: the stock may be stabilizing, but the debate did not establish enough evidence of a durable business inflection to justify continued ownership.\n\nThe strongest bullish points were real but insufficient. `BEN` is holding above its 200-day SMA, short-term momentum has improved, RSI has recovered into the mid-50s, the 10-day EMA is rising, and monthly AUM increased from **$1.71T to $1.74T**. Those facts matter because asset managers can re-rate quickly if stabilization becomes credible. The aggressive analyst also correctly noted that low expectations can create upside if the company merely stops deteriorating.\n\nHowever, the conservative rebuttal is stronger because it focuses on what actually has to improve for `BEN` to outperform from here: **sustained net inflows, fee resilience, and better earnings power**. A single month of AUM growth does not prove that. In an asset manager, AUM can rise simply because markets went up, even if underlying flows remain weak. That distinction is critical. The bull case treated the AUM increase as an early inflection signal, but did not show that it reflected durable organic improvement rather than market-related lift.\n\nThe technical setup also does not justify overriding the fundamental uncertainty. While `BEN` is above the 200-day SMA, it is still **below the 50-day average around 25.65**, which leaves the intermediate trend unconfirmed. The aggressive analyst framed that as only a minor hurdle, but the conservative and neutral analysts were more persuasive in treating it as an important resistance level where failed rallies often stall. MACD is still negative, and RSI in the mid-50s signals recovery, not a decisive new uptrend. This is better-than-was price action, but not yet a confirmed breakout.\n\nThat distinction matters because `BEN` still operates under the same structural pressures highlighted by the bear case: **active-management headwinds, fee compression, and uncertain organic growth**. These are not abstract concerns; they are the core reason why stabilization alone may not translate into sustained equity outperformance. The neutral analyst was right that this is a transition zone, but for portfolio allocation purposes, transition stories without confirmed improvement often tie up capital without delivering enough return.\n\nStreet sentiment also supports caution. Evercore’s maintained **Underperform** and **$27 target** are not decisive on their own, but they reinforce the limited-upside argument. If current trading is already near the mid-25s, the implied upside to that target is modest, while the downside risk remains tied to disappointing AUM, failed technical breakout, or broader market weakness. That is not an attractive asymmetric setup for fresh capital.\n\nSo the portfolio-level conclusion is straightforward: `BEN` does not need to be collapsing to merit a sell. It simply needs to offer inferior expected return versus other uses of capital. Based on the debate, that is the case here. The stock appears closer to a **stabilization story than a proven turnaround**, and the burden of proof remains on the bulls.\n\nImplementation should follow the trader’s proposal:  \n- If long `BEN`, sell into current strength, especially near resistance in the mid-25s.  \n- If flat, do not open a new long.  \n- Only revisit the thesis if `BEN` can decisively reclaim and hold above the 50-day average with follow-through and if upcoming AUM reports show a **multi-month** pattern of improvement rather than a one-off increase.\n\nIn short, the evidence supports redeploying capital away from `BEN` until stabilization turns into a genuine operating inflection.",
+        "source_rating": "SELL",
+        "warnings": [
+          "Position sizing was not explicit in the decision text."
+        ],
+        "protocol_warnings": [],
+        "execution_notes": []
+      },
+      "risk_decision": {
+        "approved": false,
+        "reasons": [
+          "Confidence 0.74 is below the threshold of 0.75.",
+          "Could not determine order notional safely.",
+          "No long position exists in BEN; short selling is disabled."
+        ],
+        "normalized_intent": {
+          "symbol": "BEN",
+          "action": "SELL",
+          "confidence": 0.74,
+          "rationale": "Sell BEN into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranches instead of waiting for a breakout. Do not initiate a new long position in BEN at current levels. For any residual position, risk should be managed tightly around a failed attempt to reclaim and hold above the 50-day moving average near 25.65; a decisive move above that level with follow-through would be the main signal that this sell call may be early. Ti",
+          "quantity": null,
+          "notional_usd": null,
+          "order_type": "market",
+          "limit_price": null,
+          "stop_loss": null,
+          "take_profit": null,
+          "time_horizon": null,
+          "expected_edge": "Sell BEN into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranch",
+          "supporting_signals": [
+            "fresh news catalyst",
+            "price/trend confirmation",
+            "technical confirmation",
+            "portfolio/risk alignment"
+          ],
+          "risks": [
+            "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+          ],
+          "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+          "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+          "is_new_information": true,
+          "fits_success_patterns": true,
+          "contradicts_recent_failures": false,
+          "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+          "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 74%\n\n3. **Executive Summary**:  \nSell `BEN` into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranches instead of waiting for a breakout. Do not initiate a new long position in `BEN` at current levels. For any residual position, risk should be managed tightly around a failed attempt to reclaim and hold above the 50-day moving average near 25.65; a decisive move above that level with follow-through would be the main signal that this sell call may be early. Time horizon is near- to intermediate-term: capital should be redeployed now unless upcoming AUM reports and price action show multi-month improvement and a confirmed trend reversal.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell `BEN`** because the bearish case was more investable than the bullish or neutral alternatives: the stock may be stabilizing, but the debate did not establish enough evidence of a durable business inflection to justify continued ownership.\n\nThe strongest bullish points were real but insufficient. `BEN` is holding above its 200-day SMA, short-term momentum has improved, RSI has recovered into the mid-50s, the 10-day EMA is rising, and monthly AUM increased from **$1.71T to $1.74T**. Those facts matter because asset managers can re-rate quickly if stabilization becomes credible. The aggressive analyst also correctly noted that low expectations can create upside if the company merely stops deteriorating.\n\nHowever, the conservative rebuttal is stronger because it focuses on what actually has to improve for `BEN` to outperform from here: **sustained net inflows, fee resilience, and better earnings power**. A single month of AUM growth does not prove that. In an asset manager, AUM can rise simply because markets went up, even if underlying flows remain weak. That distinction is critical. The bull case treated the AUM increase as an early inflection signal, but did not show that it reflected durable organic improvement rather than market-related lift.\n\nThe technical setup also does not justify overriding the fundamental uncertainty. While `BEN` is above the 200-day SMA, it is still **below the 50-day average around 25.65**, which leaves the intermediate trend unconfirmed. The aggressive analyst framed that as only a minor hurdle, but the conservative and neutral analysts were more persuasive in treating it as an important resistance level where failed rallies often stall. MACD is still negative, and RSI in the mid-50s signals recovery, not a decisive new uptrend. This is better-than-was price action, but not yet a confirmed breakout.\n\nThat distinction matters because `BEN` still operates under the same structural pressures highlighted by the bear case: **active-management headwinds, fee compression, and uncertain organic growth**. These are not abstract concerns; they are the core reason why stabilization alone may not translate into sustained equity outperformance. The neutral analyst was right that this is a transition zone, but for portfolio allocation purposes, transition stories without confirmed improvement often tie up capital without delivering enough return.\n\nStreet sentiment also supports caution. Evercore’s maintained **Underperform** and **$27 target** are not decisive on their own, but they reinforce the limited-upside argument. If current trading is already near the mid-25s, the implied upside to that target is modest, while the downside risk remains tied to disappointing AUM, failed technical breakout, or broader market weakness. That is not an attractive asymmetric setup for fresh capital.\n\nSo the portfolio-level conclusion is straightforward: `BEN` does not need to be collapsing to merit a sell. It simply needs to offer inferior expected return versus other uses of capital. Based on the debate, that is the case here. The stock appears closer to a **stabilization story than a proven turnaround**, and the burden of proof remains on the bulls.\n\nImplementation should follow the trader’s proposal:  \n- If long `BEN`, sell into current strength, especially near resistance in the mid-25s.  \n- If flat, do not open a new long.  \n- Only revisit the thesis if `BEN` can decisively reclaim and hold above the 50-day average with follow-through and if upcoming AUM reports show a **multi-month** pattern of improvement rather than a one-off increase.\n\nIn short, the evidence supports redeploying capital away from `BEN` until stabilization turns into a genuine operating inflection.",
+          "source_rating": "SELL",
+          "warnings": [
+            "Position sizing was not explicit in the decision text."
+          ],
+          "protocol_warnings": [],
+          "execution_notes": []
+        },
+        "checks": {
+          "paper_only": true,
+          "allowed_symbols": true,
+          "effective_confidence_threshold": 0.75,
+          "confidence": false,
+          "supporting_signal_count": 4,
+          "multiple_signals": true,
+          "expected_edge": true,
+          "market_mispricing_reason": true,
+          "reasoning_quality": true,
+          "edge_quality": true,
+          "market_wrong_quality": true,
+          "risks_present": true,
+          "new_information": true,
+          "position_sizing_rationale": true,
+          "fits_success_patterns": true,
+          "recent_failures": true,
+          "open_order_conflict": true,
+          "order_notional": null,
+          "projected_symbol_value": 0.0,
+          "projected_gross_exposure": 1296.54,
+          "flip_flop_count": 0,
+          "flip_flop": true
+        }
+      },
+      "submitted_order": null,
+      "execution_status": "rejected",
+      "latest_price": 25.51,
+      "error": null,
+      "warnings": [],
+      "reflection": {
+        "symbol": "BEN",
+        "what_changed": "Fallback decision path used.",
+        "correct_signals": [],
+        "incorrect_signals": [
+          "Confidence 0.74 is below the threshold of 0.75.",
+          "Could not determine order notional safely."
+        ],
+        "lesson": "When structured reasoning fails, default to HOLD or require a stronger edge.",
+        "previous_reasoning": null,
+        "current_reasoning": "Sell BEN into current strength rather than wait for fuller confirmation that may not arrive. If already long, exit or materially reduce now near the mid-25s resistance area; if liquidity or tax considerations matter, scale out in 1–2 tranches instead of waiting for a breakout. Do not initiate a new long position in BEN at current levels. For any residual position, risk should be managed tightly around a failed attempt to reclaim and hold above the 50-day moving average near 25.65; a decisive move above that level with follow-through would be the main signal that this sell call may be early. Ti",
+        "action_taken": "SELL",
+        "confidence": 0.74
+      }
+    },
+    {
+      "symbol": "ZBH",
+      "raw_decision_text": "1. **Rating**: Sell\n\n2. **Confidence**: 72%\n\n3. **Executive Summary**:  \n**Action**: Sell **ZBH** into current strength near the 200-day moving average. If no position is held, avoid initiating a long.  \n**Position sizing**: Move to zero exposure, or if liquidity/tax constraints apply, cut to a de minimis residual position only.  \n**Key risk levels**: Immediate decision zone is the 200-day moving average near **95.09**. A decisive breakout and hold above that level with volume would invalidate the near-term sell stance. On the downside, loss of the **50 SMA near 92.66** and the **low-93s support zone** would reinforce the bearish view.  \n**Time horizon**: Near- to medium-term tactical horizon over the next several weeks to one or two earnings cycles. Reassess only if **ZBH** shows confirmed technical follow-through above the 200-day and/or clear improvement in revenue growth, margins, cash flow, or guidance.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell ZBH** because the bearish case is better supported by the actual evidence than the bullish case, and the current setup does not justify committing capital.\n\nThe strongest bullish argument is technical repair. The debate highlighted that **ZBH** is trading around **94.865**, above the **10 EMA (91.60)** and **50 SMA (92.66)**, with **RSI at 56.9** and **MACD improving from -1.67 to -0.11**. That is real improvement and suggests the stock is no longer in a clearly broken downtrend. The aggressive analyst is right that these conditions can precede a breakout.\n\nBut that is exactly the issue: they can precede a breakout, not confirm one. The stock is still effectively sitting at the key long-term resistance level, the **200-day moving average around 95.09**. The conservative and neutral analysts made the more risk-aware point: this area is a decision point where many recoveries fail. For a portfolio decision, “possible breakout” is weaker evidence than “confirmed breakout.” The chart has improved, but the setup remains incomplete.\n\nMore importantly, the bullish case lacks hard fundamental confirmation. Across the debate, there was **no specific evidence** of:\n- accelerating revenue,\n- improving margins,\n- stronger free cash flow,\n- market share gains,\n- or a company-specific catalyst.\n\nThat absence matters. A quality med-tech franchise and aging-population tailwinds are supportive background factors, but they do not by themselves create a timely buy case. The research manager’s framing is persuasive here: this is a case of a stock looking “less bad,” not yet “good enough.”\n\nSell-side sentiment also leans cautious rather than supportive. The debate cited:\n- **BTIG downgraded to Neutral**\n- **Barclays remains Underweight with a $100 target**\n\nEven if the Barclays target is above the current price, the signal is still limited upside, not compelling rerating potential. That matters when the stock is already near resistance and lacks a clear catalyst. The burden of proof should be higher, not lower.\n\nThe neutral analyst made the best challenge to an outright sell by arguing that there is also no direct evidence of fresh deterioration. That is fair. However, portfolio management is not just about avoiding broken names; it is also about opportunity cost and quality of setup. Here, **ZBH** does not offer enough confirmed upside to justify holding capital in it when the thesis still depends on future proof. In that context, reducing or exiting is more disciplined than waiting.\n\nSo the synthesis is straightforward:\n- The aggressive analyst correctly identified a meaningful technical repair.\n- The neutral analyst correctly noted this is a wait-for-confirmation setup.\n- The conservative analyst correctly concluded that, under a risk-first mandate, current evidence is insufficient and the stock is vulnerable to failure at resistance.\n\nThat makes **Sell ZBH** the best final decision.\n\n**What would change the view**:  \nI would revisit **ZBH** only if one of two things happens:\n1. **ZBH** decisively breaks above the **200-day moving average near 95.09** and holds that move with convincing volume and follow-through; or  \n2. earnings/commentary show tangible improvement in procedure growth, margins, cash flow, guidance, or competitive positioning.\n\nUntil then, the balance of evidence favors exiting or avoiding **ZBH** rather than giving it credit for a recovery it has not yet fully earned.",
+      "parsed_decision": {
+        "raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 72%\n\n3. **Executive Summary**:  \n**Action**: Sell **ZBH** into current strength near the 200-day moving average. If no position is held, avoid initiating a long.  \n**Position sizing**: Move to zero exposure, or if liquidity/tax constraints apply, cut to a de minimis residual position only.  \n**Key risk levels**: Immediate decision zone is the 200-day moving average near **95.09**. A decisive breakout and hold above that level with volume would invalidate the near-term sell stance. On the downside, loss of the **50 SMA near 92.66** and the **low-93s support zone** would reinforce the bearish view.  \n**Time horizon**: Near- to medium-term tactical horizon over the next several weeks to one or two earnings cycles. Reassess only if **ZBH** shows confirmed technical follow-through above the 200-day and/or clear improvement in revenue growth, margins, cash flow, or guidance.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell ZBH** because the bearish case is better supported by the actual evidence than the bullish case, and the current setup does not justify committing capital.\n\nThe strongest bullish argument is technical repair. The debate highlighted that **ZBH** is trading around **94.865**, above the **10 EMA (91.60)** and **50 SMA (92.66)**, with **RSI at 56.9** and **MACD improving from -1.67 to -0.11**. That is real improvement and suggests the stock is no longer in a clearly broken downtrend. The aggressive analyst is right that these conditions can precede a breakout.\n\nBut that is exactly the issue: they can precede a breakout, not confirm one. The stock is still effectively sitting at the key long-term resistance level, the **200-day moving average around 95.09**. The conservative and neutral analysts made the more risk-aware point: this area is a decision point where many recoveries fail. For a portfolio decision, “possible breakout” is weaker evidence than “confirmed breakout.” The chart has improved, but the setup remains incomplete.\n\nMore importantly, the bullish case lacks hard fundamental confirmation. Across the debate, there was **no specific evidence** of:\n- accelerating revenue,\n- improving margins,\n- stronger free cash flow,\n- market share gains,\n- or a company-specific catalyst.\n\nThat absence matters. A quality med-tech franchise and aging-population tailwinds are supportive background factors, but they do not by themselves create a timely buy case. The research manager’s framing is persuasive here: this is a case of a stock looking “less bad,” not yet “good enough.”\n\nSell-side sentiment also leans cautious rather than supportive. The debate cited:\n- **BTIG downgraded to Neutral**\n- **Barclays remains Underweight with a $100 target**\n\nEven if the Barclays target is above the current price, the signal is still limited upside, not compelling rerating potential. That matters when the stock is already near resistance and lacks a clear catalyst. The burden of proof should be higher, not lower.\n\nThe neutral analyst made the best challenge to an outright sell by arguing that there is also no direct evidence of fresh deterioration. That is fair. However, portfolio management is not just about avoiding broken names; it is also about opportunity cost and quality of setup. Here, **ZBH** does not offer enough confirmed upside to justify holding capital in it when the thesis still depends on future proof. In that context, reducing or exiting is more disciplined than waiting.\n\nSo the synthesis is straightforward:\n- The aggressive analyst correctly identified a meaningful technical repair.\n- The neutral analyst correctly noted this is a wait-for-confirmation setup.\n- The conservative analyst correctly concluded that, under a risk-first mandate, current evidence is insufficient and the stock is vulnerable to failure at resistance.\n\nThat makes **Sell ZBH** the best final decision.\n\n**What would change the view**:  \nI would revisit **ZBH** only if one of two things happens:\n1. **ZBH** decisively breaks above the **200-day moving average near 95.09** and holds that move with convincing volume and follow-through; or  \n2. earnings/commentary show tangible improvement in procedure growth, margins, cash flow, guidance, or competitive positioning.\n\nUntil then, the balance of evidence favors exiting or avoiding **ZBH** rather than giving it credit for a recovery it has not yet fully earned.",
+        "intents": [
+          {
+            "symbol": "ZBH",
+            "action": "SELL",
+            "confidence": 0.72,
+            "rationale": "Action: Sell ZBH into current strength near the 200-day moving average. If no position is held, avoid initiating a long.",
+            "quantity": null,
+            "notional_usd": null,
+            "order_type": "market",
+            "limit_price": null,
+            "stop_loss": null,
+            "take_profit": null,
+            "time_horizon": null,
+            "expected_edge": null,
+            "supporting_signals": [],
+            "risks": [],
+            "position_sizing_rationale": null,
+            "why_market_wrong": null,
+            "is_new_information": null,
+            "fits_success_patterns": null,
+            "contradicts_recent_failures": null,
+            "previous_reasoning_change": null,
+            "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 72%\n\n3. **Executive Summary**:  \n**Action**: Sell **ZBH** into current strength near the 200-day moving average. If no position is held, avoid initiating a long.  \n**Position sizing**: Move to zero exposure, or if liquidity/tax constraints apply, cut to a de minimis residual position only.  \n**Key risk levels**: Immediate decision zone is the 200-day moving average near **95.09**. A decisive breakout and hold above that level with volume would invalidate the near-term sell stance. On the downside, loss of the **50 SMA near 92.66** and the **low-93s support zone** would reinforce the bearish view.  \n**Time horizon**: Near- to medium-term tactical horizon over the next several weeks to one or two earnings cycles. Reassess only if **ZBH** shows confirmed technical follow-through above the 200-day and/or clear improvement in revenue growth, margins, cash flow, or guidance.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell ZBH** because the bearish case is better supported by the actual evidence than the bullish case, and the current setup does not justify committing capital.\n\nThe strongest bullish argument is technical repair. The debate highlighted that **ZBH** is trading around **94.865**, above the **10 EMA (91.60)** and **50 SMA (92.66)**, with **RSI at 56.9** and **MACD improving from -1.67 to -0.11**. That is real improvement and suggests the stock is no longer in a clearly broken downtrend. The aggressive analyst is right that these conditions can precede a breakout.\n\nBut that is exactly the issue: they can precede a breakout, not confirm one. The stock is still effectively sitting at the key long-term resistance level, the **200-day moving average around 95.09**. The conservative and neutral analysts made the more risk-aware point: this area is a decision point where many recoveries fail. For a portfolio decision, “possible breakout” is weaker evidence than “confirmed breakout.” The chart has improved, but the setup remains incomplete.\n\nMore importantly, the bullish case lacks hard fundamental confirmation. Across the debate, there was **no specific evidence** of:\n- accelerating revenue,\n- improving margins,\n- stronger free cash flow,\n- market share gains,\n- or a company-specific catalyst.\n\nThat absence matters. A quality med-tech franchise and aging-population tailwinds are supportive background factors, but they do not by themselves create a timely buy case. The research manager’s framing is persuasive here: this is a case of a stock looking “less bad,” not yet “good enough.”\n\nSell-side sentiment also leans cautious rather than supportive. The debate cited:\n- **BTIG downgraded to Neutral**\n- **Barclays remains Underweight with a $100 target**\n\nEven if the Barclays target is above the current price, the signal is still limited upside, not compelling rerating potential. That matters when the stock is already near resistance and lacks a clear catalyst. The burden of proof should be higher, not lower.\n\nThe neutral analyst made the best challenge to an outright sell by arguing that there is also no direct evidence of fresh deterioration. That is fair. However, portfolio management is not just about avoiding broken names; it is also about opportunity cost and quality of setup. Here, **ZBH** does not offer enough confirmed upside to justify holding capital in it when the thesis still depends on future proof. In that context, reducing or exiting is more disciplined than waiting.\n\nSo the synthesis is straightforward:\n- The aggressive analyst correctly identified a meaningful technical repair.\n- The neutral analyst correctly noted this is a wait-for-confirmation setup.\n- The conservative analyst correctly concluded that, under a risk-first mandate, current evidence is insufficient and the stock is vulnerable to failure at resistance.\n\nThat makes **Sell ZBH** the best final decision.\n\n**What would change the view**:  \nI would revisit **ZBH** only if one of two things happens:\n1. **ZBH** decisively breaks above the **200-day moving average near 95.09** and holds that move with convincing volume and follow-through; or  \n2. earnings/commentary show tangible improvement in procedure growth, margins, cash flow, guidance, or competitive positioning.\n\nUntil then, the balance of evidence favors exiting or avoiding **ZBH** rather than giving it credit for a recovery it has not yet fully earned.",
+            "source_rating": "SELL",
+            "warnings": [
+              "Position sizing was not explicit in the decision text."
+            ],
+            "protocol_warnings": [],
+            "execution_notes": []
+          }
+        ],
+        "warnings": [],
+        "rejected": false
+      },
+      "arena_decision": {
+        "symbol": "ZBH",
+        "action": "SELL",
+        "confidence": 0.72,
+        "rationale": "Action: Sell ZBH into current strength near the 200-day moving average. If no position is held, avoid initiating a long.",
+        "quantity": null,
+        "notional_usd": null,
+        "order_type": "market",
+        "limit_price": null,
+        "stop_loss": null,
+        "take_profit": null,
+        "time_horizon": null,
+        "expected_edge": "Action: Sell ZBH into current strength near the 200-day moving average. If no position is held, avoid initiating a long.",
+        "supporting_signals": [
+          "fresh news catalyst",
+          "price/trend confirmation",
+          "technical confirmation",
+          "portfolio/risk alignment"
+        ],
+        "risks": [
+          "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+        ],
+        "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+        "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+        "is_new_information": true,
+        "fits_success_patterns": true,
+        "contradicts_recent_failures": false,
+        "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+        "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 72%\n\n3. **Executive Summary**:  \n**Action**: Sell **ZBH** into current strength near the 200-day moving average. If no position is held, avoid initiating a long.  \n**Position sizing**: Move to zero exposure, or if liquidity/tax constraints apply, cut to a de minimis residual position only.  \n**Key risk levels**: Immediate decision zone is the 200-day moving average near **95.09**. A decisive breakout and hold above that level with volume would invalidate the near-term sell stance. On the downside, loss of the **50 SMA near 92.66** and the **low-93s support zone** would reinforce the bearish view.  \n**Time horizon**: Near- to medium-term tactical horizon over the next several weeks to one or two earnings cycles. Reassess only if **ZBH** shows confirmed technical follow-through above the 200-day and/or clear improvement in revenue growth, margins, cash flow, or guidance.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell ZBH** because the bearish case is better supported by the actual evidence than the bullish case, and the current setup does not justify committing capital.\n\nThe strongest bullish argument is technical repair. The debate highlighted that **ZBH** is trading around **94.865**, above the **10 EMA (91.60)** and **50 SMA (92.66)**, with **RSI at 56.9** and **MACD improving from -1.67 to -0.11**. That is real improvement and suggests the stock is no longer in a clearly broken downtrend. The aggressive analyst is right that these conditions can precede a breakout.\n\nBut that is exactly the issue: they can precede a breakout, not confirm one. The stock is still effectively sitting at the key long-term resistance level, the **200-day moving average around 95.09**. The conservative and neutral analysts made the more risk-aware point: this area is a decision point where many recoveries fail. For a portfolio decision, “possible breakout” is weaker evidence than “confirmed breakout.” The chart has improved, but the setup remains incomplete.\n\nMore importantly, the bullish case lacks hard fundamental confirmation. Across the debate, there was **no specific evidence** of:\n- accelerating revenue,\n- improving margins,\n- stronger free cash flow,\n- market share gains,\n- or a company-specific catalyst.\n\nThat absence matters. A quality med-tech franchise and aging-population tailwinds are supportive background factors, but they do not by themselves create a timely buy case. The research manager’s framing is persuasive here: this is a case of a stock looking “less bad,” not yet “good enough.”\n\nSell-side sentiment also leans cautious rather than supportive. The debate cited:\n- **BTIG downgraded to Neutral**\n- **Barclays remains Underweight with a $100 target**\n\nEven if the Barclays target is above the current price, the signal is still limited upside, not compelling rerating potential. That matters when the stock is already near resistance and lacks a clear catalyst. The burden of proof should be higher, not lower.\n\nThe neutral analyst made the best challenge to an outright sell by arguing that there is also no direct evidence of fresh deterioration. That is fair. However, portfolio management is not just about avoiding broken names; it is also about opportunity cost and quality of setup. Here, **ZBH** does not offer enough confirmed upside to justify holding capital in it when the thesis still depends on future proof. In that context, reducing or exiting is more disciplined than waiting.\n\nSo the synthesis is straightforward:\n- The aggressive analyst correctly identified a meaningful technical repair.\n- The neutral analyst correctly noted this is a wait-for-confirmation setup.\n- The conservative analyst correctly concluded that, under a risk-first mandate, current evidence is insufficient and the stock is vulnerable to failure at resistance.\n\nThat makes **Sell ZBH** the best final decision.\n\n**What would change the view**:  \nI would revisit **ZBH** only if one of two things happens:\n1. **ZBH** decisively breaks above the **200-day moving average near 95.09** and holds that move with convincing volume and follow-through; or  \n2. earnings/commentary show tangible improvement in procedure growth, margins, cash flow, guidance, or competitive positioning.\n\nUntil then, the balance of evidence favors exiting or avoiding **ZBH** rather than giving it credit for a recovery it has not yet fully earned.",
+        "source_rating": "SELL",
+        "warnings": [
+          "Position sizing was not explicit in the decision text."
+        ],
+        "protocol_warnings": [],
+        "execution_notes": []
+      },
+      "risk_decision": {
+        "approved": false,
+        "reasons": [
+          "Confidence 0.72 is below the threshold of 0.75.",
+          "Could not determine order notional safely.",
+          "No long position exists in ZBH; short selling is disabled."
+        ],
+        "normalized_intent": {
+          "symbol": "ZBH",
+          "action": "SELL",
+          "confidence": 0.72,
+          "rationale": "Action: Sell ZBH into current strength near the 200-day moving average. If no position is held, avoid initiating a long.",
+          "quantity": null,
+          "notional_usd": null,
+          "order_type": "market",
+          "limit_price": null,
+          "stop_loss": null,
+          "take_profit": null,
+          "time_horizon": null,
+          "expected_edge": "Action: Sell ZBH into current strength near the 200-day moving average. If no position is held, avoid initiating a long.",
+          "supporting_signals": [
+            "fresh news catalyst",
+            "price/trend confirmation",
+            "technical confirmation",
+            "portfolio/risk alignment"
+          ],
+          "risks": [
+            "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+          ],
+          "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+          "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+          "is_new_information": true,
+          "fits_success_patterns": true,
+          "contradicts_recent_failures": false,
+          "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+          "source_raw_text": "1. **Rating**: Sell\n\n2. **Confidence**: 72%\n\n3. **Executive Summary**:  \n**Action**: Sell **ZBH** into current strength near the 200-day moving average. If no position is held, avoid initiating a long.  \n**Position sizing**: Move to zero exposure, or if liquidity/tax constraints apply, cut to a de minimis residual position only.  \n**Key risk levels**: Immediate decision zone is the 200-day moving average near **95.09**. A decisive breakout and hold above that level with volume would invalidate the near-term sell stance. On the downside, loss of the **50 SMA near 92.66** and the **low-93s support zone** would reinforce the bearish view.  \n**Time horizon**: Near- to medium-term tactical horizon over the next several weeks to one or two earnings cycles. Reassess only if **ZBH** shows confirmed technical follow-through above the 200-day and/or clear improvement in revenue growth, margins, cash flow, or guidance.\n\n4. **Investment Thesis**:  \nThe final decision is **Sell ZBH** because the bearish case is better supported by the actual evidence than the bullish case, and the current setup does not justify committing capital.\n\nThe strongest bullish argument is technical repair. The debate highlighted that **ZBH** is trading around **94.865**, above the **10 EMA (91.60)** and **50 SMA (92.66)**, with **RSI at 56.9** and **MACD improving from -1.67 to -0.11**. That is real improvement and suggests the stock is no longer in a clearly broken downtrend. The aggressive analyst is right that these conditions can precede a breakout.\n\nBut that is exactly the issue: they can precede a breakout, not confirm one. The stock is still effectively sitting at the key long-term resistance level, the **200-day moving average around 95.09**. The conservative and neutral analysts made the more risk-aware point: this area is a decision point where many recoveries fail. For a portfolio decision, “possible breakout” is weaker evidence than “confirmed breakout.” The chart has improved, but the setup remains incomplete.\n\nMore importantly, the bullish case lacks hard fundamental confirmation. Across the debate, there was **no specific evidence** of:\n- accelerating revenue,\n- improving margins,\n- stronger free cash flow,\n- market share gains,\n- or a company-specific catalyst.\n\nThat absence matters. A quality med-tech franchise and aging-population tailwinds are supportive background factors, but they do not by themselves create a timely buy case. The research manager’s framing is persuasive here: this is a case of a stock looking “less bad,” not yet “good enough.”\n\nSell-side sentiment also leans cautious rather than supportive. The debate cited:\n- **BTIG downgraded to Neutral**\n- **Barclays remains Underweight with a $100 target**\n\nEven if the Barclays target is above the current price, the signal is still limited upside, not compelling rerating potential. That matters when the stock is already near resistance and lacks a clear catalyst. The burden of proof should be higher, not lower.\n\nThe neutral analyst made the best challenge to an outright sell by arguing that there is also no direct evidence of fresh deterioration. That is fair. However, portfolio management is not just about avoiding broken names; it is also about opportunity cost and quality of setup. Here, **ZBH** does not offer enough confirmed upside to justify holding capital in it when the thesis still depends on future proof. In that context, reducing or exiting is more disciplined than waiting.\n\nSo the synthesis is straightforward:\n- The aggressive analyst correctly identified a meaningful technical repair.\n- The neutral analyst correctly noted this is a wait-for-confirmation setup.\n- The conservative analyst correctly concluded that, under a risk-first mandate, current evidence is insufficient and the stock is vulnerable to failure at resistance.\n\nThat makes **Sell ZBH** the best final decision.\n\n**What would change the view**:  \nI would revisit **ZBH** only if one of two things happens:\n1. **ZBH** decisively breaks above the **200-day moving average near 95.09** and holds that move with convincing volume and follow-through; or  \n2. earnings/commentary show tangible improvement in procedure growth, margins, cash flow, guidance, or competitive positioning.\n\nUntil then, the balance of evidence favors exiting or avoiding **ZBH** rather than giving it credit for a recovery it has not yet fully earned.",
+          "source_rating": "SELL",
+          "warnings": [
+            "Position sizing was not explicit in the decision text."
+          ],
+          "protocol_warnings": [],
+          "execution_notes": []
+        },
+        "checks": {
+          "paper_only": true,
+          "allowed_symbols": true,
+          "effective_confidence_threshold": 0.75,
+          "confidence": false,
+          "supporting_signal_count": 4,
+          "multiple_signals": true,
+          "expected_edge": true,
+          "market_mispricing_reason": true,
+          "reasoning_quality": true,
+          "edge_quality": true,
+          "market_wrong_quality": true,
+          "risks_present": true,
+          "new_information": true,
+          "position_sizing_rationale": true,
+          "fits_success_patterns": true,
+          "recent_failures": true,
+          "open_order_conflict": true,
+          "order_notional": null,
+          "projected_symbol_value": 0.0,
+          "projected_gross_exposure": 1296.54,
+          "flip_flop_count": 0,
+          "flip_flop": true
+        }
+      },
+      "submitted_order": null,
+      "execution_status": "rejected",
+      "latest_price": 94.74,
+      "error": null,
+      "warnings": [],
+      "reflection": {
+        "symbol": "ZBH",
+        "what_changed": "Fallback decision path used.",
+        "correct_signals": [],
+        "incorrect_signals": [
+          "Confidence 0.72 is below the threshold of 0.75.",
+          "Could not determine order notional safely."
+        ],
+        "lesson": "When structured reasoning fails, default to HOLD or require a stronger edge.",
+        "previous_reasoning": null,
+        "current_reasoning": "Action: Sell ZBH into current strength near the 200-day moving average. If no position is held, avoid initiating a long.",
+        "action_taken": "SELL",
+        "confidence": 0.72
+      }
+    },
+    {
+      "symbol": "DIS",
+      "raw_decision_text": "1. **Rating**: **Sell**\n\n2. **Confidence**: **74%**\n\n3. **Executive Summary**:  \nFor `DIS`, the trading decision is to **sell existing long exposure into strength and avoid initiating new positions**. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the **50-day SMA (~102.07)** and well below the **200-day SMA (~111.02)**, which keeps the broader trend corrective. If already long, use rallies near and just above the 50-day area to reduce or exit. For any tactical bearish trade, keep size modest given improving momentum; this is more a **fade-the-rally** setup than a high-conviction breakdown. A reasonable risk line for bearish positioning is a sustained breakout above the **200-day SMA / 111 area**, which would materially weaken the current bear thesis. Time horizon: **near- to medium-term trading view over the next several weeks to a few months**.\n\n4. **Investment Thesis**:  \nThe final decision on `DIS` is **Sell** because the bearish case is currently more evidence-based than the bullish case, even though there are real signs of stabilization.\n\nThe aggressive analyst made the best bullish points: momentum has improved meaningfully, with **RSI recovering from deeply oversold territory to ~50.58**, **MACD histogram turning positive**, and price reclaiming the **10 EMA**. There are also plausible strategic positives: **ESPN’s Disney+ expansion across 53 countries**, potential **cost discipline via layoffs**, and supportive sell-side sentiment such as **Barclays’ Overweight rating and $130 target**. These factors support the idea that `DIS` may be in early repair rather than outright deterioration.\n\nHowever, those positives are still mostly **anticipatory**, not confirmed. The conservative analyst’s core point is the most investable one: `DIS` remains **below the 50 SMA and materially below the 200 SMA**, meaning the longer-term trend is still damaged. The stock has rebounded from oversold conditions, but a rebound is not the same as a durable reversal. This distinction is critical. Many failed rallies begin exactly this way: short-term momentum improves, sentiment gets less negative, and investors start pricing in a turnaround before earnings power actually validates it.\n\nThe neutral analyst best framed the middle ground: `DIS` is **improving but incomplete**. That is true, but as Portfolio Manager, the decision must emphasize capital allocation discipline. At current levels around **101.16**, the stock is pressing resistance near the **50-day average** and trading close to the **upper Bollinger band (~101.72)**. That is not an attractive place to add fresh long risk. If `DIS` were already accepting above the 50-day and building toward the 200-day with volume, the recommendation could move toward Hold or even Overweight. But the debate did not establish that. Right now, the stock looks more like a **technical bounce inside a broader corrective structure** than a proven trend change.\n\nFundamentally, the turnaround case also lacks hard confirmation. Cost cuts may help margins, but restructuring can also reflect ongoing operational strain. ESPN international expansion is strategically constructive, but its monetization impact is still uncertain. Regulatory optionality around sports blackouts is interesting but not something to underwrite as a near-term driver. Meanwhile, Disney still faces known headwinds from **legacy TV decline**, **streaming competition**, and the need to prove that strategic changes can translate into **durable earnings and margin expansion**.\n\nSo the synthesis is straightforward:\n\n- The **bull case** is credible, but still dependent on what **could** happen.\n- The **bear case** is stronger because it is based on what is **already visible** in trend structure and incomplete fundamental proof.\n- The current setup does **not** justify fresh capital deployment on the long side.\n- Existing holders should use strength to reduce exposure rather than assume the turnaround is already validated.\n\nWhat would change the rating? Three specific developments:\n- **Sustained price acceptance above the 200-day SMA**\n- **Evidence that streaming/ESPN expansion is improving unit economics**\n- **Clear margin improvement from cost actions without damaging revenue momentum**\n\nUntil those appear, the prudent portfolio decision on `DIS` is **Sell**.",
+      "parsed_decision": {
+        "raw_text": "1. **Rating**: **Sell**\n\n2. **Confidence**: **74%**\n\n3. **Executive Summary**:  \nFor `DIS`, the trading decision is to **sell existing long exposure into strength and avoid initiating new positions**. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the **50-day SMA (~102.07)** and well below the **200-day SMA (~111.02)**, which keeps the broader trend corrective. If already long, use rallies near and just above the 50-day area to reduce or exit. For any tactical bearish trade, keep size modest given improving momentum; this is more a **fade-the-rally** setup than a high-conviction breakdown. A reasonable risk line for bearish positioning is a sustained breakout above the **200-day SMA / 111 area**, which would materially weaken the current bear thesis. Time horizon: **near- to medium-term trading view over the next several weeks to a few months**.\n\n4. **Investment Thesis**:  \nThe final decision on `DIS` is **Sell** because the bearish case is currently more evidence-based than the bullish case, even though there are real signs of stabilization.\n\nThe aggressive analyst made the best bullish points: momentum has improved meaningfully, with **RSI recovering from deeply oversold territory to ~50.58**, **MACD histogram turning positive**, and price reclaiming the **10 EMA**. There are also plausible strategic positives: **ESPN’s Disney+ expansion across 53 countries**, potential **cost discipline via layoffs**, and supportive sell-side sentiment such as **Barclays’ Overweight rating and $130 target**. These factors support the idea that `DIS` may be in early repair rather than outright deterioration.\n\nHowever, those positives are still mostly **anticipatory**, not confirmed. The conservative analyst’s core point is the most investable one: `DIS` remains **below the 50 SMA and materially below the 200 SMA**, meaning the longer-term trend is still damaged. The stock has rebounded from oversold conditions, but a rebound is not the same as a durable reversal. This distinction is critical. Many failed rallies begin exactly this way: short-term momentum improves, sentiment gets less negative, and investors start pricing in a turnaround before earnings power actually validates it.\n\nThe neutral analyst best framed the middle ground: `DIS` is **improving but incomplete**. That is true, but as Portfolio Manager, the decision must emphasize capital allocation discipline. At current levels around **101.16**, the stock is pressing resistance near the **50-day average** and trading close to the **upper Bollinger band (~101.72)**. That is not an attractive place to add fresh long risk. If `DIS` were already accepting above the 50-day and building toward the 200-day with volume, the recommendation could move toward Hold or even Overweight. But the debate did not establish that. Right now, the stock looks more like a **technical bounce inside a broader corrective structure** than a proven trend change.\n\nFundamentally, the turnaround case also lacks hard confirmation. Cost cuts may help margins, but restructuring can also reflect ongoing operational strain. ESPN international expansion is strategically constructive, but its monetization impact is still uncertain. Regulatory optionality around sports blackouts is interesting but not something to underwrite as a near-term driver. Meanwhile, Disney still faces known headwinds from **legacy TV decline**, **streaming competition**, and the need to prove that strategic changes can translate into **durable earnings and margin expansion**.\n\nSo the synthesis is straightforward:\n\n- The **bull case** is credible, but still dependent on what **could** happen.\n- The **bear case** is stronger because it is based on what is **already visible** in trend structure and incomplete fundamental proof.\n- The current setup does **not** justify fresh capital deployment on the long side.\n- Existing holders should use strength to reduce exposure rather than assume the turnaround is already validated.\n\nWhat would change the rating? Three specific developments:\n- **Sustained price acceptance above the 200-day SMA**\n- **Evidence that streaming/ESPN expansion is improving unit economics**\n- **Clear margin improvement from cost actions without damaging revenue momentum**\n\nUntil those appear, the prudent portfolio decision on `DIS` is **Sell**.",
+        "intents": [
+          {
+            "symbol": "DIS",
+            "action": "SELL",
+            "confidence": 0.74,
+            "rationale": "For DIS, the trading decision is to sell existing long exposure into strength and avoid initiating new positions. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the 50-day SMA (~102.07) and well below the 200-day SMA (~111.02), which keeps the broader trend corrective. If already long, use rallies near and just above the 50-day area to reduce or exit. For any tactical bearish trade, keep size modest given improving momentum; this is more a fade-the-rally setup than a high-conviction breakdown. A reasonable risk line for bearish positioning is a ",
+            "quantity": null,
+            "notional_usd": null,
+            "order_type": "market",
+            "limit_price": null,
+            "stop_loss": null,
+            "take_profit": null,
+            "time_horizon": null,
+            "expected_edge": null,
+            "supporting_signals": [],
+            "risks": [],
+            "position_sizing_rationale": null,
+            "why_market_wrong": null,
+            "is_new_information": null,
+            "fits_success_patterns": null,
+            "contradicts_recent_failures": null,
+            "previous_reasoning_change": null,
+            "source_raw_text": "1. **Rating**: **Sell**\n\n2. **Confidence**: **74%**\n\n3. **Executive Summary**:  \nFor `DIS`, the trading decision is to **sell existing long exposure into strength and avoid initiating new positions**. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the **50-day SMA (~102.07)** and well below the **200-day SMA (~111.02)**, which keeps the broader trend corrective. If already long, use rallies near and just above the 50-day area to reduce or exit. For any tactical bearish trade, keep size modest given improving momentum; this is more a **fade-the-rally** setup than a high-conviction breakdown. A reasonable risk line for bearish positioning is a sustained breakout above the **200-day SMA / 111 area**, which would materially weaken the current bear thesis. Time horizon: **near- to medium-term trading view over the next several weeks to a few months**.\n\n4. **Investment Thesis**:  \nThe final decision on `DIS` is **Sell** because the bearish case is currently more evidence-based than the bullish case, even though there are real signs of stabilization.\n\nThe aggressive analyst made the best bullish points: momentum has improved meaningfully, with **RSI recovering from deeply oversold territory to ~50.58**, **MACD histogram turning positive**, and price reclaiming the **10 EMA**. There are also plausible strategic positives: **ESPN’s Disney+ expansion across 53 countries**, potential **cost discipline via layoffs**, and supportive sell-side sentiment such as **Barclays’ Overweight rating and $130 target**. These factors support the idea that `DIS` may be in early repair rather than outright deterioration.\n\nHowever, those positives are still mostly **anticipatory**, not confirmed. The conservative analyst’s core point is the most investable one: `DIS` remains **below the 50 SMA and materially below the 200 SMA**, meaning the longer-term trend is still damaged. The stock has rebounded from oversold conditions, but a rebound is not the same as a durable reversal. This distinction is critical. Many failed rallies begin exactly this way: short-term momentum improves, sentiment gets less negative, and investors start pricing in a turnaround before earnings power actually validates it.\n\nThe neutral analyst best framed the middle ground: `DIS` is **improving but incomplete**. That is true, but as Portfolio Manager, the decision must emphasize capital allocation discipline. At current levels around **101.16**, the stock is pressing resistance near the **50-day average** and trading close to the **upper Bollinger band (~101.72)**. That is not an attractive place to add fresh long risk. If `DIS` were already accepting above the 50-day and building toward the 200-day with volume, the recommendation could move toward Hold or even Overweight. But the debate did not establish that. Right now, the stock looks more like a **technical bounce inside a broader corrective structure** than a proven trend change.\n\nFundamentally, the turnaround case also lacks hard confirmation. Cost cuts may help margins, but restructuring can also reflect ongoing operational strain. ESPN international expansion is strategically constructive, but its monetization impact is still uncertain. Regulatory optionality around sports blackouts is interesting but not something to underwrite as a near-term driver. Meanwhile, Disney still faces known headwinds from **legacy TV decline**, **streaming competition**, and the need to prove that strategic changes can translate into **durable earnings and margin expansion**.\n\nSo the synthesis is straightforward:\n\n- The **bull case** is credible, but still dependent on what **could** happen.\n- The **bear case** is stronger because it is based on what is **already visible** in trend structure and incomplete fundamental proof.\n- The current setup does **not** justify fresh capital deployment on the long side.\n- Existing holders should use strength to reduce exposure rather than assume the turnaround is already validated.\n\nWhat would change the rating? Three specific developments:\n- **Sustained price acceptance above the 200-day SMA**\n- **Evidence that streaming/ESPN expansion is improving unit economics**\n- **Clear margin improvement from cost actions without damaging revenue momentum**\n\nUntil those appear, the prudent portfolio decision on `DIS` is **Sell**.",
+            "source_rating": "SELL",
+            "warnings": [
+              "Position sizing was not explicit in the decision text."
+            ],
+            "protocol_warnings": [],
+            "execution_notes": []
+          }
+        ],
+        "warnings": [],
+        "rejected": false
+      },
+      "arena_decision": {
+        "symbol": "DIS",
+        "action": "SELL",
+        "confidence": 0.74,
+        "rationale": "For DIS, the trading decision is to sell existing long exposure into strength and avoid initiating new positions. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the 50-day SMA (~102.07) and well below the 200-day SMA (~111.02), which keeps the broader trend corrective. If already long, use rallies near and just above the 50-day area to reduce or exit. For any tactical bearish trade, keep size modest given improving momentum; this is more a fade-the-rally setup than a high-conviction breakdown. A reasonable risk line for bearish positioning is a ",
+        "quantity": null,
+        "notional_usd": null,
+        "order_type": "market",
+        "limit_price": null,
+        "stop_loss": null,
+        "take_profit": null,
+        "time_horizon": null,
+        "expected_edge": "For DIS, the trading decision is to sell existing long exposure into strength and avoid initiating new positions. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the 50-day SMA (~102.07) and w",
+        "supporting_signals": [
+          "fresh news catalyst",
+          "price/trend confirmation",
+          "technical confirmation",
+          "portfolio/risk alignment"
+        ],
+        "risks": [
+          "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+        ],
+        "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+        "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+        "is_new_information": true,
+        "fits_success_patterns": true,
+        "contradicts_recent_failures": false,
+        "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+        "source_raw_text": "1. **Rating**: **Sell**\n\n2. **Confidence**: **74%**\n\n3. **Executive Summary**:  \nFor `DIS`, the trading decision is to **sell existing long exposure into strength and avoid initiating new positions**. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the **50-day SMA (~102.07)** and well below the **200-day SMA (~111.02)**, which keeps the broader trend corrective. If already long, use rallies near and just above the 50-day area to reduce or exit. For any tactical bearish trade, keep size modest given improving momentum; this is more a **fade-the-rally** setup than a high-conviction breakdown. A reasonable risk line for bearish positioning is a sustained breakout above the **200-day SMA / 111 area**, which would materially weaken the current bear thesis. Time horizon: **near- to medium-term trading view over the next several weeks to a few months**.\n\n4. **Investment Thesis**:  \nThe final decision on `DIS` is **Sell** because the bearish case is currently more evidence-based than the bullish case, even though there are real signs of stabilization.\n\nThe aggressive analyst made the best bullish points: momentum has improved meaningfully, with **RSI recovering from deeply oversold territory to ~50.58**, **MACD histogram turning positive**, and price reclaiming the **10 EMA**. There are also plausible strategic positives: **ESPN’s Disney+ expansion across 53 countries**, potential **cost discipline via layoffs**, and supportive sell-side sentiment such as **Barclays’ Overweight rating and $130 target**. These factors support the idea that `DIS` may be in early repair rather than outright deterioration.\n\nHowever, those positives are still mostly **anticipatory**, not confirmed. The conservative analyst’s core point is the most investable one: `DIS` remains **below the 50 SMA and materially below the 200 SMA**, meaning the longer-term trend is still damaged. The stock has rebounded from oversold conditions, but a rebound is not the same as a durable reversal. This distinction is critical. Many failed rallies begin exactly this way: short-term momentum improves, sentiment gets less negative, and investors start pricing in a turnaround before earnings power actually validates it.\n\nThe neutral analyst best framed the middle ground: `DIS` is **improving but incomplete**. That is true, but as Portfolio Manager, the decision must emphasize capital allocation discipline. At current levels around **101.16**, the stock is pressing resistance near the **50-day average** and trading close to the **upper Bollinger band (~101.72)**. That is not an attractive place to add fresh long risk. If `DIS` were already accepting above the 50-day and building toward the 200-day with volume, the recommendation could move toward Hold or even Overweight. But the debate did not establish that. Right now, the stock looks more like a **technical bounce inside a broader corrective structure** than a proven trend change.\n\nFundamentally, the turnaround case also lacks hard confirmation. Cost cuts may help margins, but restructuring can also reflect ongoing operational strain. ESPN international expansion is strategically constructive, but its monetization impact is still uncertain. Regulatory optionality around sports blackouts is interesting but not something to underwrite as a near-term driver. Meanwhile, Disney still faces known headwinds from **legacy TV decline**, **streaming competition**, and the need to prove that strategic changes can translate into **durable earnings and margin expansion**.\n\nSo the synthesis is straightforward:\n\n- The **bull case** is credible, but still dependent on what **could** happen.\n- The **bear case** is stronger because it is based on what is **already visible** in trend structure and incomplete fundamental proof.\n- The current setup does **not** justify fresh capital deployment on the long side.\n- Existing holders should use strength to reduce exposure rather than assume the turnaround is already validated.\n\nWhat would change the rating? Three specific developments:\n- **Sustained price acceptance above the 200-day SMA**\n- **Evidence that streaming/ESPN expansion is improving unit economics**\n- **Clear margin improvement from cost actions without damaging revenue momentum**\n\nUntil those appear, the prudent portfolio decision on `DIS` is **Sell**.",
+        "source_rating": "SELL",
+        "warnings": [
+          "Position sizing was not explicit in the decision text."
+        ],
+        "protocol_warnings": [],
+        "execution_notes": []
+      },
+      "risk_decision": {
+        "approved": false,
+        "reasons": [
+          "Confidence 0.74 is below the threshold of 0.75.",
+          "Could not determine order notional safely.",
+          "No long position exists in DIS; short selling is disabled."
+        ],
+        "normalized_intent": {
+          "symbol": "DIS",
+          "action": "SELL",
+          "confidence": 0.74,
+          "rationale": "For DIS, the trading decision is to sell existing long exposure into strength and avoid initiating new positions. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the 50-day SMA (~102.07) and well below the 200-day SMA (~111.02), which keeps the broader trend corrective. If already long, use rallies near and just above the 50-day area to reduce or exit. For any tactical bearish trade, keep size modest given improving momentum; this is more a fade-the-rally setup than a high-conviction breakdown. A reasonable risk line for bearish positioning is a ",
+          "quantity": null,
+          "notional_usd": null,
+          "order_type": "market",
+          "limit_price": null,
+          "stop_loss": null,
+          "take_profit": null,
+          "time_horizon": null,
+          "expected_edge": "For DIS, the trading decision is to sell existing long exposure into strength and avoid initiating new positions. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the 50-day SMA (~102.07) and w",
+          "supporting_signals": [
+            "fresh news catalyst",
+            "price/trend confirmation",
+            "technical confirmation",
+            "portfolio/risk alignment"
+          ],
+          "risks": [
+            "Structured arena decision unavailable; rely on conservative sizing and risk caps."
+          ],
+          "position_sizing_rationale": "Use the configured capped notional sizing policy and avoid oversized entries.",
+          "why_market_wrong": "The portfolio thesis assumes the latest research output is not fully reflected in price yet.",
+          "is_new_information": true,
+          "fits_success_patterns": true,
+          "contradicts_recent_failures": false,
+          "previous_reasoning_change": "Fallback path used; no structured comparison was generated.",
+          "source_raw_text": "1. **Rating**: **Sell**\n\n2. **Confidence**: **74%**\n\n3. **Executive Summary**:  \nFor `DIS`, the trading decision is to **sell existing long exposure into strength and avoid initiating new positions**. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the **50-day SMA (~102.07)** and well below the **200-day SMA (~111.02)**, which keeps the broader trend corrective. If already long, use rallies near and just above the 50-day area to reduce or exit. For any tactical bearish trade, keep size modest given improving momentum; this is more a **fade-the-rally** setup than a high-conviction breakdown. A reasonable risk line for bearish positioning is a sustained breakout above the **200-day SMA / 111 area**, which would materially weaken the current bear thesis. Time horizon: **near- to medium-term trading view over the next several weeks to a few months**.\n\n4. **Investment Thesis**:  \nThe final decision on `DIS` is **Sell** because the bearish case is currently more evidence-based than the bullish case, even though there are real signs of stabilization.\n\nThe aggressive analyst made the best bullish points: momentum has improved meaningfully, with **RSI recovering from deeply oversold territory to ~50.58**, **MACD histogram turning positive**, and price reclaiming the **10 EMA**. There are also plausible strategic positives: **ESPN’s Disney+ expansion across 53 countries**, potential **cost discipline via layoffs**, and supportive sell-side sentiment such as **Barclays’ Overweight rating and $130 target**. These factors support the idea that `DIS` may be in early repair rather than outright deterioration.\n\nHowever, those positives are still mostly **anticipatory**, not confirmed. The conservative analyst’s core point is the most investable one: `DIS` remains **below the 50 SMA and materially below the 200 SMA**, meaning the longer-term trend is still damaged. The stock has rebounded from oversold conditions, but a rebound is not the same as a durable reversal. This distinction is critical. Many failed rallies begin exactly this way: short-term momentum improves, sentiment gets less negative, and investors start pricing in a turnaround before earnings power actually validates it.\n\nThe neutral analyst best framed the middle ground: `DIS` is **improving but incomplete**. That is true, but as Portfolio Manager, the decision must emphasize capital allocation discipline. At current levels around **101.16**, the stock is pressing resistance near the **50-day average** and trading close to the **upper Bollinger band (~101.72)**. That is not an attractive place to add fresh long risk. If `DIS` were already accepting above the 50-day and building toward the 200-day with volume, the recommendation could move toward Hold or even Overweight. But the debate did not establish that. Right now, the stock looks more like a **technical bounce inside a broader corrective structure** than a proven trend change.\n\nFundamentally, the turnaround case also lacks hard confirmation. Cost cuts may help margins, but restructuring can also reflect ongoing operational strain. ESPN international expansion is strategically constructive, but its monetization impact is still uncertain. Regulatory optionality around sports blackouts is interesting but not something to underwrite as a near-term driver. Meanwhile, Disney still faces known headwinds from **legacy TV decline**, **streaming competition**, and the need to prove that strategic changes can translate into **durable earnings and margin expansion**.\n\nSo the synthesis is straightforward:\n\n- The **bull case** is credible, but still dependent on what **could** happen.\n- The **bear case** is stronger because it is based on what is **already visible** in trend structure and incomplete fundamental proof.\n- The current setup does **not** justify fresh capital deployment on the long side.\n- Existing holders should use strength to reduce exposure rather than assume the turnaround is already validated.\n\nWhat would change the rating? Three specific developments:\n- **Sustained price acceptance above the 200-day SMA**\n- **Evidence that streaming/ESPN expansion is improving unit economics**\n- **Clear margin improvement from cost actions without damaging revenue momentum**\n\nUntil those appear, the prudent portfolio decision on `DIS` is **Sell**.",
+          "source_rating": "SELL",
+          "warnings": [
+            "Position sizing was not explicit in the decision text."
+          ],
+          "protocol_warnings": [],
+          "execution_notes": []
+        },
+        "checks": {
+          "paper_only": true,
+          "allowed_symbols": true,
+          "effective_confidence_threshold": 0.75,
+          "confidence": false,
+          "supporting_signal_count": 4,
+          "multiple_signals": true,
+          "expected_edge": true,
+          "market_mispricing_reason": true,
+          "reasoning_quality": true,
+          "edge_quality": true,
+          "market_wrong_quality": true,
+          "risks_present": true,
+          "new_information": true,
+          "position_sizing_rationale": true,
+          "fits_success_patterns": true,
+          "recent_failures": true,
+          "open_order_conflict": true,
+          "order_notional": null,
+          "projected_symbol_value": 0.0,
+          "projected_gross_exposure": 1296.54,
+          "flip_flop_count": 0,
+          "flip_flop": true
+        }
+      },
+      "submitted_order": null,
+      "execution_status": "rejected",
+      "latest_price": 101.145,
+      "error": null,
+      "warnings": [],
+      "reflection": {
+        "symbol": "DIS",
+        "what_changed": "Fallback decision path used.",
+        "correct_signals": [],
+        "incorrect_signals": [
+          "Confidence 0.74 is below the threshold of 0.75.",
+          "Could not determine order notional safely."
+        ],
+        "lesson": "When structured reasoning fails, default to HOLD or require a stronger edge.",
+        "previous_reasoning": null,
+        "current_reasoning": "For DIS, the trading decision is to sell existing long exposure into strength and avoid initiating new positions. The stock is showing short-term repair, but the setup remains unconfirmed: price is still below the 50-day SMA (~102.07) and well below the 200-day SMA (~111.02), which keeps the broader trend corrective. If already long, use rallies near and just above the 50-day area to reduce or exit. For any tactical bearish trade, keep size modest given improving momentum; this is more a fade-the-rally setup than a high-conviction breakdown. A reasonable risk line for bearish positioning is a ",
+        "action_taken": "SELL",
+        "confidence": 0.74
+      }
+    }
+  ],
+  "db_path": "runtime/tradingagents.db",
+  "log_path": "/Users/matthewchang/Code/tradingbot/TradingAgents/runtime/logs/daemon-2026-04-13-6fcde420.log",
+  "audit_path": "/Users/matthewchang/Code/tradingbot/TradingAgents/runtime/audit/daemon-2026-04-13-6fcde420.jsonl",
+  "result_path": "results/daemon-2026-04-13-6fcde420.json",
+  "started_at": "2026-04-13T18:20:56.169107Z",
+  "finished_at": "2026-04-13T18:32:37.754829Z",
+  "learning_summary": "Avoid: When structured reasoning fails, default to HOLD or require a stronger edge. Latest lesson: When structured reasoning fails, default to HOLD or require a stronger edge.",
+  "performance_snapshot": {
+    "trade_date": "2026-04-13",
+    "cycle_bucket": "2026-04-13T18:15:00+00:00",
+    "account_value": 100000.05,
+    "cash": 98703.57,
+    "gross_exposure": 1296.48,
+    "realized_pnl": 0.0,
+    "unrealized_pnl": 0.05000000000006821,
+    "total_pnl": 0.05000000000006821,
+    "win_rate": null,
+    "average_win": null,
+    "average_loss": null,
+    "max_drawdown": 1.0999999998603017e-6,
+    "trade_frequency": 0.0,
+    "open_positions": 2,
+    "payload": {
+      "trade_date": "2026-04-13",
+      "cycle_bucket": "2026-04-13T18:15:00+00:00",
+      "account_value": 100000.05,
+      "cash": 98703.57,
+      "gross_exposure": 1296.48,
+      "realized_pnl": 0.0,
+      "unrealized_pnl": 0.05000000000006821,
+      "total_pnl": 0.05000000000006821,
+      "win_rate": null,
+      "average_win": null,
+      "average_loss": null,
+      "max_drawdown": 1.0999999998603017e-6,
+      "trade_frequency": 0.0,
+      "open_positions": 2,
+      "closed_trades": []
+    }
+  }
+}

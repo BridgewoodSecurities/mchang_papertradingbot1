@@ -189,7 +189,7 @@ class RiskConfig(BaseModel):
     max_new_positions_per_day: int = Field(default=3, ge=0)
     max_open_positions: int = Field(default=5, ge=0)
     max_daily_loss_pct: float = Field(default=0.03, ge=0.0, le=1.0)
-    min_confidence_threshold: float = Field(default=0.80, ge=0.0, le=1.0)
+    min_confidence_threshold: float = Field(default=0.65, ge=0.0, le=1.0)
     reject_short_selling: bool = True
     reject_fractional_shares: bool = True
     market_hours_only: bool = True
@@ -201,7 +201,7 @@ class RiskConfig(BaseModel):
     max_trades_per_cycle: int = Field(default=0, ge=0)
     default_to_hold: bool = True
     require_multiple_signals: bool = True
-    min_signals_required: int = Field(default=3, ge=1)
+    min_signals_required: int = Field(default=2, ge=1)
     require_expected_edge: bool = True
     require_market_mispricing_reason: bool = True
     require_new_information_check: bool = True
@@ -209,7 +209,7 @@ class RiskConfig(BaseModel):
     reject_if_contradicts_recent_failures: bool = True
     trade_frequency_penalty_enabled: bool = True
     recent_trade_lookback_minutes: int = Field(default=120, ge=0)
-    extra_confidence_threshold_after_recent_trade: float = Field(default=0.1, ge=0.0, le=1.0)
+    extra_confidence_threshold_after_recent_trade: float = Field(default=0.05, ge=0.0, le=1.0)
     block_reentry_while_position_open: bool = True
     allow_scaling_in: bool = False
     allow_reversal: bool = False
@@ -328,6 +328,7 @@ class AgentMemorySnapshot(BaseModel):
     recurring_success_patterns: list[str] = Field(default_factory=list)
     learning_summary: str | None = None
     previous_reasoning: str | None = None
+    counterfactual_summary: dict[str, Any] = Field(default_factory=dict)
 
 
 class PerformanceSnapshot(BaseModel):

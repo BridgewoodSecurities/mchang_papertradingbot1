@@ -98,6 +98,45 @@ class DecisionParserTests(unittest.TestCase):
         self.assertEqual(result.intents[0].action, TradeAction.HOLD)
         self.assertTrue(result.warnings)
 
+    def test_parser_extracts_supporting_signals(self):
+        result = self.parser.parse(
+            """Rating: Buy
+            Confidence: 77%
+            Executive Summary: A news catalyst supports the setup while RSI and MACD both confirm momentum.
+            Investment Thesis: The trend has improved and technical indicator confirmation remains constructive.
+            """,
+            default_symbol="NVDA",
+        )
+
+        intent = result.intents[0]
+        self.assertGreaterEqual(len(intent.supporting_signals), 3)
+
+    def test_parser_extracts_expected_edge(self):
+        result = self.parser.parse(
+            """Rating: Buy
+            Investment Thesis: NVDA is underpriced because the market is underpricing demand after a fresh enterprise acceleration.
+            """,
+            default_symbol="NVDA",
+        )
+
+        intent = result.intents[0]
+        self.assertIsNotNone(intent.expected_edge)
+        self.assertTrue(intent.expected_edge.strip())
+
+    def test_parser_extracts_risks(self):
+        result = self.parser.parse(
+            """Rating: Buy
+            Executive Summary: Initiate a starter position with disciplined sizing.
+            Key risks:
+            - Risk of a broader market selloff.
+            - Earnings risk if guidance slips.
+            """,
+            default_symbol="NVDA",
+        )
+
+        intent = result.intents[0]
+        self.assertGreaterEqual(len(intent.risks), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

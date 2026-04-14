@@ -49,6 +49,32 @@ class ArenaDecisionEngine:
         cycle_inputs: dict[str, Any],
         memory_snapshot: AgentMemorySnapshot,
     ) -> tuple[OrderIntent, AgentReflection]:
+        if (
+            base_intent is not None
+            and base_intent.action == TradeAction.SELL
+            and not self._has_open_position(cycle_inputs)
+        ):
+            note = "No position to sell; arena converted to HOLD."
+            held_intent = base_intent.model_copy(
+                update={
+                    "action": TradeAction.HOLD,
+                    "source_rating": "HOLD",
+                    "execution_notes": list(base_intent.execution_notes) + [note],
+                }
+            )
+            reflection = AgentReflection(
+                symbol=symbol,
+                what_changed=note,
+                correct_signals=[],
+                incorrect_signals=[note],
+                lesson="SELL signal with no position is not actionable.",
+                previous_reasoning=memory_snapshot.previous_reasoning,
+                current_reasoning=held_intent.rationale,
+                action_taken=TradeAction.HOLD,
+                confidence=base_intent.confidence,
+            )
+            return held_intent, reflection
+
         if self._llm is None:
             intent, reflection = self._fallback_decision(
                 symbol=symbol,
@@ -120,9 +146,20 @@ class ArenaDecisionEngine:
         portfolio_state = json.dumps(cycle_inputs.get("portfolio") or {}, indent=2, default=str)
         pnl_state = json.dumps(cycle_inputs.get("recent_pnl") or [], indent=2, default=str)
         news_state = json.dumps(cycle_inputs.get("news") or [], indent=2, default=str)
+        research_data_summary = cycle_inputs.get("research_data_summary")
+        research_state = (
+            json.dumps(research_data_summary, indent=2, default=str)
+            if research_data_summary is not None
+            else "Research indicators not available for this cycle."
+        )
         latest_price = cycle_inputs.get("latest_price")
         parsed_json = json.dumps(parsed_decision.model_dump(mode="json"), indent=2)
         memory_json = json.dumps(memory_snapshot.model_dump(mode="json"), indent=2)
+        counterfactual_summary = json.dumps(
+            memory_snapshot.counterfactual_summary or {},
+            indent=2,
+            default=str,
+        )
         base_json = json.dumps(base_intent.model_dump(mode="json"), indent=2) if base_intent else "null"
         return f"""
 You are the final disciplined trading agent in a Prediction Arena-style workflow.
@@ -135,19 +172,32 @@ You must follow this protocol exactly for {symbol} on {analysis_date}:
 5. REFLECT: compare this reasoning to the last cycle and extract one concise lesson.
 
 Hard rules:
-- Default to HOLD unless the signal is strong.
-- HOLD is preferred when uncertain, and no trade is better than a weak trade.
 - Do not trade just because a cycle occurred.
 - There is no arbitrary trade quota to fill; trade only when prudence, fresh evidence, and confidence justify action.
 - Recent activity should make you more selective, not more active.
 - Never trade without a clear expected edge and an explanation of why the market is wrong.
 - Every BUY or SELL must cite multiple supporting signals.
-- Confidence must reflect uncertainty honestly and should stay low when evidence is mixed.
 - Favor patience, capital preservation, and disciplined sizing over action for its own sake.
 - Reject stale reasoning: say whether the information is new or already priced in.
 - Reject trades that do not fit past successful patterns or that repeat recent failures.
 - Long-only US equities, no margin, no shorting, no options, no crypto.
 - Return JSON only, no markdown.
+
+CONFIDENCE SCORING GUIDE:
+- 0.85-0.95: Multiple confirming signals, fresh catalyst, clear edge, favorable risk/reward, aligns with recent success patterns
+- 0.70-0.84: Solid thesis with 2+ confirming signals but some uncertainty remains (e.g., mixed macro)
+- 0.55-0.69: Directionally reasonable but missing confirmation or has notable counter-arguments
+- 0.40-0.54: Weak or stale thesis, mixed signals, no clear edge
+- Below 0.40: No actionable thesis, contradicts evidence, or pure speculation
+
+CRITICAL: A confidence of 0.70+ means you believe the trade has positive expected value after transaction costs. If the research engine produced a clear BUY/SELL with specific technical levels, named catalysts, and a coherent thesis — and you cannot identify a specific flaw in that reasoning — your confidence should be 0.70 or higher, not 0.30-0.40.
+
+Do NOT reflexively assign low confidence because "macro is uncertain" — macro is always uncertain. Score based on whether the specific thesis for this specific symbol has identifiable flaws.
+
+HOLD BIAS:
+- HOLD is preferred when the thesis is genuinely weak, stale, or contradicted by evidence.
+- HOLD is NOT appropriate when the research engine produced a well-reasoned thesis that you simply cannot verify independently — that is what the research engine is for.
+- If you are converting a BUY/SELL to HOLD, you MUST state the specific flaw or missing evidence that justifies overriding the research engine. "I can't independently verify" is not a valid reason.
 
 Current time: {cycle_inputs.get("timestamp")}
 Latest price: {latest_price}
@@ -166,11 +216,19 @@ Cooldown context:
 Portfolio state:
 {portfolio_state}
 
+=== RESEARCH DATA (from this cycle's TradingAgents analysis) ===
+{research_state}
+The research engine analyzed the following indicators this cycle. You can use these to verify whether the thesis has technical support. Do NOT dismiss the thesis as "stale" if these indicators are consistent with the recommended action.
+
 Recent PnL:
 {pnl_state}
 
 Recent news/context:
 {news_state}
+
+=== COUNTERFACTUAL TRACK RECORD ===
+{counterfactual_summary}
+If most recent overrides to HOLD turned out to be missed opportunities, bias toward trusting the research engine more.
 
 Memory:
 {memory_json}
@@ -465,3 +523,14 @@ Return exactly this JSON shape:
         if len(normalized) < 30:
             return True
         return any(re.search(pattern, normalized) for pattern in self.GENERIC_REASONING_PATTERNS)
+
+    def _has_open_position(self, cycle_inputs: dict[str, Any]) -> bool:
+        open_position = cycle_inputs.get("open_position") or {}
+        if isinstance(open_position, dict):
+            return bool(open_position.get("has_open_position"))
+
+        portfolio = cycle_inputs.get("portfolio") or {}
+        for position in portfolio.get("positions") or []:
+            if isinstance(position, dict) and float(position.get("qty", 0.0) or 0.0) > 0:
+                return True
+        return False

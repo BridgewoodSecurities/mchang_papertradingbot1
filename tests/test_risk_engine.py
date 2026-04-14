@@ -25,7 +25,7 @@ class RiskEngineTests(unittest.TestCase):
         payload = {
             "symbol": "NVDA",
             "action": TradeAction.BUY,
-            "confidence": 0.9,
+            "confidence": 0.7,
             "notional_usd": 500.0,
             "rationale": "Fresh news, trend confirmation, and disciplined sizing all support a selective starter entry.",
             "expected_edge": "Positive revision momentum is still underpriced.",
@@ -152,7 +152,7 @@ class RiskEngineTests(unittest.TestCase):
 
     def test_rejects_insufficient_supporting_signals(self):
         engine = RiskEngine(RiskConfig(market_hours_only=False))
-        intent = self._intent(supporting_signals=["fresh news catalyst", "price/trend confirmation"])
+        intent = self._intent(supporting_signals=[])
         decision = engine.evaluate(
             intent,
             account=self.account,
@@ -180,6 +180,39 @@ class RiskEngineTests(unittest.TestCase):
             latest_price=100.0,
         )
         self.assertTrue(decision.approved)
+
+    def test_two_signals_sufficient(self):
+        engine = RiskEngine(RiskConfig(market_hours_only=False))
+        intent = self._intent(
+            supporting_signals=[
+                "fresh news catalyst",
+                "price/trend confirmation",
+            ]
+        )
+        decision = engine.evaluate(
+            intent,
+            account=self.account,
+            positions=[],
+            open_orders=[],
+            latest_price=100.0,
+        )
+        self.assertTrue(decision.approved)
+
+    def test_first_entry_gets_lower_threshold(self):
+        engine = RiskEngine(RiskConfig(market_hours_only=False))
+        intent = self._intent(
+            confidence=0.62,
+            supporting_signals=["fresh news catalyst"],
+        )
+        decision = engine.evaluate(
+            intent,
+            account=self.account,
+            positions=[],
+            open_orders=[],
+            latest_price=100.0,
+        )
+        self.assertTrue(decision.approved)
+        self.assertTrue(decision.checks["first_entry_discount"])
 
     def test_rejects_generic_reasoning(self):
         engine = RiskEngine(RiskConfig(market_hours_only=False))
@@ -230,7 +263,7 @@ class RiskEngineTests(unittest.TestCase):
                 extra_confidence_threshold_after_recent_trade=0.1,
             )
         )
-        intent = self._intent(confidence=0.85)
+        intent = self._intent(confidence=0.84)
         decision = engine.evaluate(
             intent,
             account=self.account,
@@ -240,7 +273,7 @@ class RiskEngineTests(unittest.TestCase):
             recent_trade_count=1,
         )
         self.assertFalse(decision.approved)
-        self.assertIn("0.90", " ".join(decision.reasons))
+        self.assertIn("0.85", " ".join(decision.reasons))
 
     def test_cycle_trade_cap_disabled_when_zero(self):
         engine = RiskEngine(RiskConfig(market_hours_only=False, max_trades_per_cycle=0))

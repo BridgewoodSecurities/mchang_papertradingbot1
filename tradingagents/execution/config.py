@@ -199,7 +199,7 @@ def load_risk_config(env: dict[str, str] | None = None) -> RiskConfig:
         max_open_positions=_parse_int(env.get("MAX_OPEN_POSITIONS"), 5),
         max_daily_loss_pct=_parse_float(env.get("MAX_DAILY_LOSS_PCT"), 0.03),
         min_confidence_threshold=_parse_float(
-            env.get("MIN_CONFIDENCE_THRESHOLD"), 0.80
+            env.get("MIN_CONFIDENCE_THRESHOLD"), 0.65
         ),
         reject_short_selling=_parse_bool(env.get("REJECT_SHORT_SELLING"), True),
         reject_fractional_shares=_parse_bool(
@@ -232,7 +232,7 @@ def load_risk_config(env: dict[str, str] | None = None) -> RiskConfig:
             env.get("REQUIRE_MULTIPLE_SIGNALS"),
             True,
         ),
-        min_signals_required=_parse_int(env.get("MIN_SIGNALS_REQUIRED"), 3),
+        min_signals_required=_parse_int(env.get("MIN_SIGNALS_REQUIRED"), 2),
         require_expected_edge=_parse_bool(env.get("REQUIRE_EXPECTED_EDGE"), True),
         require_market_mispricing_reason=_parse_bool(
             env.get("REQUIRE_MARKET_MISPRICING_REASON"), True
@@ -256,7 +256,7 @@ def load_risk_config(env: dict[str, str] | None = None) -> RiskConfig:
         ),
         extra_confidence_threshold_after_recent_trade=_parse_float(
             env.get("EXTRA_CONFIDENCE_THRESHOLD_AFTER_RECENT_TRADE"),
-            0.1,
+            0.05,
         ),
         block_reentry_while_position_open=_parse_bool(
             env.get("BLOCK_REENTRY_WHILE_POSITION_OPEN"),

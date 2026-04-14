@@ -67,6 +67,19 @@ class RiskEngine:
             checks["allowed_symbols"] = True
 
         effective_confidence_threshold = self.config.min_confidence_threshold
+        symbol_position = next((position for position in positions if position.symbol == intent.symbol), None)
+        order_notional = self._estimate_order_notional(intent, latest_price=latest_price)
+        is_first_entry = (
+            intent.action == TradeAction.BUY
+            and (symbol_position is None or symbol_position.qty <= 0)
+            and order_notional is not None
+            and order_notional <= self.config.max_order_notional_usd
+        )
+        effective_min_signals = self.config.min_signals_required
+        if is_first_entry:
+            effective_confidence_threshold = max(0.0, effective_confidence_threshold - 0.05)
+            effective_min_signals = max(1, effective_min_signals - 1)
+        checks["first_entry_discount"] = is_first_entry
         if self.config.trade_frequency_penalty_enabled and recent_trade_count > 0:
             effective_confidence_threshold = min(
                 1.0,
@@ -89,9 +102,10 @@ class RiskEngine:
 
         signal_count = len(intent.supporting_signals)
         checks["supporting_signal_count"] = signal_count
-        if self.config.require_multiple_signals and signal_count < self.config.min_signals_required:
+        checks["effective_min_signals_required"] = effective_min_signals
+        if self.config.require_multiple_signals and signal_count < effective_min_signals:
             reasons.append(
-                f"Only {signal_count} supporting signal(s) were present; {self.config.min_signals_required} are required."
+                f"Only {signal_count} supporting signal(s) were present; {effective_min_signals} are required."
             )
             checks["multiple_signals"] = False
         else:
@@ -115,13 +129,13 @@ class RiskEngine:
         else:
             checks["reasoning_quality"] = True
 
-        if self._is_generic_reasoning(intent.expected_edge):
+        if self._is_insufficient_detail(intent.expected_edge):
             reasons.append("Expected edge explanation was too generic.")
             checks["edge_quality"] = False
         else:
             checks["edge_quality"] = True
 
-        if self._is_generic_reasoning(intent.why_market_wrong):
+        if self._is_insufficient_detail(intent.why_market_wrong):
             reasons.append("Why-the-market-is-wrong explanation was too generic.")
             checks["market_wrong_quality"] = False
         else:
@@ -162,7 +176,6 @@ class RiskEngine:
         else:
             checks["recent_failures"] = True
 
-        symbol_position = next((position for position in positions if position.symbol == intent.symbol), None)
         current_symbol_value = abs(symbol_position.market_value or 0.0) if symbol_position else 0.0
         current_total_value = sum(abs(position.market_value or 0.0) for position in positions)
         open_positions_count = sum(1 for position in positions if position.qty > 0)
@@ -171,7 +184,6 @@ class RiskEngine:
         if intent.symbol in open_order_symbols:
             reasons.append(f"Open order already exists for {intent.symbol}.")
 
-        order_notional = self._estimate_order_notional(intent, latest_price=latest_price)
         checks["order_notional"] = order_notional
 
         if order_notional is None or order_notional <= 0:
@@ -344,20 +356,18 @@ class RiskEngine:
         if text is None:
             return True
         normalized = " ".join(text.split()).strip().lower()
-        if len(normalized) < 30:
+        if len(normalized) < 50:
             return True
         generic_phrases = (
             "buy now",
             "sell now",
             "strong conviction",
-            "good buy",
-            "good sell",
-            "bullish outlook",
-            "bearish outlook",
-            "positive momentum",
-            "negative momentum",
         )
         return any(phrase in normalized for phrase in generic_phrases)
+
+    def _is_insufficient_detail(self, text: str | None) -> bool:
+        normalized = " ".join((text or "").split()).strip()
+        return len(normalized) <= 20
 
     def _parse_datetime(self, value: str | None) -> datetime | None:
         if not value:

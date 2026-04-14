@@ -265,6 +265,22 @@ class SQLitePersistence:
             payload_json TEXT NOT NULL,
             created_at TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS counterfactuals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id TEXT NOT NULL,
+            symbol TEXT NOT NULL,
+            trade_date TEXT NOT NULL,
+            original_action TEXT NOT NULL,
+            original_confidence REAL,
+            final_action TEXT NOT NULL,
+            price_at_decision REAL,
+            price_after_1d REAL,
+            price_after_5d REAL,
+            would_have_pnl_1d REAL,
+            would_have_pnl_5d REAL,
+            override_reason TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
         """
         with self._connect() as connection:
             connection.executescript(schema)
@@ -680,7 +696,7 @@ class SQLitePersistence:
         limit: int = 10,
     ) -> list[dict[str, Any]]:
         query = """
-            SELECT symbol, action, confidence, cycle_bucket, payload_json, created_at
+            SELECT id, symbol, action, confidence, cycle_bucket, payload_json, created_at
             FROM agent_decisions
             WHERE agent_id = ?
         """
@@ -695,6 +711,7 @@ class SQLitePersistence:
         items: list[dict[str, Any]] = []
         for row in rows:
             payload = json.loads(row["payload_json"])
+            payload.setdefault("id", row["id"])
             payload.setdefault("symbol", row["symbol"])
             payload.setdefault("action", row["action"])
             payload.setdefault("confidence", row["confidence"])
@@ -941,6 +958,139 @@ class SQLitePersistence:
                 (agent_id, limit),
             ).fetchall()
         return [json.loads(row["payload_json"]) for row in rows]
+
+    def record_counterfactual(
+        self,
+        run_id: str,
+        symbol: str,
+        trade_date: str,
+        original_action: str,
+        original_confidence: float | None,
+        final_action: str,
+        price_at_decision: float | None,
+        override_reason: str | None,
+    ) -> None:
+        with self._connect() as connection:
+            connection.execute(
+                """
+                INSERT INTO counterfactuals
+                (run_id, symbol, trade_date, original_action, original_confidence, final_action, price_at_decision, override_reason)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    run_id,
+                    symbol,
+                    trade_date,
+                    original_action,
+                    original_confidence,
+                    final_action,
+                    price_at_decision,
+                    override_reason,
+                ),
+            )
+
+    def update_counterfactual_prices(
+        self,
+        symbol: str,
+        trade_date: str,
+        price_after_1d: float | None = None,
+        price_after_5d: float | None = None,
+    ) -> None:
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT id, original_action, price_at_decision, price_after_1d, price_after_5d
+                FROM counterfactuals
+                WHERE symbol = ? AND trade_date = ?
+                """,
+                (symbol, trade_date),
+            ).fetchall()
+
+            for row in rows:
+                price_at_decision = row["price_at_decision"]
+                action = str(row["original_action"]).upper()
+                direction = 1.0 if action == "BUY" else -1.0
+                next_price_1d = row["price_after_1d"] if price_after_1d is None else price_after_1d
+                next_price_5d = row["price_after_5d"] if price_after_5d is None else price_after_5d
+                pnl_1d = (
+                    (next_price_1d - price_at_decision) * direction
+                    if next_price_1d is not None and price_at_decision is not None
+                    else None
+                )
+                pnl_5d = (
+                    (next_price_5d - price_at_decision) * direction
+                    if next_price_5d is not None and price_at_decision is not None
+                    else None
+                )
+                connection.execute(
+                    """
+                    UPDATE counterfactuals
+                    SET price_after_1d = ?,
+                        price_after_5d = ?,
+                        would_have_pnl_1d = ?,
+                        would_have_pnl_5d = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        next_price_1d,
+                        next_price_5d,
+                        pnl_1d,
+                        pnl_5d,
+                        row["id"],
+                    ),
+                )
+
+    def get_recent_counterfactuals(
+        self,
+        symbol: str | None = None,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+        query = """
+            SELECT id, run_id, symbol, trade_date, original_action, original_confidence, final_action,
+                   price_at_decision, price_after_1d, price_after_5d, would_have_pnl_1d, would_have_pnl_5d,
+                   override_reason, created_at
+            FROM counterfactuals
+            WHERE 1 = 1
+        """
+        params: list[Any] = []
+        if symbol:
+            query += " AND symbol = ?"
+            params.append(symbol)
+        query += " ORDER BY trade_date DESC, id DESC LIMIT ?"
+        params.append(limit)
+        with self._connect() as connection:
+            rows = connection.execute(query, tuple(params)).fetchall()
+        return [dict(row) for row in rows]
+
+    def get_counterfactual_summary(self) -> dict[str, Any]:
+        recent = self.get_recent_counterfactuals(limit=20)
+        profitable = sum(1 for item in recent if (item.get("would_have_pnl_1d") or 0.0) > 0)
+        unprofitable = sum(1 for item in recent if (item.get("would_have_pnl_1d") or 0.0) < 0)
+        pnl_1d = [item["would_have_pnl_1d"] for item in recent if item.get("would_have_pnl_1d") is not None]
+        pnl_5d = [item["would_have_pnl_5d"] for item in recent if item.get("would_have_pnl_5d") is not None]
+        return {
+            "total_overrides": len(recent),
+            "profitable_overrides": profitable,
+            "unprofitable_overrides": unprofitable,
+            "avg_missed_pnl_1d": (sum(pnl_1d) / len(pnl_1d)) if pnl_1d else 0.0,
+            "avg_missed_pnl_5d": (sum(pnl_5d) / len(pnl_5d)) if pnl_5d else 0.0,
+        }
+
+    def get_pending_counterfactuals(self, *, limit: int = 200) -> list[dict[str, Any]]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT id, run_id, symbol, trade_date, original_action, original_confidence, final_action,
+                       price_at_decision, price_after_1d, price_after_5d, would_have_pnl_1d, would_have_pnl_5d,
+                       override_reason, created_at
+                FROM counterfactuals
+                WHERE price_after_1d IS NULL OR price_after_5d IS NULL
+                ORDER BY trade_date ASC, id ASC
+                LIMIT ?
+                """,
+                (limit,),
+            ).fetchall()
+        return [dict(row) for row in rows]
 
     def get_recent_runs(self, *, limit: int = 20) -> list[dict[str, Any]]:
         with self._connect() as connection:
@@ -1279,6 +1429,18 @@ class SQLitePersistence:
                 (bucket_key,),
             ).fetchall()
         return [row["symbol"] for row in rows]
+
+    def get_processed_symbols_since(self, *, since: datetime) -> set[str]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT DISTINCT symbol
+                FROM processed_symbol_buckets
+                WHERE processed_at >= ?
+                """,
+                (since.isoformat(),),
+            ).fetchall()
+        return {str(row["symbol"]).upper() for row in rows if row["symbol"]}
 
     def upsert_news_items(self, items: list[NewsItem]) -> list[NewsItem]:
         now = datetime.now(timezone.utc).isoformat()

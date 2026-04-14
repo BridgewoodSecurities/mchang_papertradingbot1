@@ -526,12 +526,14 @@ INDEX_HTML = """<!doctype html>
       margin-bottom: 4px;
     }
     .decision-card {
-      padding: 14px;
+      padding: 12px;
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 16px;
-      display: grid;
-      gap: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
     }
     .decision-top {
       display: flex;
@@ -554,6 +556,28 @@ INDEX_HTML = """<!doctype html>
       white-space: pre-wrap;
       word-break: break-word;
       line-height: 1.5;
+    }
+    .decision-summary {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+    .decision-link {
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .decision-detail {
+      display: grid;
+      gap: 16px;
+    }
+    .decision-detail-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
     }
     .decision-grid {
       display: grid;
@@ -599,6 +623,10 @@ INDEX_HTML = """<!doctype html>
     @media (max-width: 720px) {
       header { padding: 22px 16px 12px; }
       main { padding: 0 14px 20px; }
+      .decision-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -730,6 +758,30 @@ INDEX_HTML = """<!doctype html>
       return `${(number * 100).toFixed(1)}%`;
     }
 
+    function truncateText(value, maxLength = 160) {
+      const text = String(value || "").replaceAll(/\\s+/g, " ").trim();
+      if (!text) return "No rationale recorded.";
+      return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
+    }
+
+    function decisionId(item) {
+      return String(item?.id ?? item?.created_at ?? "");
+    }
+
+    function decisionHref(item) {
+      return `/?decision=${encodeURIComponent(decisionId(item))}`;
+    }
+
+    function selectedDecisionId() {
+      return new URLSearchParams(window.location.search).get("decision");
+    }
+
+    function findSelectedDecision(snapshot) {
+      const wanted = selectedDecisionId();
+      if (!wanted) return null;
+      return (snapshot.recent_decisions || []).find((item) => decisionId(item) === wanted) || null;
+    }
+
     function renderTable(columns, rows) {
       if (!rows || rows.length === 0) {
         return `<div class="muted">No rows yet.</div>`;
@@ -754,10 +806,6 @@ INDEX_HTML = """<!doctype html>
         return `<div class="muted">No decisions yet.</div>`;
       }
       return items.map((item) => {
-        const signals = (item.supporting_signals || []).join(", ") || "-";
-        const risks = (item.risks || []).join(", ") || "-";
-        const warnings = [...(item.warnings || []), ...(item.protocol_warnings || [])].join(" | ") || "-";
-        const notes = (item.execution_notes || []).join(" | ") || "-";
         return `
           <div class="decision-card">
             <div class="decision-top">
@@ -768,8 +816,47 @@ INDEX_HTML = """<!doctype html>
               </div>
               <div class="decision-meta">${fmtTime(item.created_at)}</div>
             </div>
-            <div class="decision-copy">${esc(item.rationale || "No rationale recorded.")}</div>
+            <a class="decision-link" href="${decisionHref(item)}">View details</a>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderDecisionDetail(item) {
+      if (!item) {
+        return `
+          <section class="raw-panel">
+            <div class="decision-detail">
+              <div class="decision-detail-top">
+                <h2>Decision Not Found</h2>
+                <a class="decision-link" href="/">Back to dashboard</a>
+              </div>
+              <div class="muted">This decision is no longer in the recent dashboard snapshot. Go back to the dashboard and open a newer item.</div>
+            </div>
+          </section>
+        `;
+      }
+      const signals = (item.supporting_signals || []).join(", ") || "-";
+      const risks = (item.risks || []).join(", ") || "-";
+      const warnings = [...(item.warnings || []), ...(item.protocol_warnings || [])].join(" | ") || "-";
+      const notes = (item.execution_notes || []).join(" | ") || "-";
+      return `
+        <section class="raw-panel">
+          <div class="decision-detail">
+            <div class="decision-detail-top">
+              <div class="decision-title">
+                <strong>${esc(item.symbol || "-")}</strong>
+                <span class="pill">${esc(item.action || "-")}</span>
+                <span class="decision-meta">Confidence ${item.confidence !== null && item.confidence !== undefined ? esc(Number(item.confidence).toFixed(2)) : "-"}</span>
+                <span class="decision-meta">${fmtTime(item.created_at)}</span>
+              </div>
+              <a class="decision-link" href="/">Back to dashboard</a>
+            </div>
             <div class="decision-grid">
+              <div class="decision-block">
+                <div class="decision-block-label">Rationale</div>
+                <div class="decision-copy">${esc(item.rationale || "-")}</div>
+              </div>
               <div class="decision-block">
                 <div class="decision-block-label">Expected Edge</div>
                 <div class="decision-copy">${esc(item.expected_edge || "-")}</div>
@@ -794,19 +881,19 @@ INDEX_HTML = """<!doctype html>
                 <div class="decision-block-label">Warnings</div>
                 <div class="decision-copy">${esc(warnings)}</div>
               </div>
+              <div class="decision-block">
+                <div class="decision-block-label">More</div>
+                <div class="decision-copy">${esc(JSON.stringify({
+                  time_horizon: item.time_horizon || null,
+                  previous_reasoning_change: item.previous_reasoning_change || null,
+                  execution_notes: notes,
+                  cycle_bucket: item.cycle_bucket || null,
+                }, null, 2))}</div>
+              </div>
             </div>
-            <details>
-              <summary>More</summary>
-              <pre>${esc(JSON.stringify({
-                time_horizon: item.time_horizon || null,
-                previous_reasoning_change: item.previous_reasoning_change || null,
-                execution_notes: notes,
-                cycle_bucket: item.cycle_bucket || null,
-              }, null, 2))}</pre>
-            </details>
           </div>
-        `;
-      }).join("");
+        </section>
+      `;
     }
 
     function setHTML(id, html) {
@@ -815,7 +902,23 @@ INDEX_HTML = """<!doctype html>
     }
 
     function updateDashboard(snapshot) {
+      const selectedDecision = findSelectedDecision(snapshot);
       state.refreshSeconds = snapshot.refresh_seconds || 5;
+      if (selectedDecisionId()) {
+        document.title = selectedDecision
+          ? `${selectedDecision.symbol || "Decision"} • TradingBot Monitor`
+          : "Decision • TradingBot Monitor";
+        document.querySelector("header h1").textContent = "Decision Detail";
+        document.querySelector(".subhead").textContent =
+          "Compact overview cards now link here for the full decision record.";
+        document.querySelector("main").innerHTML = renderDecisionDetail(selectedDecision);
+        return;
+      }
+
+      document.title = "TradingBot Monitor";
+      document.querySelector("header h1").textContent = "TradingBot Monitor";
+      document.querySelector(".subhead").textContent =
+        "Live dashboard for the paper-trading daemon. It auto-refreshes so you can watch heartbeat changes, memory updates, positions, orders, reflections, cycles, news, and recent errors without tailing files by hand.";
       document.getElementById("refresh-label").textContent =
         `Updated ${fmtTime(snapshot.generated_at)} • polling every ${state.refreshSeconds}s`;
 

@@ -184,17 +184,23 @@ class ArenaServiceTests(unittest.TestCase):
                 "last_trade": {"side": "BUY"},
                 "cooldowns": {"position_reentry_cooldown_active": True},
                 "portfolio": {},
+                "research_data_summary": {
+                    "indicators": {"rsi": 58.0, "macd": 1.2, "sma_50": 125.0},
+                    "price_vs_moving_averages": "above 50SMA",
+                    "trend_assessment": "bullish",
+                },
                 "recent_pnl": [],
                 "news": [],
             },
             memory_snapshot=AgentMemorySnapshot(symbol="NVDA"),
         )
-        self.assertIn("HOLD is preferred when uncertain", prompt)
+        self.assertIn("HOLD is preferred when the thesis is genuinely weak", prompt)
         self.assertIn("Do not trade just because a cycle occurred", prompt)
         self.assertIn("There is no arbitrary trade quota to fill", prompt)
         self.assertIn("Favor patience, capital preservation, and disciplined sizing", prompt)
         self.assertIn("Trades today", prompt)
         self.assertIn("Open position context", prompt)
+        self.assertIn("RESEARCH DATA", prompt)
 
     def test_disabled_arena_keeps_tradable_structured_buy(self):
         config = ExecutionConfig(
@@ -272,6 +278,34 @@ Buy in tranches and respect the 200-day moving average as the key invalidation t
         self.assertTrue(intent.expected_edge)
         self.assertTrue(intent.position_sizing_rationale)
         self.assertTrue(risk.approved)
+
+    def test_prompt_confidence_guidance_present(self):
+        config = self._make_config("/tmp")
+        decider = ArenaDecisionEngine(config, RiskConfig(market_hours_only=False))
+        prompt = decider._build_prompt(
+            symbol="NVDA",
+            analysis_date="2026-04-13",
+            raw_decision_text="Rating: Buy",
+            parsed_decision=ParsedDecisionResult(raw_text="Rating: Buy"),
+            base_intent=None,
+            cycle_inputs={
+                "timestamp": "2026-04-13T14:00:00+00:00",
+                "latest_price": 100.0,
+                "portfolio": {},
+                "recent_pnl": [],
+                "news": [],
+                "research_data_summary": None,
+                "open_position": {},
+                "last_trade": {},
+                "cooldowns": {},
+            },
+            memory_snapshot=AgentMemorySnapshot(symbol="NVDA"),
+        )
+
+        self.assertIn(
+            "0.70+ means you believe the trade has positive expected value",
+            prompt,
+        )
 
 
 if __name__ == "__main__":
