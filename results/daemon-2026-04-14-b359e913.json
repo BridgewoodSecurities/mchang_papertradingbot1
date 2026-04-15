@@ -1,0 +1,91 @@
+{
+  "run_id": "daemon-2026-04-14-b359e913",
+  "mode": "daemon",
+  "trade_date": "2026-04-14",
+  "symbols": [
+    "AMZN",
+    "AMT",
+    "PWR"
+  ],
+  "symbol_results": [
+    {
+      "symbol": "AMZN",
+      "raw_decision_text": null,
+      "parsed_decision": null,
+      "arena_decision": null,
+      "risk_decision": null,
+      "submitted_order": null,
+      "execution_status": "error",
+      "latest_price": null,
+      "error": "LLM provider quota/billing error for the configured model. Add API billing or switch providers/models via TRADINGAGENTS_LLM_PROVIDER, TRADINGAGENTS_DEEP_THINK_LLM, and TRADINGAGENTS_QUICK_THINK_LLM.",
+      "warnings": [],
+      "reflection": null
+    },
+    {
+      "symbol": "AMT",
+      "raw_decision_text": null,
+      "parsed_decision": null,
+      "arena_decision": null,
+      "risk_decision": null,
+      "submitted_order": null,
+      "execution_status": "error",
+      "latest_price": null,
+      "error": "LLM provider quota/billing error for the configured model. Add API billing or switch providers/models via TRADINGAGENTS_LLM_PROVIDER, TRADINGAGENTS_DEEP_THINK_LLM, and TRADINGAGENTS_QUICK_THINK_LLM.",
+      "warnings": [],
+      "reflection": null
+    },
+    {
+      "symbol": "PWR",
+      "raw_decision_text": null,
+      "parsed_decision": null,
+      "arena_decision": null,
+      "risk_decision": null,
+      "submitted_order": null,
+      "execution_status": "error",
+      "latest_price": null,
+      "error": "LLM provider quota/billing error for the configured model. Add API billing or switch providers/models via TRADINGAGENTS_LLM_PROVIDER, TRADINGAGENTS_DEEP_THINK_LLM, and TRADINGAGENTS_QUICK_THINK_LLM.",
+      "warnings": [],
+      "reflection": null
+    }
+  ],
+  "db_path": "runtime/tradingagents.db",
+  "log_path": "/Users/matthewchang/Code/tradingbot/TradingAgents/runtime/logs/daemon-2026-04-14-b359e913.log",
+  "audit_path": "/Users/matthewchang/Code/tradingbot/TradingAgents/runtime/audit/daemon-2026-04-14-b359e913.jsonl",
+  "result_path": "results/daemon-2026-04-14-b359e913.json",
+  "started_at": "2026-04-14T19:12:43.420978Z",
+  "finished_at": "2026-04-14T19:12:53.217340Z",
+  "learning_summary": "Avoid: SELL signal with no position is not actionable. Latest lesson: SELL signal with no position is not actionable.",
+  "performance_snapshot": {
+    "trade_date": "2026-04-14",
+    "cycle_bucket": "2026-04-14T19:00:00+00:00",
+    "account_value": 100026.82,
+    "cash": 96004.69,
+    "gross_exposure": 4022.13,
+    "realized_pnl": 0.0,
+    "unrealized_pnl": 26.819999999999908,
+    "total_pnl": 26.819999999999908,
+    "win_rate": null,
+    "average_win": null,
+    "average_loss": null,
+    "max_drawdown": 0.0010311553068456797,
+    "trade_frequency": 0.0,
+    "open_positions": 5,
+    "payload": {
+      "trade_date": "2026-04-14",
+      "cycle_bucket": "2026-04-14T19:00:00+00:00",
+      "account_value": 100026.82,
+      "cash": 96004.69,
+      "gross_exposure": 4022.13,
+      "realized_pnl": 0.0,
+      "unrealized_pnl": 26.819999999999908,
+      "total_pnl": 26.819999999999908,
+      "win_rate": null,
+      "average_win": null,
+      "average_loss": null,
+      "max_drawdown": 0.0010311553068456797,
+      "trade_frequency": 0.0,
+      "open_positions": 5,
+      "closed_trades": []
+    }
+  }
+}

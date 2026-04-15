@@ -136,6 +136,9 @@ class ExecutionConfig(BaseModel):
     log_level: str = "INFO"
     paper_trading_enabled: bool = False
     execute: bool = False
+    bridgewood_api_base: str | None = None
+    bridgewood_agent_api_key: str | None = None
+    bridgewood_request_timeout_seconds: float = Field(default=10.0, gt=0.0)
     default_order_notional_usd: float = 1000.0
     time_in_force: str = "day"
     order_type: OrderType = OrderType.MARKET

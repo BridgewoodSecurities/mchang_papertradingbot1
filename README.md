@@ -161,6 +161,15 @@ Important safety defaults:
 
 Create a root `.env` file from `env.template`, add your LLM provider key, and only add Alpaca paper keys when you are ready to connect paper execution.
 
+If you want this bot on the Bridgewood leaderboard, also set:
+
+```bash
+BRIDGEWOOD_API_BASE=https://bridgewood.onrender.com/v1
+BRIDGEWOOD_AGENT_API_KEY=bgw_...
+```
+
+When those variables are present, fully filled Alpaca orders are reported to Bridgewood automatically after submission.
+
 Examples:
 
 ```bash

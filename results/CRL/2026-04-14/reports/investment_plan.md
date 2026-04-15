@@ -1,0 +1,11 @@
+After weighing both sides, my call on CRL is Hold.
+
+Here’s the short version of the debate. The bull case is that CRL has already repaired a lot of technical damage: it reclaimed the 10-day, 50-day, and 200-day moving averages, momentum is positive, RSI is healthy but not stretched, and the stock has likely moved out of the worst of the selloff. That argues the market may be starting to price in a recovery.
+
+The bear case is that this is still just a rebound into a major resistance area around 179.5 to 180, and the fundamentals behind the move are not clearly improving yet. JP Morgan cutting its target to 160 while staying Neutral is not a bullish signal; it says upside is limited for now. Add in shaky global growth, soft business confidence, and the fact that CRL’s demand depends on biopharma and outsourcing conditions that have not fully turned, and the rally looks vulnerable to stalling.
+
+My decision is Hold because the strongest arguments do not yet justify fresh aggressive buying, but they also do not support an outright sell. The stock has improved enough technically that I wouldn’t fight it short here, yet the bear’s resistance and valuation warnings are enough to keep me from chasing it before proof of a real breakout. In other words, the chart has healed, but the setup is not clean enough to pay up for yet.
+
+My investment plan for the trader is this: if you already own CRL, keep the position but don’t add here. Treat 180 as the key line in the sand. If CRL breaks above that level on solid volume and holds it for more than one session, then I’d become more constructive and consider adding. If it fails there and slips back through the 50-day area, I’d reduce exposure or exit, because that would suggest the rebound is losing force. For a fresh entry, I would wait rather than buy now, since the risk/reward is not attractive at current levels. If you want a cleaner plan, think of this as “hold and watch for confirmation,” not “buy the dip” and not “sell in panic.”
+
+One lesson from similar situations is that technical recoveries can look convincing right before they fade if the business backdrop hasn’t actually improved. I’m applying that lesson here: respect the rebound, but demand confirmation before committing new capital.

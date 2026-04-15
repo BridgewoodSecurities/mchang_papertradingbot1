@@ -9,7 +9,11 @@ from pathlib import Path
 from typing import Callable, Iterator
 from uuid import uuid4
 
-from tradingagents.arena import AgentMemoryService, ArenaDecisionEngine, PerformanceTracker
+from tradingagents.arena import (
+    AgentMemoryService,
+    ArenaDecisionEngine,
+    PerformanceTracker,
+)
 from tradingagents.brokers.base import BaseBroker
 from tradingagents.execution.config import build_analysis_config
 from tradingagents.execution.logging_utils import AuditTrail, setup_logging
@@ -30,6 +34,10 @@ from tradingagents.execution.parser import DecisionParser
 from tradingagents.execution.policy import ExecutionPolicy
 from tradingagents.execution.timeouts import time_limit
 from tradingagents.persistence.sqlite_store import SQLitePersistence
+from tradingagents.reporting.bridgewood import (
+    BridgewoodReporter,
+    BridgewoodReporterError,
+)
 from tradingagents.risk.engine import RiskEngine
 
 
@@ -80,6 +88,11 @@ class TradingCycleRunner:
             execution_config=execution_config,
             broker=broker,
         )
+        self.bridgewood = (
+            BridgewoodReporter.from_execution_config(execution_config)
+            if BridgewoodReporter.is_configured(execution_config)
+            else None
+        )
 
     def run_cycle(
         self,
@@ -123,6 +136,7 @@ class TradingCycleRunner:
         audit.write("run_start", run_id=run_id, mode=mode.value, symbols=symbols, analysis_date=analysis_date)
 
         account, positions, open_orders = self._load_broker_state(mode=mode)
+        self._reconcile_recent_broker_orders(run_id=run_id, now=started_at, logger=logger)
         self.store.snapshot_equity(
             run_id=run_id,
             equity=account.equity,
@@ -386,6 +400,7 @@ class TradingCycleRunner:
                 )
 
         finished_at = datetime.now(timezone.utc)
+        self._reconcile_recent_broker_orders(run_id=run_id, now=finished_at, logger=logger)
         performance_snapshot = self._capture_performance_snapshot(
             run_id=run_id,
             cycle_bucket=cycle_bucket,
@@ -547,7 +562,107 @@ class TradingCycleRunner:
                 order_id=order.id,
                 payload=order.model_dump(mode="json"),
             )
+            if self.bridgewood is not None and order.status.lower() == "filled":
+                self._report_bridgewood_fill(run_id=run_id, symbol=symbol, order=order)
         return order
+
+    def _reconcile_recent_broker_orders(
+        self,
+        *,
+        run_id: str,
+        now: datetime,
+        logger,
+        lookback: timedelta = timedelta(days=2),
+    ) -> None:
+        if self.broker is None:
+            return
+
+        recent_orders = self.store.get_recent_broker_orders(
+            since=now - lookback,
+            limit=200,
+        )
+        tracked_ids = {
+            str(value)
+            for item in recent_orders
+            for value in (item.get("order_id"), item.get("client_order_id"))
+            if value
+        }
+        if not tracked_ids:
+            return
+
+        try:
+            broker_orders = self.broker.list_orders(status="all", limit=max(100, len(tracked_ids) * 2))
+        except Exception:
+            logger.exception(
+                "broker_order_reconciliation_failed",
+                extra={"run_id": run_id},
+            )
+            return
+
+        fills_recorded = 0
+        for order in broker_orders:
+            if not self._is_tracked_order(order=order, tracked_ids=tracked_ids):
+                continue
+
+            self.store.update_broker_order(order=order)
+            if order.status.lower() != "filled":
+                continue
+            if self.store.has_fill(order_id=order.id):
+                continue
+
+            self.store.record_fill(
+                run_id=run_id,
+                symbol=order.symbol,
+                order_id=order.id,
+                payload=order.model_dump(mode="json"),
+            )
+            fills_recorded += 1
+            if self.bridgewood is not None:
+                self._report_bridgewood_fill(run_id=run_id, symbol=order.symbol, order=order)
+
+        if fills_recorded:
+            logger.info(
+                "broker_order_reconciliation_complete",
+                extra={"run_id": run_id, "fills_recorded": fills_recorded},
+            )
+
+    def _is_tracked_order(self, *, order: BrokerOrder, tracked_ids: set[str]) -> bool:
+        return bool(
+            (order.id and order.id in tracked_ids)
+            or (order.client_order_id and order.client_order_id in tracked_ids)
+        )
+
+    def _report_bridgewood_fill(
+        self,
+        *,
+        run_id: str,
+        symbol: str,
+        order: BrokerOrder,
+    ) -> None:
+        if self.bridgewood is None:
+            return
+
+        try:
+            response = self.bridgewood.report_filled_order(order)
+        except BridgewoodReporterError as exc:
+            self.store.record_broker_event(
+                run_id=run_id,
+                symbol=symbol,
+                event_type="bridgewood_execution_report_failed",
+                payload={
+                    "error": str(exc),
+                    "order_id": order.id,
+                    "client_order_id": order.client_order_id,
+                },
+            )
+            return
+
+        self.store.record_broker_event(
+            run_id=run_id,
+            symbol=symbol,
+            event_type="bridgewood_execution_reported",
+            payload=response,
+        )
 
     @contextmanager
     def _heartbeat_keepalive(

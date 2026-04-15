@@ -104,6 +104,12 @@ def load_execution_config(
         log_level=env.get("LOG_LEVEL", "INFO"),
         paper_trading_enabled=_parse_bool(env.get("PAPER_TRADING_ENABLED"), False),
         execute=execute,
+        bridgewood_api_base=env.get("BRIDGEWOOD_API_BASE"),
+        bridgewood_agent_api_key=env.get("BRIDGEWOOD_AGENT_API_KEY"),
+        bridgewood_request_timeout_seconds=_parse_float(
+            env.get("BRIDGEWOOD_REQUEST_TIMEOUT_SECONDS"),
+            10.0,
+        ),
         default_order_notional_usd=_parse_float(
             env.get("DEFAULT_ORDER_NOTIONAL_USD"), 1000.0
         ),

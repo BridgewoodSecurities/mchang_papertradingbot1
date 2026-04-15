@@ -360,6 +360,42 @@ class SQLitePersistence:
                 ),
             )
 
+    def update_broker_order(self, *, order: BrokerOrder) -> int:
+        identifiers: list[str] = []
+        params: list[Any] = [
+            order.status,
+            order.id,
+            order.client_order_id,
+            order.qty,
+            order.notional_usd,
+            (order.submitted_at or datetime.now(timezone.utc)).isoformat(),
+            order.model_dump_json(),
+        ]
+        if order.id:
+            identifiers.append("order_id = ?")
+            params.append(order.id)
+        if order.client_order_id:
+            identifiers.append("client_order_id = ?")
+            params.append(order.client_order_id)
+        if not identifiers:
+            return 0
+
+        query = f"""
+            UPDATE broker_orders
+            SET
+                status = ?,
+                order_id = ?,
+                client_order_id = ?,
+                qty = ?,
+                notional_usd = ?,
+                submitted_at = ?,
+                payload_json = ?
+            WHERE {" OR ".join(identifiers)}
+        """
+        with self._connect() as connection:
+            cursor = connection.execute(query, tuple(params))
+            return int(cursor.rowcount or 0)
+
     def record_broker_event(
         self,
         *,
@@ -398,6 +434,21 @@ class SQLitePersistence:
                     datetime.now(timezone.utc).isoformat(),
                 ),
             )
+
+    def has_fill(self, *, order_id: str | None) -> bool:
+        if not order_id:
+            return False
+        with self._connect() as connection:
+            row = connection.execute(
+                """
+                SELECT 1
+                FROM fills
+                WHERE order_id = ?
+                LIMIT 1
+                """,
+                (order_id,),
+            ).fetchone()
+        return row is not None
 
     def snapshot_positions(self, *, run_id: str, payload: list[dict[str, Any]]) -> None:
         self._insert_json("position_snapshots", run_id=run_id, payload=payload, symbolless=True)
